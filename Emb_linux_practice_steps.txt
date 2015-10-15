@@ -1,0 +1,2162 @@
+ 
+Assignment1: compilation and installation of Uboot,linux,rootfs..
+
+https://www.kernel.org/doc/Documentation/kbuild/modules.txt   ---refer this document
+
+step1:   Installi.ng cross compiler tool chain
+
+cd /root/beagleboneb_emb_linux_2015/toolchain/
+tar -xJvf /home/jaguar/Documents/embedded_linux/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz  
+
+linux-xbxq:~/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin
+linux-xbxq:~/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin# ls 
+arm-linux-gnueabihf-addr2line     arm-linux-gnueabihf-gfortran
+arm-linux-gnueabihf-ar            arm-linux-gnueabihf-gprof
+arm-linux-gnueabihf-as            arm-linux-gnueabihf-ld
+arm-linux-gnueabihf-c++           arm-linux-gnueabihf-ld.bfd
+arm-linux-gnueabihf-c++filt       arm-linux-gnueabihf-ld.gold
+arm-linux-gnueabihf-cpp           arm-linux-gnueabihf-ldd
+arm-linux-gnueabihf-ct-ng.config  arm-linux-gnueabihf-nm
+arm-linux-gnueabihf-dwp           arm-linux-gnueabihf-objcopy
+arm-linux-gnueabihf-elfedit       arm-linux-gnueabihf-objdump
+arm-linux-gnueabihf-g++           arm-linux-gnueabihf-pkg-config
+arm-linux-gnueabihf-gcc           arm-linux-gnueabihf-pkg-config-real
+arm-linux-gnueabihf-gcc-4.9.2     arm-linux-gnueabihf-ranlib
+arm-linux-gnueabihf-gcc-ar        arm-linux-gnueabihf-readelf
+arm-linux-gnueabihf-gcc-nm        arm-linux-gnueabihf-size
+arm-linux-gnueabihf-gcc-ranlib    arm-linux-gnueabihf-strings
+arm-linux-gnueabihf-gcov          arm-linux-gnueabihf-strip
+arm-linux-gnueabihf-gdb
+
+
+
+
+
+
+
+
+
+
+step2:  compiling uboot
+
+cd /root/beagleboneb_emb_linux_2015/uboot_dir/
+tar -xvf /home/jaguar/Documents/embedded_linux/uboot.tar
+
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir # pwd
+/root/beagleboneb_emb_linux_2015/uboot_dir
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir # cd uboot/
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir/uboot # ls
+0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch  u-boot
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir/uboot # cd u-boot/
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir/uboot/u-boot # ls
+.checkpatch.conf  Kconfig      api        disk      include          test
+.git              Licenses     arch       doc       lib              tools
+.gitignore        MAINTAINERS  board      drivers   net
+.mailmap          MAKEALL      common     dts       post
+.travis.yml       Makefile     config.mk  examples  scripts
+Kbuild            README       configs    fs        snapshot.commit
+linux-xbxq:~/beagleboneb_emb_linux_2015/uboot_dir/uboot/u-boot # pwd
+/root/beagleboneb_emb_linux_2015/uboot_dir/uboot/u-boot
+
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x_evm_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+
+
+jaguar-ThinkPad-X1-Carbon tools # pwd
+/root/beagleboneb_emb_linux_2015/uboot_dir/uboot/u-boot/tools
+jaguar-ThinkPad-X1-Carbon tools # ls -l mkimage
+-rwxr-xr-x 1 root root 133058 Aug  9 18:43 mkimage
+
+
+
+
+step3:  
+
+cd /root/beagleboneb_emb_linux_2015/emb_linux_kernel
+tar -xvf /home/jaguar/Documents/embedded_linux/bb-kernel.tar 
+
+
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # 
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # ls
+.CC         KERNEL        build_kernel.sh  patch.sh          system.sh
+.git        LICENSE       deploy           patches           system.sh.sample
+.gitignore  README        dl               repo_maintenance  tools
+3rdparty    build_deb.sh  ignore           scripts           version.sh
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # 
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # 
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # pwd
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel
+linux-xbxq:~/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel # 
+
+
+
+arch/arm/kernel/devtree.o: In function `of_free_overlay_info':
+devtree.c:(.text+0x0): multiple definition of `of_free_overlay_info'
+arch/arm/kernel/smp_twd.o:smp_twd.c:(.text+0x1c4): first defined here
+arch/arm/kernel/perf_event_cpu.o: In function `of_free_overlay_info':
+perf_event_cpu.c:(.text+0x10c0): multiple definition of `of_free_overlay_info'
+arch/arm/kernel/smp_twd.o:smp_twd.c:(.text+0x1c4): first defined here
+arch/arm/kernel/topology.o: In function `of_free_overlay_info':
+topology.c:(.text+0x0): multiple definition of `of_free_overlay_info'
+arch/arm/kernel/smp_twd.o:smp_twd.c:(.text+0x1c4): first defined here
+make[1]: *** [arch/arm/kernel/built-in.o] Error 1
+make: *** [arch/arm/kernel] Error 2
+--------------to avoid this error : dont do make menuconfig
+
+step4:   compiling kernel
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/uboot_dir/uboot/u-boot/tools
+
+
+cd /root/beagleboneb_emb_linux_2015/bb-kernel/KERNEL/
+/*
+$ make clean        [kind of clean]
+$ make mrproper     [even cleaner]
+$ make distclean    [there we go, THAT's clean]
+clean - Remove most compiler generated files
+        but keep the config and enough build support to build external modules
+mrproper - Remove all generated files + config + various backup files
+distclean - mrproper + remove editor backup and patch files
+*/
+make ARCH=arm mrproper
+
+/*
+Suppose that just last week you picked your way through the maze of options,
+and settled on a configuration that supports all the hardware and features you want.
+Today a new stable kernel is released and of course you want to upgrade right away. 
+Is it necessary to start from scratch configuring the new kernel? Not at all.
+
+For exapmle, you have .config file of your current kernel and you
+downloaded new kernel and want to build your new kernel. Since very likely new
+kernel will have some new configuration options, you will need to update your
+config. Easiest way to do this is to run 'make oldconfig' which will ask you
+questions about new configuration options. (that is the ones your current
+.config file doesn't have)
+*/
+
+//cp /home/jaguar/Documents/em_lin/config-bbb-latest.config  .config
+
+cp  /home/jaguar/Documents/embedded_linux/class_delivery/class_delivery_day1/config-bbb-latest.config  .config
+make ARCH=arm oldconfig
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- LOADADDR=0x80008000 uImage
+
+
+jaguar-ThinkPad-X1-Carbon boot # pwd
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/arch/arm/boot
+jaguar-ThinkPad-X1-Carbon boot # ls -l uImage
+-rw-r--r-- 1 root root 4950280 Aug  9 18:49 uImage
+
+
+step:  compiling modules
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- modules
+
+jaguar-ThinkPad-X1-Carbon Ext_mods # pwd
+/root/beagleboneb_emb_linux_2015/Ext_mods
+
+make INSTALL_MOD_PATH=/root/beagleboneb_emb_linux_2015/Ext_mods   modules_install
+
+
+ls /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/
+
+make INSTALL_MOD_PATH=/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/    modules_install
+
+jaguar-ThinkPad-X1-Carbon Ext_mods # pwd
+/root/beagleboneb_emb_linux_2015/Ext_mods
+jaguar-ThinkPad-X1-Carbon Ext_mods # ls
+lib
+jaguar-ThinkPad-X1-Carbon lib # ls
+firmware  modules
+
+
+
+step: 
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- dtbs
+
+jaguar-ThinkPad-X1-Carbon dts # pwd
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/arch/arm/boot/dts
+jaguar-ThinkPad-X1-Carbon dts # ls  am335*
+am335x-boneblack.dts  am335x-bone-common.dtsi  am335x-bone.dts  am335x-evm.dts  am335x-evmsk.dts  am335x-tester.dts
+jaguar-ThinkPad-X1-Carbon dts # 
+
+
+
+
+ ls  bb-kernel/KERNEL/arch/arm/boot/zImage (zImage for ARM )   
+ ls  bb-kernel/KERNEL/arch/arm/boot/uImage (u-boot image wrapped from zImage)
+ ls  bb-kernel/KERNEL/arch/arm/boot/dts/am335x-boneblack.dtb (device-tree blob)
+ 
+      setenv ipaddr 192.9.200.2
+      setenv serverip 192.9.200.1
+      ping 192.9.200.1
+      tftp 0x80007fc0  uImage_3.8.13
+      tftp 0x80f80000 am335x-boneblack_3.8.13.dtb 
+	  tftp 0x83000000 initrd_bbs_1.17.4.img (or) tftp 0x8f000000 initrd_bbs_1.17.4.img   
+      setenv bootargs 'console=ttyO0,115200n8 root=/dev/ram0 rw initrd=0x83000000,1048576'
+      bootm 0x80007fc0 - 0x80f80000   : bootm 0x81000000 
+	  
+	  
+for checking pinmux details :
+mount -t debugfs none /sys/kernel/debug  //mount debugfs 
+check pinmux details
+cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pins
+
+cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
+
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.9.200.2 nfsroot=192.9.200.1:/home/jaguar/beagleboneb_emb_linux_2015/tg_rootfs/rfs_bb_static_1.17.4'
+	  
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /home/jaguar/beagleboneb_emb_linux_2015/kernels/linux-3.12-bone-black   M=`pwd` modules
+
+make INSTALL_MOD_PATH=/home/jaguar/beagleboneb_emb_linux_2015/tg_rootfs/rfs_bb_static_1.17.4    ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /home/jaguar/beagleboneb_emb_linux_2015/kernels/linux-3.12-bone-black   M=
+`pwd` modules_install	  
+       
+- to get help on dtc compiler    
+/home/jaguar/embedded_linux_may_june_2015/staging_area/bb-kernel/KERNEL/scripts/dtc/dtc  --help
+- to generate dts from a given dtb
+/home/jaguar/embedded_linux_may_june_2015/staging_area/bb-kernel/KERNEL/scripts/dtc/dtc  -I dtb  -O dts  
+   -o  am335x-boneblack_full.dts  /tftpboot/am335x-boneblack.dtb
+
+
+- to generate dtb from a given dts     
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /var/lib/am335x-boneblack.dtb  ./arch/arm/boot/dts/am335x-boneblack.dts 
+  
+
+Assignment2:
+
+pass initcall_debug as additional kernel command line parameter
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/ram0 rw initrd=0x83000000,1048576 initcall_debug'
+
+using dmesg find out init methods invoked, during boot-up and understand embedded linux  boot up.
+
+using dmesg find KVAS layout for  embedded linux. how this differs from desktop linux KVAS.
+
+
+
+
+cat /proc/buddyinfo ---Identify physical mem zones.? how they are different from desktop linux- why?
+
+Identify the device tree blob bnary used for the Emb-linux-kernel.also identify its location under kernel source tree.
+
+generate the device tree source for the device tree blob of the Emb-linux-kernel.(in a directory other than source tree).
+
+check the details of your device tree nodes.
+
+
+Task: Understanding device tree related nodes and their properties:
+
+ use /proc and  /sys --- run time info of nodes of device tree blob
+
+/proc/device-tree/*
+/sys/bus/platform/devices/*
+/sys/bus/i2c/devices/*...etc[depending on HW bus]
+
+cross verify wether nodes are setup correctly othrwise rebuild dtb and load with kernel and repeat testing.
+
+---UART debug console.
+    system physical memory
+    kernel command line  : [In emb-linux kernel args are passed via a node of device tree]
+    Find kernel args detals in dts also and check Any difference from what you see in /proc/device-tree? -- why? Any practical reason?
+    Find details of cpu used and its features
+    Board identification details.
+
+
+uart_dtree.txt ---understand device tree framework related comments
+
+spot the device node of the UART(used for debig console) in the  emb-linux kernel: understand properties and related values.
+
+Enable more UARTS in dts/dtsi ..rebuild dtb,reload kernel with dtb and verify using /proc and /sys
+verify the driver binding for newly enabled devices.
+
+
+
+
+
+
+
+
+
+jaguar-ThinkPad-X1-Carbon rootfs_1 # pwd
+
+/root/beagleboneb_emb_linux_2015/rootfs_1
+
+jaguar-ThinkPad-X1-Carbon rootfs_1 # tar -xvf  /home/jaguar/Documents/embedded_linux/class_delivery/class_delivery_day2/busy_box_rfs_custom/busybox-1.17.4.tar.bz2 
+
+aguar-ThinkPad-X1-Carbon rootfs_1 # ls
+busybox-1.17.4
+
+jaguar-ThinkPad-X1-Carbon rootfs_1 # cd busybox-1.17.4/
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # ls
+applets        e2fsprogs  LICENSE          networking  TEST_config_nommu
+arch           editors    loginutils       printutils  TEST_config_noprintf
+archival       examples   mailutils        procps      TEST_config_rh9
+AUTHORS        findutils  Makefile         README      testsuite
+Config.in      include    Makefile.custom  runit       TODO
+console-tools  init       Makefile.flags   scripts     TODO_unicode
+coreutils      INSTALL    Makefile.help    selinux     util-linux
+debianutils    libbb      miscutils        shell
+docs           libpwdgrp  modutils         sysklogd
+
+
+
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # cp  /home/jaguar/Documents/embedded_linux/class_delivery/class_delivery_day2/busy_box_rfs_custom/busybox-1.17.2.config   .config
+
+
+
+make oldconfig
+
+makedir bb1_.17.4_fs_static
+
+/root/beagleboneb_emb_linux_2015/rootfs_1/bb1_.17.4_fs_static/
+
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # make menuconfig
+  HOSTLD  scripts/kconfig/mconf
+  HOSTCC  scripts/kconfig/lxdialog/checklist.o
+In file included from scripts/kconfig/lxdialog/checklist.c:24:0:
+scripts/kconfig/lxdialog/dialog.h:31:20: fatal error: curses.h: No such file or directory
+ #include CURSES_LOC
+                    ^
+compilation terminated.
+make[2]: *** [scripts/kconfig/lxdialog/checklist.o] Error 1
+make[1]: *** [menuconfig] Error 2
+make: *** [menuconfig] Error 2
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # apt-get install libncurses5-dev 
+
+
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # make menuconfig
+
+
+10) change 	Busybox Settings  ---> 
+		build options -->
+			        [*] Build BusyBox as a static binary (no shared libs)
+	
+11) 			---> installation options
+				installation prefix                    
+            (                       )   fill the directory path with /root/beagleboneb_emb_linux_2015/rootfs_1/bb1_.17.4_fs_static/
+
+12) 	.	---> Build Options  ---> 
+	           (               ) Cross Compiler prefix, as needed   arm-linux-gnueabihf-
+
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+
+13) 
+14) 	Save and exit
+
+
+
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- LOADADDR=0x80008000 uImage-1
+
+
+
+ jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # make
+  CC      shell/shell_common.o
+shell/shell_common.c:334:17: warning: ‘struct rlimit’ declared inside parameter list
+    const struct limits *l)
+                 ^
+shell/shell_common.c:334:17: warning: its scope is only this definition or declaration, which is probably not what you want
+shell/shell_common.c: In function ‘printlim’:
+shell/shell_common.c:336:2: error: unknown type name ‘rlim_t’
+  rlim_t val;
+  ^
+shell/shell_common.c:338:13: error: dereferencing pointer to incomplete type
+  val = limit->rlim_max;
+             ^
+shell/shell_common.c:340:14: error: dereferencing pointer to incomplete type
+   val = limit->rlim_cur;
+              ^
+shell/shell_common.c:342:13: error: ‘RLIM_INFINITY’ undeclared (first use in this function)
+  if (val == RLIM_INFINITY)
+             ^
+shell/shell_common.c:342:13: note: each undeclared identifier is reported only once for each function it appears in
+shell/shell_common.c: In function ‘shell_builtin_ulimit’:
+shell/shell_common.c:377:17: error: storage size of ‘limit’ isn’t known
+   struct rlimit limit;
+                 ^
+shell/shell_common.c:394:5: warning: implicit declaration of function ‘getrlimit’ [-Wimplicit-function-declaration]
+     getrlimit(l->cmd, &limit);
+     ^
+shell/shell_common.c:413:6: error: unknown type name ‘rlim_t’
+      rlim_t val;
+      ^
+shell/shell_common.c:416:13: error: ‘RLIM_INFINITY’ undeclared (first use in this function)
+       val = RLIM_INFINITY;
+             ^
+shell/shell_common.c:441:6: warning: implicit declaration of function ‘setrlimit’ [-Wimplicit-function-declaration]
+      if (setrlimit(l->cmd, &limit) < 0) {
+      ^
+shell/shell_common.c:377:17: warning: unused variable ‘limit’ [-Wunused-variable]
+   struct rlimit limit;
+                 ^
+make[1]: *** [shell/shell_common.o] Error 1
+make: *** [shell] Error 2
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+
+
+
+
+
+
+
+
+
+
+
+
+
+I do need the shell. So I looked into that file and searched the web a bit.
+Result: The file shell/shell_common.c misses an include statement at the top:
+
+#include <sys/resource.h>
+
+If you add this, Busybox compiles and runs fine. Probably this is the culprit
+with the other build errors as well. Interestingly, if I try the same process
+on Debian with the GCC it supplies:
+
+
+
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- 
+
+
+
+
+
+
+
+  CC      util-linux/more.o
+  CC      util-linux/mount.o
+  CC      util-linux/umount.o
+  AR      util-linux/lib.a
+  LD      util-linux/volume_id/built-in.o
+  AR      util-linux/volume_id/lib.a
+  LINK    busybox_unstripped
+Trying libraries: crypt m
+ Library crypt is not needed, excluding it
+ Library m is not needed, excluding it
+Final link with: <none>
+  DOC     busybox.pod
+  DOC     BusyBox.txt
+  DOC     BusyBox.1
+  DOC     BusyBox.html
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # ls
+applets   busybox                 Config.in      docs       findutils  libbb       mailutils        Makefile.help  printutils  scripts   TEST_config_nommu     TODO
+arch      busybox_unstripped      console-tools  e2fsprogs  include    libpwdgrp   Makefile         miscutils      procps      selinux   TEST_config_noprintf  TODO_unicode
+archival  busybox_unstripped.map  coreutils      editors    init       LICENSE     Makefile.custom  modutils       README      shell     TEST_config_rh9       util-linux
+AUTHORS   busybox_unstripped.out  debianutils    examples   INSTALL    loginutils  Makefile.flags   networking     runit       sysklogd  testsuite
+jaguar-ThinkPad-X1-Carbon busybox-1.17.4 # 
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- install
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean   --to remove Every thing=> .config and all obj files..
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+I2c-tools for linux:
+
+
+cd /root/beagleboneb_emb_linux_2015/other_tools/i2c_tools
+tar -xvf /home/jaguar/Documents/i2c-tools-3.1.2.tar.bz2 
+
+
+
+
+
+/root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c_dest/
+
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+
+sudo apt-get update; sudo apt-get install python-dev -y
+
+
+jaguar-ThinkPad-X1-Carbon i2c-tools-3.1.2 # ls
+CHANGES  COPYING  eeprom  eepromer  include  Makefile  py-smbus  README  stub  tools  version.h
+
+
+make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- 
+
+Change in Makefile :  prefix = /root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c_dest 
+
+make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-  install
+(OR)
+make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prefix=/root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c_dest  install
+
+
+
+
+make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- uninstall
+(OR)
+make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- prefix=/root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c_dest  uninstall
+
+make clean
+
+
+binaries  from eeprom stub tools Directories will be compiled and  installed by default.
+
+
+To build  py-smbus:
+
+jaguar-ThinkPad-X1-Carbon i2c-tools-3.1.2 # pwd
+/root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c-tools-3.1.2
+jaguar-ThinkPad-X1-Carbon i2c-tools-3.1.2 # 
+jaguar-ThinkPad-X1-Carbon i2c-tools-3.1.2 #  make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- EXTRA="py-smbus"
+
+you need to copy binaries manually
+
+To build 
+
+jaguar-ThinkPad-X1-Carbon eepromer # pwd
+/root/beagleboneb_emb_linux_2015/other_tools/i2c_tools/i2c-tools-3.1.2/eepromer
+
+you need to copy binaries manually
+
+
+
+
+jaguar-ThinkPad-X1-Carbon i2c-tools-3.1.2 # make  ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- EXTRA="py-smbus"
+cd py-smbus && CPPFLAGS=" -I../include" python setup.py build
+running build
+running build_ext
+building 'smbus' extension
+x86_64-linux-gnu-gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -I../include -fPIC -I/usr/include/python2.7 -c smbusmodule.c -o build/temp.linux-x86_64-2.7/smbusmodule.o
+smbusmodule.c:19:20: fatal error: Python.h: No such file or directory
+ #include <Python.h>
+                    ^
+compilation terminated.
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+make: *** [all-python] Error 1
+
+
+Even if you have Python installed, the header file and the library usually aren't installed by default. On Ubuntu, they come in a separate package called python-dev.
+
+sudo apt-get update; sudo apt-get install python-dev -y
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+
+/root/beagleboneb_emb_linux_2015/rootfs_1/bb1_.17.4_fs_static/bin
+
+arm-linux-gnueabihf-readelf
+
+
+
+
+
+
+ picocom -b 115200 /dev/ttyUSB0
+debian
+temppwd
+
+
+
+Set the Baud rate to 115,200 Baud, N,8,1 on the COM used.
+
+
+
+picocom -b 115200 -p n -d 8 /dev/ttyUSB0
+
+
+ using the u-boot command line for loading embedded linux system components  and 
+   booting the beaglebone black embedded linux system :
+
+   - boot the board and press enter to enter u-boot command line 
+
+   - once in the prompt, do the following : 
+
+      setenv ipaddr 192.9.200.10
+      setenv serverip 192.9.200.1
+      ping 192.9.200.1
+	  setenv serverip 192.9.200.1
+
+
+
+
+
+
+
+setenv bootargs 'console=tty0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+setenv bootargs 'console=ttyS0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+setenv bootargs 'console=ttyS2,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+setenv bootargs 'console=ttyUSB0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+
+
+
+
+
+
+
+
+      tftp 0x80007fc0  uImage
+
+      
+
+	  tftp 0x80f80000 am335x-boneblack.dtb
+      tftp 0x80f80000 am335x-boneblack_3.8.13.dtb or 
+      tftp 0x80f80000 am335x-boneblack_usrleds_m2.dtb or
+      tftp 0x80f80000 am335x-boneblack_usrleds_m3.dtb
+      tftp 0x80f80000 am335x-boneblack_usrleds_m1.dtb or
+      tftp 0x80f80000 am335x-boneblack_usrleds_m4.dtb
+      tftp 0x80f80000 am335x-boneblack_usrleds_m5.dtb
+      tftp 0x80f80000 am335x-boneblack_usrleds_m6.dtb
+      tftp 0x80f80000 am335x-boneblack_extleds_m7.dtb
+      tftp 0x83000000 initrd_bbs_1.17.4.img (or)
+      tftp 0x8f000000 initrd_bbs_1.17.4.img     (initial ramdisk image)
+      setenv bootargs 'console=ttyO0,115200n8 root=/dev/ram0 initrd=0x83000000,1048576' (or)
+      setenv bootargs 'console=ttyO0,115200n8 root=/dev/ram0 rw initrd=0x83000000,1048576'
+
+
+	setenv bootargs 'console=ttyS0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+setenv bootargs 'console=ttyS2,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+
+setenv bootargs 'console=ttyS0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+	bootm 0x80007fc0 - 0x80f80000
+
+
+LG-P765_6309  -----chaitanya wifi ssid
+security WPA2PSK
+passwd; de44216e71c4
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+day2:
+
+we are replacing binaries in the rfs_bb_static_1.17.4 with 
+
+
+mkdir /root/beagleboneb_emb_linux_2015/busybox-1.23.2/busybox-1.23.2
+
+mkdir /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2
+
+
+cd /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_1.17.4 # tar -xvf /home/jaguar/Documents/embedded_linux_july_august_2015/class_delivery_day3/samples/rfs_bb_static_1.17.4.tar 
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_latest # cd rfs_bb_static_1.17.4/
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_1.17.4 # 
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_1.17.4 # pwd
+/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.17.4
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_1.17.4 # ls
+bin  dev  etc  lib  proc  sbin  sys  tmp  usr  var
+jaguar-ThinkPad-X1-Carbon rfs_bb_static_1.17.4 # 
+
+
+
+
+cd /root/beagleboneb_emb_linux_2015/busybox-1.23.2/busybox-1.23.2/
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+make defconfig
+
+make ARCH=arm menuconfig
+
+make 
+make install
+
+cd /root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/
+make ARCH=arm INSTALL_MOD_PATH=/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2  modules_install
+
+
+
+ - boot the board and press enter to enter u-boot command line 
+
+   - once in the prompt, do the following : 
+
+      
+ 	  setenv ipaddr 192.168.1.10
+      setenv serverip 192.168.1.2
+      ping 192.168.1.2
+      tftp 0x80007fc0  uImage_3.8.13
+      tftp 0x80f80000 am335x-boneblack_3.8.13.dtb
+	  
+     
+
+
+vi /etc/exports
+/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/     *(rw,sync,insecure,no_root_squash,no_subtree_check)
+
+exportfs -ra
+
+
+setenv bootargs 'console=tty0,115200n8 root=/dev/nfs rw ip=192.168.1.10  nfsroot=192.168.1.2:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+bootm 0x80007fc0 - 0x80f80000
+
+
+
+
+arm-linux-gnueabihf-gcc -static hello.c
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL    M=`pwd` modules
+
+ /root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb -o\
+    ./arch/arm/boot/dts/am335x-boneblack.dtb  ./arch/arm/boot/dts/am335x-boneblack.dts 
+
+
+ls /root/dtb_comp/dtbs/
+ls /root/dtb_comp/dtss/
+
+
+BB-UART4-00A0.dts
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -@ -O dtb -o BB-UART4-00A0.dtb -b 0 BB-UART4-00A0.dts
+
+
+dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
+
+jaguar-ThinkPad-X1-Carbon dtss # /root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART2-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART2-00A0.dts
+
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART4-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART4-00A0.dts
+
+
+cp  /root/dtb_comp/dtbs/BB-UART2-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+
+echo BB-UART2 > /sys/devices/bone_capemgr.9/slots
+
+
+
+route add -net 12.34.0.0 netmask 255.255.0.0 gw 12.34.56.1
+route add -net 12.13.0.0 netmask 255.255.0.0 gw 12.34.56.1
+route add -host 11.22.33.44 gw 12.34.56.1
+
+cat /var/log/syslog | grep tftp
+
+tcpdump port 69 -v
+
+tcpdump -i eth0 
+
+
+
+
+route add -net 192.168.1.0  netmask 255.255.255.0 gw 192.168.1.10
+
+
+route add -net 192.168.3.0  netmask 255.255.255.0 gw 192.168.3.10
+
+	picocom -b 115200 -p n -d 8 /dev/ttyUSB0
+
+ping 192.168.3.10
+
+setenv ipaddr 192.168.3.20
+setenv serverip 192.168.3.10
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.3.20  nfsroot=192.168.3.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/'
+
+tftp 0x80007fc0  uImage4
+tftp 0x80007fc0 uImage_3.8.13
+
+tftp 0x80f80000 am335x-boneblack.dtb
+
+tftp 0x80f80000 am335x-boneblack_gpioctrl.dtb
+
+tftp 0x80f80000 am335x-boneblack_gpioctrl1.dtb
+
+tftp 0x80f80000 am335x-boneblack_gpioctrl2.dtb
+
+bootm 0x80007fc0 - 0x80f80000
+
+
+tftp 0x80007fc0 uImage_3.8.13
+
+insmod /lib/modules/3.8.13-bbb-labs\+/kernel/drivers/custom/gpio_ctrl.ko
+echo 1 > /sys/class/gpio/gpio30/value
+
+
+ PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+ cp /home/jaguar/Documents/em_lin/practice/gpio_ctrl1.c ./gpio_ctrl1.c 
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /root/beagleboneb_emb_linux_2015/emb_linux_kernel1/bb-kernel/KERNEL/   M=`pwd` modules
+
+ cp gpio_ctrl.ko /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/usr
+
+ cp gpio_ctrl.ko /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom/
+
+				  P9
+-----------------------
+port 0.31  ------9.13 --o/p: trigger
+port 0.30  ------9.11---i/p:intr
+port 0.20  ------9.41---o/p:led
+
+
+mount -t debugfs nodev /sys/kernel/debug
+you can view a lot of files and directories in /sys/kernel/debug,
+
+
+  cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pins  | grep 870
+
+  cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins | grep 870
+
+
+echo BB-UART2 > /sys/devices/bone_capemgr*/slots
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Aug-31st:
+---------------------------
+ping 192.168.1.10
+
+setenv ipaddr 192.168.1.20
+
+setenv serverip 192.168.1.10
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/'
+
+tftp 0x80007fc0  uImage
+
+tftp 0x80f80000 am335x-boneblack.dtb
+
+bootm 0x80007fc0 - 0x80f80000
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+GPIO_CTRL : 
+
+
+jaguar-ThinkPad-X1-Carbon gpio_ctrl # pwd
+/root/dtb_comp/dtss/gpio_ctrl
+aguar-ThinkPad-X1-Carbon gpio_ctrl # ls
+am335x-boneblack_gpioctrl.dts  am335x-bone-common.dtsi  am33xx.dtsi  skeleton.dtsi  tps65217.dtsi
+
+jaguar-ThinkPad-X1-Carbon gpio_ctrl #
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_gpioctrl.dtb  /root/dtb_comp/dtss/gpio_ctrl/am335x-boneblack_gpioctrl.dts
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_gpioctrl1.dtb  /root/dtb_comp/dtss/gpio_ctrl1/am335x-boneblack_gpioctrl.dts
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_gpioctrl2.dtb  /root/dtb_comp/dtss/gpio_ctrl2/am335x-boneblack_gpioctrl.dts
+
+
+PATH=$PATH:/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/   M=`pwd` modules
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -C /root/beagleboneb_emb_linux_2015/emb_linux_kernel1/bb-kernel/KERNEL/   M=`pwd` modules
+
+
+
+cp gpio_ctrl1.ko  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom/gpio_ctrl.ko 
+t
+cp gpio_ctrl.ko  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/modlules/
+
+
+cp gpio_ctrl.ko  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/usr/
+
+
+jaguar-ThinkPad-X1-Carbon KERNEL # vi include/uapi/asm-generic/errno-base.h 
+jaguar-ThinkPad-X1-Carbon KERNEL # vi include/uapi/asm-generic/errno.h
+
+
+
+ping 192.168.1.10
+
+setenv ipaddr 192.168.1.20
+
+setenv serverip 192.168.1.10
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.1.20  nfsroot=192.168.1.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2'
+
+tftp 0x80007fc0  uImage
+
+tftp 0x80f80000 am335x-boneblack_gpioctrl.dtb
+
+bootm 0x80007fc0 - 0x80f80000
+
+
+
+
+
+
+
+
+
+/usr # insmod  gpio_ctrl.ko 
+[   33.233242] gpio_ctrl: version magic '3.8.13-bbb-labs+ SMP mod_unload ARMv7 p2v8 ' should be '3.8.13bbb-labs-bone72 SMP mod_unload ARMv7 thumb2 p2v8 '
+insmod: can't insert 'gpio_ctrl.ko': invalid module format
+/usr # 
+
+
+jaguar-ThinkPad-X1-Carbon custom_drvrs # modinfo gpio_ctrl.ko
+filename:       /root/beagleboneb_emb_linux_2015/custom_drvrs/gpio_ctrl.ko
+vermagic:       3.8.13-bbb-labs+ SMP mod_unload ARMv7 p2v8 
+depends:        
+srcversion:     9FC2CC56986490530364D85
+
+
+insmod -f gpio_ctrl.ko 
+
+
+
+
+
+
+
+
+$ git clone git://git.kernel.org/pub/scm/linux/kernel/
+                       git/torvalds/linux-2.6.git git-kernel
+
+and keep it up to date on a regular basis:
+
+$ git pull
+
+
+
+/usr # insmod gpio_ctrl.ko 
+[  310.213858] gpio_ctrl: version magic '3.8.13-bbb-labs+ SMP mod_unload ARMv7 p2v8 ' should be '3.8.13-bbb-labs+ SMP mod_unload ARMv7 thumb2 p2v8 '
+insmod: can't insert 'gpio_ctrl.ko': invalid module format
+/usr # 
+/usr # 
+/usr # zcat /proc/config.gz | grep -i thumb
+CONFIG_ARM_THUMB=y
+CONFIG_ARM_THUMBEE=y
+CONFIG_THUMB2_KERNEL=y
+CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11=y
+CONFIG_XZ_DEC_ARMTHUMB=y
+/usr # 
+
+
+
+
+
+
+jaguar-ThinkPad-X1-Carbon gpio_ctrl # make -C /lib/modules/3.13.0-37-generic/build/    M=`pwd` modules
+
+
+/lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom # insmod gpio_ctrl.ko 
+[   93.639173] In gpio_ctrl_probe: 
+[   93.642652] devname=gpio_ctrl_mod.9
+[   93.646310] devname=gpio_ctrl_mod.9
+[   93.650050] gpio_ctrl_custom gpio_ctrl_mod.9: could not find pctldev for node /ocp/gpio_ctrl_mod/pinmux_gpioctrl_pins, deferring probe
+[   93.662748] gpio_ctrl_custom gpio_ctrl_mod.9: pins are not configured from the driver
+[   93.670939] pinctrl=-517
+[   93.673617] child-count=2
+[   93.676402] gpios---2 -2 -2
+[   93.679344] ctrlmodule->cdev.name=pinmux_gpioctrl_pins
+[   93.684763] Gpio_ctrl:devm_gpio_request_one
+[   93.689164] Unable to handle kernel NULL pointer dereference at virtual address 0000002c
+[   93.697650] pgd = df4d4000
+[   93.700494] [0000002c] *pgd=9f06a831, *pte=00000000, *ppte=00000000
+[   93.707117] Internal error: Oops: 17 [#1] SMP THUMB2
+[   93.712313] Modules linked in: gpio_ctrl(O+)
+[   93.716794] CPU: 0    Tainted: G           O  (3.8.13-bbb+ #1)
+[   93.722917] PC is at __gpio_to_irq+0x12/0x24
+[   93.727394] LR is at gpio_ctrl_probe+0x32e/0x3d4 [gpio_ctrl]
+[   93.733318] pc : [<c0260362>]    lr : [<bf80034f>]    psr: a0000033
+[   93.733318] sp : df479d08  ip : c029d031  fp : df4e6fa4
+[   93.745337] r10: 00000001  r9 : 00000000  r8 : bf8007a0
+[   93.750805] r7 : c02bf1f9  r6 : df110844  r5 : df110810  r4 : c091ddec
+[   93.757638] r3 : ffffffe8  r2 : c0916a8c  r1 : fffffffe  r0 : 00000000
+[   93.764473] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
+[   93.772124] Control: 50c5387d  Table: 9f4d4019  DAC: 00000015
+[   93.778138] Process insmod (pid: 82, stack limit = 0xdf478240)
+[   93.784243] Stack: (0xdf479d08 to 0xdf47a000)
+[   93.788805] 9d00:                   df012544 00000000 00000000 df110800 c086db80 00000001
+[   93.797370] 9d20: df012540 c02496bf 00000000 df479d7c 00000007 df0187a8 00000000 00000002
+[   93.805935] 9d40: c0d322b0 00000002 c0d322b0 00000000 00000001 c0d322b0 00000001 c0d322b0
+[   93.814499] 9d60: 00000000 00000000 c0d322b0 00000000 c0d322b0 00000000 00000002 c0d321f0
+[   93.823064] 9d80: fffffdfb fffffdfb 00000000 df4e7988 df479db0 df111a88 00000001 fffffdfb
+[   93.831629] 9da0: fffffdfb bf8005e0 df110810 df110810 df110818 df110818 df110810 df110810
+[   93.840194] 9dc0: df46f014 df46f010 df112e00 ffffffea 00000002 fffffdfb c0d321f0 c0d322b0
+[   93.848758] 9de0: df110844 c02bf0a9 df110810 bf8007a0 df110844 c02bf1f9 bf8007a0 c02bf243
+[   93.857323] 9e00: df110810 00000000 00000001 c02bdf9d df042478 df10a500 bf8007a0 df4560c0
+[   93.865888] 9e20: c08821b8 00000000 bf802001 c02beac7 bf8006e8 bf8007a0 df478010 bf8007a0
+[   93.874453] 9e40: df478010 bf8007e0 df4e6f80 c02bf629 c08ae980 df478010 bf8007e0 df4e6f80
+[   93.883018] 9e60: bf802001 bf80200f df478000 c0008747 c08679c8 c004b96b 00000000 00000001
+[   93.891583] 9e80: 00000014 df2ad800 bf8007ec bf8007e0 df4e6f80 bf800828 00000001 00000001
+[   93.900147] 9ea0: df4e6fa4 c006fbed bf8007ec 00007fff c006d035 c0007828 e09d6000 00000000
+[   93.908712] 9ec0: df479f58 df478008 bf8007ec bf8007e0 bf800934 c0047cfd 000002d2 00013c93
+[   93.917277] 9ee0: df478000 00000000 00000002 e09c2000 df456110 00000000 00000000 00000000
+[   93.925841] 9f00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   93.934406] 9f20: 00000000 00000000 00000000 00000000 c000c8a4 00013c93 0017a6a8 00161896
+[   93.942970] 9f40: 00000080 c000c8a4 df478000 00000000 00000000 c00701b9 e09c2000 00013c93
+[   93.951535] 9f60: e09d0a94 e09d092c e09d59bc 00000948 00000b68 00000000 00000000 00000000
+[   93.960099] 9f80: 00000023 00000024 0000000f 00000000 0000000c 00000000 00000000 00000069
+[   93.968664] 9fa0: be94ce64 c000c701 00000000 00000069 0017a6a8 00013c93 00161896 7fffffff
+[   93.977228] 9fc0: 00000000 00000069 be94ce64 00000080 00000001 be94ce6c 00000000 00000000
+[   93.985793] 9fe0: 00000000 be94caf8 0003c42b 00013068 600f0030 0017a6a8 00000000 00000000
+[   93.994375] [<c0260362>] (__gpio_to_irq+0x12/0x24) from [<bf80034f>] (gpio_ctrl_probe+0x32e/0x3d4 [gpio_ctrl])
+[   94.004829] [<bf80034f>] (gpio_ctrl_probe+0x32e/0x3d4 [gpio_ctrl]) from [<c02bf0a9>] (driver_probe_device+0x55/0x180)
+[   94.015908] [<c02bf0a9>] (driver_probe_device+0x55/0x180) from [<c02bf243>] (__driver_attach+0x4b/0x4c)
+[   94.025719] [<c02bf243>] (__driver_attach+0x4b/0x4c) from [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c)
+[   94.035165] [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c) from [<c02beac7>] (bus_add_driver+0x77/0x184)
+[   94.044612] [<c02beac7>] (bus_add_driver+0x77/0x184) from [<c02bf629>] (driver_register+0x3d/0xc8)
+[   94.053971] [<c02bf629>] (driver_register+0x3d/0xc8) from [<bf80200f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl])
+[   94.064238] [<bf80200f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl]) from [<c0008747>] (do_one_initcall+0xcb/0x10c)
+[   94.074601] [<c0008747>] (do_one_initcall+0xcb/0x10c) from [<c006fbed>] (load_module+0x1149/0x16b8)
+[   94.084049] [<c006fbed>] (load_module+0x1149/0x16b8) from [<c00701b9>] (sys_init_module+0x5d/0x8c)
+[   94.093406] [<c00701b9>] (sys_init_module+0x5d/0x8c) from [<c000c701>] (ret_fast_syscall+0x1/0x44)
+[   94.102759] Code: eba3 0380 4601 58d0 (6ac3) b113 
+[   94.107829] ---[ end trace 4db570d86d428b4a ]---
+Segmentation fault
+/lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom # 
+
+
+
+/sys/class/gpio # cat gpio31/direction 
+in
+/sys/class/gpio # cat gpio20/value 
+0
+/sys/class/gpio # cat gpio31/value 
+0
+/sys/class/gpio # echo 1 > gpio20/value 
+/sys/class/gpio # 
+/sys/class/gpio # cat gpio20/value 
+1
+/sys/class/gpio # cat gpio31/value 
+0
+/sys/class/gpio # 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom # insmod gpio_ctrl.ko 
+[  111.299024] In gpio_ctrl_probe: 
+[  111.302503] devname=gpio_ctrl_mod.9
+[  111.306172] devname=gpio_ctrl_mod.9
+[  111.309928] pinctrl=-548673216
+[  111.313156] child-count=1
+[  111.315946] gpios--30 31 20
+[  111.318883] ctrlmodule->cdev.name=gpioctrl_on_switch
+[  111.324094] irq_no=159
+[  111.326600] Gpio_ctrl:gpio_request_one
+[  111.330534] irq_no=159
+[  111.333063] ------------[ cut here ]------------
+[  111.337922] WARNING: at fs/sysfs/dir.c:536 sysfs_add_one+0x77/0x84()
+[  111.344569] sysfs: cannot create duplicate filename '/devices/ocp.3/gpio_ctrl_mod.9/leds/gpioctrl_on_switch'
+[  111.354873] Modules linked in: gpio_ctrl(O+) [last unloaded: gpio_ctrl]
+[  111.361885] [<c0011531>] (unwind_backtrace+0x1/0x90) from [<c0030703>] (warn_slowpath_common+0x3f/0x4c)
+[  111.371713] [<c0030703>] (warn_slowpath_common+0x3f/0x4c) from [<c003072d>] (warn_slowpath_fmt+0x1d/0x28)
+[  111.381753] [<c003072d>] (warn_slowpath_fmt+0x1d/0x28) from [<c0107e6f>] (sysfs_add_one+0x77/0x84)
+[  111.391158] [<c0107e6f>] (sysfs_add_one+0x77/0x84) from [<c0107fbb>] (create_dir+0x4f/0x98)
+[  111.399925] [<c0107fbb>] (create_dir+0x4f/0x98) from [<c010821d>] (sysfs_create_dir+0x4d/0x7c)
+[  111.408970] [<c010821d>] (sysfs_create_dir+0x4d/0x7c) from [<c0249cf3>] (kobject_add_internal+0x5b/0x154)
+[  111.419012] [<c0249cf3>] (kobject_add_internal+0x5b/0x154) from [<c0249f6d>] (kobject_add+0x2d/0x68)
+[  111.428598] [<c0249f6d>] (kobject_add+0x2d/0x68) from [<c02bd6e5>] (device_add+0x95/0x418)
+[  111.437275] [<c02bd6e5>] (device_add+0x95/0x418) from [<c02bdb9b>] (device_create_vargs+0x83/0x90)
+[  111.446678] [<c02bdb9b>] (device_create_vargs+0x83/0x90) from [<c02bdbbd>] (device_create+0x15/0x18)
+[  111.456263] [<c02bdbbd>] (device_create+0x15/0x18) from [<c03b9333>] (led_classdev_register+0x2b/0xc4)
+[  111.466041] [<c03b9333>] (led_classdev_register+0x2b/0xc4) from [<bf804419>] (gpio_ctrl_probe+0x3d0/0x424 [gpio_ctrl])
+[  111.477272] [<bf804419>] (gpio_ctrl_probe+0x3d0/0x424 [gpio_ctrl]) from [<c02bf0a9>] (driver_probe_device+0x55/0x180)
+[  111.488405] [<c02bf0a9>] (driver_probe_device+0x55/0x180) from [<c02bf243>] (__driver_attach+0x4b/0x4c)
+[  111.498262] [<c02bf243>] (__driver_attach+0x4b/0x4c) from [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c)
+[  111.507756] [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c) from [<c02beac7>] (bus_add_driver+0x77/0x184)
+[  111.517249] [<c02beac7>] (bus_add_driver+0x77/0x184) from [<c02bf629>] (driver_register+0x3d/0xc8)
+[  111.526655] [<c02bf629>] (driver_register+0x3d/0xc8) from [<bf80600f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl])
+[  111.536972] [<bf80600f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl]) from [<c0008747>] (do_one_initcall+0xcb/0x10c)
+[  111.547385] [<c0008747>] (do_one_initcall+0xcb/0x10c) from [<c006fbed>] (load_module+0x1149/0x16b8)
+[  111.556881] [<c006fbed>] (load_module+0x1149/0x16b8) from [<c00701b9>] (sys_init_module+0x5d/0x8c)
+[  111.566288] [<c00701b9>] (sys_init_module+0x5d/0x8c) from [<c000c701>] (ret_fast_syscall+0x1/0x44)
+[  111.575655] ---[ end trace 36637c5bc2de0827 ]---
+[  111.580508] ------------[ cut here ]------------
+[  111.585361] WARNING: at lib/kobject.c:196 kobject_add_internal+0x149/0x154()
+[  111.592760] kobject_add_internal failed for gpioctrl_on_switch with -EEXIST, don't try to register things with the same name in the same directory.
+[  111.606611] Modules linked in: gpio_ctrl(O+) [last unloaded: gpio_ctrl]
+[  111.613599] [<c0011531>] (unwind_backtrace+0x1/0x90) from [<c0030703>] (warn_slowpath_common+0x3f/0x4c)
+[  111.623460] [<c0030703>] (warn_slowpath_common+0x3f/0x4c) from [<c003072d>] (warn_slowpath_fmt+0x1d/0x28)
+[  111.633500] [<c003072d>] (warn_slowpath_fmt+0x1d/0x28) from [<c0249de1>] (kobject_add_internal+0x149/0x154)
+[  111.643722] [<c0249de1>] (kobject_add_internal+0x149/0x154) from [<c0249f6d>] (kobject_add+0x2d/0x68)
+[  111.653397] [<c0249f6d>] (kobject_add+0x2d/0x68) from [<c02bd6e5>] (device_add+0x95/0x418)
+[  111.662070] [<c02bd6e5>] (device_add+0x95/0x418) from [<c02bdb9b>] (device_create_vargs+0x83/0x90)
+[  111.671471] [<c02bdb9b>] (device_create_vargs+0x83/0x90) from [<c02bdbbd>] (device_create+0x15/0x18)
+[  111.681054] [<c02bdbbd>] (device_create+0x15/0x18) from [<c03b9333>] (led_classdev_register+0x2b/0xc4)
+[  111.690822] [<c03b9333>] (led_classdev_register+0x2b/0xc4) from [<bf804419>] (gpio_ctrl_probe+0x3d0/0x424 [gpio_ctrl])
+[  111.702047] [<bf804419>] (gpio_ctrl_probe+0x3d0/0x424 [gpio_ctrl]) from [<c02bf0a9>] (driver_probe_device+0x55/0x180)
+[  111.713178] [<c02bf0a9>] (driver_probe_device+0x55/0x180) from [<c02bf243>] (__driver_attach+0x4b/0x4c)
+[  111.723038] [<c02bf243>] (__driver_attach+0x4b/0x4c) from [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c)
+[  111.732531] [<c02bdf9d>] (bus_for_each_dev+0x3d/0x5c) from [<c02beac7>] (bus_add_driver+0x77/0x184)
+[  111.742023] [<c02beac7>] (bus_add_driver+0x77/0x184) from [<c02bf629>] (driver_register+0x3d/0xc8)
+[  111.751428] [<c02bf629>] (driver_register+0x3d/0xc8) from [<bf80600f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl])
+[  111.761743] [<bf80600f>] (gpio_ctrl_init+0xe/0x1f [gpio_ctrl]) from [<c0008747>] (do_one_initcall+0xcb/0x10c)
+[  111.772146] [<c0008747>] (do_one_initcall+0xcb/0x10c) from [<c006fbed>] (load_module+0x1149/0x16b8)
+[  111.781638] [<c006fbed>] (load_module+0x1149/0x16b8) from [<c00701b9>] (sys_init_module+0x5d/0x8c)
+[  111.791040] [<c00701b9>] (sys_init_module+0x5d/0x8c) from [<c000c701>] (ret_fast_syscall+0x1/0x44)
+[  111.800436] ---[ end trace 36637c5bc2de0828 ]---
+[  111.805287] Gpio_ctrl:led_classdev_register
+[  111.809679] Gpio_ctrl:probe
+[  111.812770] Gpio_ctrl Drv Registered
+/lib/modules/3.8.13-bbb-labs+/kernel/drivers/custom # 
+
+
+
+--------------------------------------------------------------------
+
+
+
+jaguar-ThinkPad-X1-Carbon dtc_tools # git clone git://git.kernel.org/pub/scm/utils/dtc/dtc.git
+Cloning into 'dtc'...
+remote: Counting objects: 3100, done.
+remote: Compressing objects: 100% (352/352), done.
+remote: Total 3100 (delta 213), reused 0 (delta 0)
+Receiving objects: 100% (3100/3100), 766.50 KiB | 110.00 KiB/s, done.
+Resolving deltas: 100% (2243/2243), done.
+Checking connectivity... done.
+
+
+
+------------------------------
+
+
+
+dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
+
+
+echo BB-UART2 > /sys/devices/bone_capemgr.9/slots
+
+
+/root/dtb_comp/dtss
+
+jaguar-ThinkPad-X1-Carbon dtss # ls
+
+am335x-boneblack.dts  am335x-boneblack_gpioctrl.dts  BB-UART1-00A0.dts  BB-UART2-00A0.dts  BB-UART4-00A0.dts  BB-UART5-00A0.dts  gpio_ctrl  gpio_ctrl1  gpio_ctrl2
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART1-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART1-00A0.dts
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART2-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART2-00A0.dts
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART4-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART4-00A0.dts
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/dtbs/BB-UART5-00A0.dtbo  -b 0  /root/dtb_comp/dtss/BB-UART5-00A0.dts
+
+
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/bspm_P9_24_10-00A0.dtbo  -b 0  /root/dtb_comp/dtss/bspm_P9_24_10-00A0.dts
+cp /root/dtb_comp/bspm_P9_24_10-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+echo bspm_P9_24_10 > /sys/devices/bone_capemgr.9/slots
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc -@ -O dtb -o /root/dtb_comp/enable-uart5-00A0.dtbo  -b 0  /root/dtb_comp/dtss/enable-uart5-00A0.dts
+cp /root/dtb_comp/enable-uart5-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+echo enable-uart5 > /sys/devices/bone_capemgr.9/slots
+
+
+
+
+
+cp  /root/dtb_comp/dtbs/BB-UART1-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+cp  /root/dtb_comp/dtbs/BB-UART2-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+cp  /root/dtb_comp/dtbs/BB-UART4-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+cp  /root/dtb_comp/dtbs/BB-UART5-00A0.dtbo  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+
+
+
+/sys/devices/bone_capemgr.10 # echo BB-UART1 > /sys/devices/bone_capemgr.10/slot
+s 
+[ 1003.728879] bone-capemgr bone_capemgr.10: part_number 'BB-UART1', version 'N/A'
+[ 1003.736659] bone-capemgr bone_capemgr.10: slot #8: generic override
+[ 1003.743261] bone-capemgr bone_capemgr.10: bone: Using override eeprom data at slot 8
+[ 1003.751369] bone-capemgr bone_capemgr.10: slot #8: 'Override Board Name,00A0,Override Manuf,BB-UART1'
+[ 1003.761140] bone-capemgr bone_capemgr.10: slot #8: Requesting part number/version based 'BB-UART1-00A0.dtbo
+[ 1003.771341] bone-capemgr bone_capemgr.10: slot #8: Requesting firmware 'BB-UART1-00A0.dtbo' for board-name 'Override Board Name', version '00A0'
+[ 1003.784903] bone-capemgr bone_capemgr.10: slot #8: dtbo 'BB-UART1-00A0.dtbo' loaded; converting to live tree
+[ 1003.795328] bone-capemgr bone_capemgr.10: slot #8: Failed to resolve tree
+sh: write error: Invalid argument
+
+
+
+echo BB-UART2 > /sys/devices/bone_capemgr*/slots
+
+echo BB-UART4> /sys/devices/bone_capemgr*/slot
+
+echo BB-UART5 > /sys/devices/bone_capemgr*/slot
+
+
+
+
+A17 B17 ---I2C2-SDA  I2C2-SCL
+
+E16 E15  --SCL SDA
+
+D18 D17   - SDA SCL
+
+
+
+
+
+Dear sir,
+
+
+
+
+In processor Datasheet and beaglebone schematic.
+I2C-SCL  I2C-SDA
+ A16       B16  -----used as I2C1_SCL and SDA
+ E17       E18  ----- some otherFn.
+ D15       D16  ---- used as UART1-TXD & RXD
+ J15       H17  ---- as mii-interface
+
+here why they have given same functionality in several pins?
+so that all can be used as i2c, if required??
+
+In the scematic --
+ It is shown that(E17,E18) and (J15,H17) are used for some other purpose.
+ but (D15,D16) and (A16,B16)  are left as pinouts from board.
+
+SRM- mentions
+ A16       B16  -- as I2C1_SCL and I2C1_SDA
+ D15       D16  ---- as UART1_TXD & UART1_RXD
+
+Both sets are given as pinouts from P9 Expansion Header.
+
+As P9.pinouts are they meant to be configured only as per pin names given.
+or can we configure D15,D16 as i2c1-pins as well??
+
+I have selected A16,B16 -- as they are named as I2C1_SCL and I2C1_SDA in schematic
+
+
+
+
+
+
+
+am33xx.dtsi:
+
+                uart2: serial@48022000 {
+                        compatible = "ti,omap3-uart";
+                        ti,hwmods = "uart2";
+                        clock-frequency = <48000000>;
+                        reg = <0x48022000 0x2000>;
+                        interrupts = <73>;
+                        status = "disabled";
+                };
+
+
+
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_en_uarts.dtb  /root/dtb_comp/dtss/uart_enable/am335x-boneblack_en_uarts.dts
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_en_uarts1.dtb  /root/dtb_comp/dtss/uart_enable1/am335x-boneblack_en_uarts.dts
+
+
+/ # 
+/ # dmesg | grep tty
+[    0.000000] Kernel command line: console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.3.20  nfsroot=192.168.3.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/
+[    0.319512] 44e09000.serial: ttyO0 at MMIO 0x44e09000 (irq = 72) is a OMAP UART0
+[    1.081684] console [ttyO0] enabled
+/ # 
+
+/sys/devices/ocp.3/44e09000.serial/tty # ls -l
+total 0
+drwxr-xr-x    3 0        0                0 Jan  1 00:34 ttcyO0
+/sys/devices/ocp.3/44e09000.serial/tty # 
+
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # ls -l
+total 0
+-r--r-----    1 0        0             4096 Jan  1 00:35 close_delay
+-r--r-----    1 0        0             4096 Jan  1 00:35 closing_wait
+-r--r-----    1 0        0             4096 Jan  1 00:35 custom_divisor
+-r--r--r--    1 0        0             4096 Jan  1 00:35 dev
+lrwxrwxrwx    1 0        0                0 Jan  1 00:35 device -> ../../../44e09000.serial
+-r--r-----    1 0        0             4096 Jan  1 00:35 flags
+-r--r-----    1 0        0             4096 Jan  1 00:35 io_type
+-r--r-----    1 0        0             4096 Jan  1 00:35 iomem_base
+-r--r-----    1 0        0             4096 Jan  1 00:35 iomem_reg_shift
+-r--r-----    1 0        0             4096 Jan  1 00:35 irq
+-r--r-----    1 0        0             4096 Jan  1 00:35 line
+-r--r-----    1 0        0             4096 Jan  1 00:35 port
+drwxr-xr-x    2 0        0                0 Jan  1 00:35 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:35 subsystem -> ../../../../../class/tty
+-r--r-----    1 0        0             4096 Jan  1 00:35 type
+-r--r-----    1 0        0             4096 Jan  1 00:35 uartclk
+-rw-r--r--    1 0        0             4096 Jan  1 00:35 uevent
+-r--r-----    1 0        0             4096 Jan  1 00:35 xmit_fifo_size
+
+
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat uartclk 
+48000000
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat irq
+72
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat iomem_base
+0x44E09000
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat dev
+247:0
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat uevent
+MAJOR=247
+MINOR=0
+DEVNAME=ttyO0
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # cat xmit_fifo_size
+64
+/sys/devices/ocp.3/44e09000.serial/tty/ttyO0 # 
+
+
+
+You need to mount the debug file system:     mount -t debugfs none /sys/kernel/debug
+Better still, do it in /etc/fstab by adding:      debugfs /sys/kernel/debug debugfs 0 0
+
+
+he BeagleBone Black uses a new kernel - 3.8. The /sys/kernel/debug/omap_mux is gone and device trees are used to describe hardware. The 3.8 kernel uses Device Tree Overlays (DTO) for pin muxing.
+
+Here are some useful links to help you understand DTOs:
+
+https://github.com/jadonk/validation-scripts/tree/master/test-capemgr
+http://devicetree.org/Device_Tree_Usage
+http://hipstercircuits.com/adding-beaglebone-cape-support-to-a-kernel-with-device-tree-in-ubuntu/
+http://hipstercircuits.com/enable-pwm-on-beaglebone-with-device-tree-overlays/
+http://hipstercircuits.com/enable-spi-1-0-and-1-1-with-device-tre-overlays-on-beaglebone/
+
+
+
+
+
+picocom -b 115200 -p n -d 8 /dev/ttyUSB0
+
+ping 192.168.3.10
+
+setenv ipaddr 192.168.3.20
+setenv serverip 192.168.3.10
+
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.3.20  nfsroot=192.168.3.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/'
+
+tftp 0x80007fc0  uImage4
+tftp 0x80007fc0 uImage_3.8.13
+
+tftp 0x80f80000 am335x-boneblack_gpioctrl1.dtb
+
+tftp 0x80f80000 am335x-boneblack_en_uarts.dtb
+
+tftp 0x80f80000 am335x-boneblack_i2c_en.dtb
+
+
+bootm 0x80007fc0 - 0x80f80000
+
+
+ls /sys/devices/ocp.3/
+
+/ # ls /sys/devices/ocp.3/*.serial
+/sys/devices/ocp.3/44e09000.serial:
+driver     modalias   power      subsystem  tty        uevent
+
+/sys/devices/ocp.3/48022000.serial:
+driver     modalias   power      subsystem  tty        uevent
+
+/sys/devices/ocp.3/481a6000.serial:
+driver     modalias   power      subsystem  tty        uevent
+/ # 
+/ # 
+/ # ls /dev/ttyO*
+/dev/ttyO0  /dev/ttyO1  /dev/ttyO3
+/ # 
+
+
+
+stty -F /dev/ttyO3 9600 raw
+cat /dev/ttyO3 &
+echo "test uart1 to uart3" > /dev/ttyO1
+
+stty -F /dev/ttyO3 115200 raw
+cat /dev/ttyO3 &
+echo "test uart1 to uart3" > /dev/ttyO1
+
+
+
+
+/home/uart_apps # ./uart_ttyO2
+/bin/sh: ./uart_ttyO2: not found
+/home/uart_apps # ./a.out 
+/bin/sh: ./a.out: not found
+
+
+
+jaguar-ThinkPad-X1-Carbon uart_apps # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf  -a a.out  | less
+jaguar-ThinkPad-X1-Carbon uart_apps # 
+jaguar-ThinkPad-X1-Carbon uart_apps # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf  -a a.out  | grep lib
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+00020854  00000616 R_ARM_JUMP_SLOT   00000000   __libc_start_main
+     6: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.4 (2)
+    84: 000106b1     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini
+    98: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+   104: 00010671    64 FUNC    GLOBAL DEFAULT   13 __libc_csu_init
+  000000: Version: 1  File: libc.so.6  Cnt: 1
+
+
+jaguar-ThinkPad-X1-Carbon uart_apps # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf  -a  uart_ttyO2 | grep lib
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+00020854  00000616 R_ARM_JUMP_SLOT   00000000   __libc_start_main
+     6: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.4 (2)
+    84: 000106b1     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini
+    98: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+   104: 00010671    64 FUNC    GLOBAL DEFAULT   13 __libc_csu_init
+  000000: Version: 1  File: libc.so.6  Cnt: 1
+
+
+
+jaguar-ThinkPad-X1-Carbon uart_apps # ls -l  /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6
+lrwxrwxrwx 1 1001 1001 20 Sep 11  2014 /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6 -> libc-2.19-2014.08.so
+jaguar-ThinkPad-X1-Car
+
+
+
+
+jaguar-ThinkPad-X1-Carbon sample # cp     -a    /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6   /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/
+jaguar-ThinkPad-X1-Carbon sample # 
+
+PATH=$PATH:/lib/
+
+
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-ldd  --root /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/home/sample  ./a.out 
+        libc.so.6 not found
+jaguar-ThinkPad-X1-Carbon sample # 
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+/home/sample # ls -la
+total 20
+drwxr-xr-x    2 0        0             4096 Sep 28  2015 .
+drwxr-xr-x    4 0        0             4096 Sep 28  2015 ..
+-rwxrwxrwx    1 0        0             6095 Sep 28  2015 a.out
+-rw-r--r--    1 0        0               62 Sep 28  2015 prgm.c
+/home/sample #
+
+
+/home/sample # cat prgm.c
+#include<stdio.h>
+int main()
+{
+printf("Hello\n");
+return 0;
+}
+
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf  -a  a.out | grep lib
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+00020550  00000216 R_ARM_JUMP_SLOT   00000000   __libc_start_main
+     2: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.4 (2)
+    84: 00010429     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini
+    94: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+    98: 000103e9    64 FUNC    GLOBAL DEFAULT   13 __libc_csu_init
+  000000: Version: 1  File: libc.so.6  Cnt: 1
+jaguar-ThinkPad-X1-Carbon sample #
+jaguar-ThinkPad-X1-Carbon sample #
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-ldd  --root /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/home/sample  ./a.out
+        libc.so.6 not found
+jaguar-ThinkPad-X1-Carbon sample #
+jaguar-ThinkPad-X1-Carbon sample #
+jaguar-ThinkPad-X1-Carbon sample # cp     -a    /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6   /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/
+jaguar-ThinkPad-X1-Carbon sample #
+
+
+
+/home/sample # echo $PATH
+/sbin:/usr/sbin:/bin:/usr/bin:/lib/
+/home/sample #
+/home/sample # cd /lib/f
+/lib # ls -l
+total 8
+drwxr-xr-x    9 0        0             4096 Sep 22  2015 firmware
+lrwxrwxrwx    1 1001     1001            20 Sep 11  2014 libc.so.6 -> libc-2.19-2014.08.so
+drwxr-xr-x    4 0        0             4096 Sep 12  2015 modules
+
+
+/home/sample # ./a.out
+/bin/sh: ./a.out: not found
+
+
+
+
+
+jaguar-ThinkPad-X1-Carbon use_static # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-g
+arm-linux-gnueabihf-g++         arm-linux-gnueabihf-gcc-4.9.2   arm-linux-gnueabihf-gcc-nm      arm-linux-gnueabihf-gcov        arm-linux-gnueabihf-gfortran    
+arm-linux-gnueabihf-gcc         arm-linux-gnueabihf-gcc-ar      arm-linux-gnueabihf-gcc-ranlib  arm-linux-gnueabihf-gdb         arm-linux-gnueabihf-gprof       
+jaguar-ThinkPad-X1-Carbon use_static # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-gcc  
+lib_mylib.c  lib_mylib.h  prgm.c       
+jaguar-ThinkPad-X1-Carbon use_static # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-gcc  lib_mylib.c -o lib_mylib.o
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/../arm-linux-gnueabihf/libc/usr/lib/arm-linux-gnueabihf/crt1.o: In function `_start':
+:(.text+0x28): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+jaguar-ThinkPad-X1-Carbon use_static # 
+jaguar-ThinkPad-X1-Carbon use_static # cat lib_mylib.c
+#include <stdio.h>
+void fun(void)
+
+
+
+
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-gcc  -static prgm.c -o static_prgm
+jaguar-ThinkPad-X1-Carbon sample # ls
+a.out  prgm.c  static_prgm  use_static
+
+/home/sample # ./static_prgm 
+Hello
+
+problem:
+/home/sample # ./a.out 
+/bin/sh: ./a.out: not found
+/home/sample # 
+
+solution----
+
+
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf  -a /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/bin/busybox | grep lib
+
+
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-readelf -a a.out | grep lib
+      [Requesting program interpreter: /lib/ld-linux-armhf.so.3]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+00020550  00000216 R_ARM_JUMP_SLOT   00000000   __libc_start_main
+     2: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.4 (2)
+    84: 00010429     2 FUNC    GLOBAL DEFAULT   13 __libc_csu_fini
+    94: 00000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+    98: 000103e9    64 FUNC    GLOBAL DEFAULT   13 __libc_csu_init
+  000000: Version: 1  File: libc.so.6  Cnt: 1
+
+
+jaguar-ThinkPad-X1-Carbon sample # /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-ldd  --root /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/home/sample  a.out 
+        libc.so.6 not found
+
+
+cp  -a  /root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf/libc.so.6   /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/
+
+
+export LD_LIBRARY_PATH=/lib:$LD_LIBRARY_PATH
+
+
+
+
+
+/bin/sh: ./a.out: not found
+/home/sample # echo $PATH
+/sbin:/usr/sbin:/bin:/usr/bin
+/home/sample # 
+/home/sample # export PATH=/lib:$PATH
+/home/sample # echo $PATH
+/lib:/sbin:/usr/sbin:/bin:/usr/bin
+/home/sample # 
+/home/sample # ./a.out 
+/bin/sh: ./a.out: not found
+/home/sample # 
+
+
+
+
+jaguar-ThinkPad-X1-Carbon bin # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin
+jaguar-ThinkPad-X1-Carbon bin # cd ../arm-linux-gnueabihf/libc/
+jaguar-ThinkPad-X1-Carbon libc # 
+jaguar-ThinkPad-X1-Carbon libc # ls
+etc  lib  sbin  usr  var
+
+
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf
+
+
+aguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # 
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # ls
+ld-2.19-2014.08.so               libcrypt.so.1          libnsl-2.19-2014.08.so         libnss_dns.so.2                 libnss_nisplus.so.2         librt-2.19-2014.08.so
+libanl-2.19-2014.08.so           libc.so.6              libnsl.so.1                    libnss_files-2.19-2014.08.so    libnss_nis.so.2             librt.so.1
+libanl.so.1                      libdl-2.19-2014.08.so  libnss_compat-2.19-2014.08.so  libnss_files.so.2               libpcprofile.so             libSegFault.so
+libBrokenLocale-2.19-2014.08.so  libdl.so.2             libnss_compat.so.2             libnss_hesiod-2.19-2014.08.so   libpthread-2.19-2014.08.so  libthread_db-1.0.so
+libBrokenLocale.so.1             libm-2.19-2014.08.so   libnss_db-2.19-2014.08.so      libnss_hesiod.so.2              libpthread.so.0             libthread_db.so.1
+libc-2.19-2014.08.so             libmemusage.so         libnss_db.so.2                 libnss_nis-2.19-2014.08.so      libresolv-2.19-2014.08.so   libutil-2.19-2014.08.so
+libcrypt-2.19-2014.08.so         libm.so.6              libnss_dns-2.19-2014.08.so     libnss_nisplus-2.19-2014.08.so  libresolv.so.2              libutil.so.1
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # 
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # 
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # cp -a * /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # 
+
+/home/sample # ./a.out 
+/bin/sh: ./a.out: not found
+/home/sample # 
+/home/sample # 
+	
+
+
+
+
+
+
+aguar-ThinkPad-X1-Carbon bin # ./arm-linux-gnueabihf-gcc -print-sysroot
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/../arm-linux-gnueabihf/libc
+jaguar-ThinkPad-X1-Carbon bin # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin
+jaguar-ThinkPad-X1-Carbon bin # cd ../arm-linux-gnueabihf/libc/	
+jaguar-ThinkPad-X1-Carbon libc # ls
+etc  lib  sbin  usr  var
+
+jaguar-ThinkPad-X1-Carbon lib # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/lib
+jaguar-ThinkPad-X1-Carbon lib # ls
+arm-linux-gnueabihf  ld-linux-armhf.so.3
+
+
+jaguar-ThinkPad-X1-Carbon lib # cd arm-linux-gnueabihf/
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # ls
+ld-2.19-2014.08.so               libcrypt.so.1          libnsl-2.19-2014.08.so         libnss_dns.so.2                 libnss_nisplus.so.2         librt-2.19-2014.08.so
+libanl-2.19-2014.08.so           libc.so.6              libnsl.so.1                    libnss_files-2.19-2014.08.so    libnss_nis.so.2             librt.so.1
+libanl.so.1                      libdl-2.19-2014.08.so  libnss_compat-2.19-2014.08.so  libnss_files.so.2               libpcprofile.so             libSegFault.so
+libBrokenLocale-2.19-2014.08.so  libdl.so.2             libnss_compat.so.2             libnss_hesiod-2.19-2014.08.so   libpthread-2.19-2014.08.so  libthread_db-1.0.so
+libBrokenLocale.so.1             libm-2.19-2014.08.so   libnss_db-2.19-2014.08.so      libnss_hesiod.so.2              libpthread.so.0             libthread_db.so.1
+libc-2.19-2014.08.so             libmemusage.so         libnss_db.so.2                 libnss_nis-2.19-2014.08.so      libresolv-2.19-2014.08.so   libutil-2.19-2014.08.so
+libcrypt-2.19-2014.08.so         libm.so.6              libnss_dns-2.19-2014.08.so     libnss_nisplus-2.19-2014.08.so  libresolv.so.2              libutil.so.1
+jaguar-ThinkPad-X1-Carbon arm-linux-gnueabihf # 
+
+
+
+
+
+jaguar-ThinkPad-X1-Carbon libc # pwd
+/root/beagleboneb_emb_linux_2015/toolchain/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc
+jaguar-ThinkPad-X1-Carbon libc # 
+jaguar-ThinkPad-X1-Carbon libc # cp -aR  ./lib/*  /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/
+
+-----copy lib dir as it is ..containing both arm-linux-gnueabihf  ld-linux-armhf.so.3
+
+
+
+
+
+
+
+
+
+/sys/bus/platform/drivers/omap_uart # dmesg | grep tty
+[    0.000000] Kernel command line: console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.3.20  nfsroot=192.168.3.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/
+[    0.320900] 44e09000.serial: ttyO0 at MMIO 0x44e09000 (irq = 72) is a OMAP UART0
+[    1.094883] console [ttyO0] enabled
+[    1.134914] 48022000.serial: ttyO1 at MMIO 0x48022000 (irq = 73) is a OMAP UART1
+[    1.143201] 481a6000.serial: ttyO3 at MMIO 0x481a6000 (irq = 44) is a OMAP UART3
+/sys/bus/platform/drivers/omap_uart # 
+/sys/bus/platform/drivers/omap_uart # 
+/sys/bus/platform/drivers/omap_uart # 
+/sys/bus/platform/drivers/omap_uart # dmesg | grep error
+[    0.176387] arm-pmu: probe of arm-pmu failed with error -28
+[    0.318788] tps65217-bl: probe of tps65217-bl failed with error -22
+[    0.320623] omap_uart 44e09000.serial: did not get pins for uart0 error: -19
+[    1.127348] omap_uart 48022000.serial: did not get pins for uart1 error: -22
+/sys/bus/platform/drivers/omap_uart # 
+/sys/bus/platform/drivers/omap_uart # dmesg | grep uart
+[    0.320623] omap_uart 44e09000.serial: did not get pins for uart0 error: -19
+[    1.127348] omap_uart 48022000.serial: did not get pins for uart1 error: -22
+/sys/bus/platform/drivers/omap_uart # 
+/home/uart_apps # dmesg | grep serial
+[    0.320623] omap_uart 44e09000.serial: did not get pins for uart0 error: -19
+[    0.320900] 44e09000.serial: ttyO0 at MMIO 0x44e09000 (irq = 72) is a OMAP UART0
+[    1.098967] pinctrl-single 44e10800.pinmux: pin 44e10950 already requested by 4802a000.i2c; cannot claim for 48022000.serial
+[    1.110717] pinctrl-single 44e10800.pinmux: pin-84 (48022000.serial) status -22
+[    1.127348] omap_uart 48022000.serial: did not get pins for uart1 error: -22
+[    1.134914] 48022000.serial: ttyO1 at MMIO 0x48022000 (irq = 73) is a OMAP UART1
+[    1.143201] 481a6000.serial: ttyO3 at MMIO 0x481a6000 (irq = 44) is a OMAP UART3
+/home/uart_apps # 
+
+
+NOTE:
+
+[    0.320623] omap_uart 44e09000.serial: did not get pins for uart0 error: -19
+[    1.127348] omap_uart 48022000.serial: did not get pins for uart1 error: -22
+pinctrl-single 44e10800.pinmux: pin 44e10950 already requested by 4802a000.i2c; cannot claim for 48022000.serial
+
+
+define ENODEV          19      /* No such device */
+#define ENOTDIR         20      /* Not a directory */
+#define EISDIR          21      /* Is a directory */
+#define EINVAL          22      /* Invalid argument */
+
+
+pinctrl-single 44e10800.pinmux: pin 44e10950 already requested by 4802a000.i2c; cannot claim for 48022000.serial
+:
+comment below
+
+                i2c1_pins: pinmux_i2c1_pins {
+                        pinctrl-single,pins = <
+                                0x150 0x72      /* spi0_sclk/i2c2_sclk SLEWCTRL_SLOW | INPUT_PULLUP | MODE2 /
+                                0x15C 0x72      /* spi0_cs0 /i2c2_sda, SLEWCTRL_SLOW | INPUT_PULLUP | MODE2 /
+                        >;
+                };
+
+
+cat /proc/tty/driver/omap_serial
+
+/proc/tty/drivers
+
+root@beaglebone:/proc/tty# cat /proc/tty/drivers 
+/dev/tty             /dev/tty        5       0 system:/dev/tty
+/dev/console         /dev/console    5       1 system:console
+/dev/ptmx            /dev/ptmx       5       2 system
+/dev/vc/0            /dev/vc/0       4       0 system:vtmaster
+g_serial             /dev/ttyGS    242       0 serial
+sdio_uart            /dev/ttySDIO  245 0-7 serial
+acm                  /dev/ttyACM   166 0-31 serial
+OMAP-SERIAL          /dev/ttyO     248 0-5 serial
+serial               /dev/ttyS       4 64-95 serial
+pty_slave            /dev/pts      136 0-1048575 pty:slave
+pty_master           /dev/ptm      128 0-1048575 pty:master
+unknown              /dev/tty        4 1-63 console
+
+
+root@beaglebone:/proc/tty# cat /proc/tty/driver/OMAP-SERIAL 
+serinfo:1.0 driver revision:
+0: uart:OMAP UART0 mmio:0x44E09000 irq:72 tx:7661 rx:412 RTS|CTS|DTR|DSR
+root@beaglebone:/proc/tty# 
+root@beaglebone:/proc/tty# 
+
+
+
+If you open arch/arm/boot/dts/am33xx.dtsi file you will see that all uarts are configured,
+you just need to enable the UART you need to use.
+
+Enabling is done either in am335x-bone-common.dtsi:
+
+    ocp {
+        uart0: serial@44e09000 {
+            pinctrl-names = "default";
+            pinctrl-0 = <&uart0_pins>;
+
+            status = "okay";
+        };
+
+        musb: usb@47400000 {
+            status = "okay";
+
+            control@44e10000 {
+                status = "okay";
+            };
+           .....................
+  Or you can do it in your specific dts file,
+ i.e. in am335x-boneblack.dts, add:
+    &uart1 {
+            pinctrl-names = "default";
+            pinctrl-0 = <&uart1_pins>;
+
+            status = "okay";
+     }
+And the omap serial driver should register your uart port in /dev/
+Pin muxing is done in the am33xx.dtsi file.
+
+
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pins | grep 874
+pin 29 (44e10874) 00000006 pinctrl-single 
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pins | grep 870
+pin 28 (44e10870) 00000026 pinctrl-single 
+/sys/kernel/debug/pinctrl/44e10800.pinmux # 
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pins | grep 954
+pin 85 (44e10954) 00000001 pinctrl-single 
+/sys/kernel/debug/pinctrl/44e10800.pinmux # 
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pins | grep 950
+pin 84 (44e10950) 00000021 pinctrl-single 
+
+
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pinmux-pins | grep 854
+pin 21 (44e10854): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pinmux-pins | grep 874
+pin 29 (44e10874): 481a6000.serial (GPIO UNCLAIMED) function pinmux_bb_uart4_pins group pinmux_bb_uart4_pins
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pinmux-pins | grep 870
+pin 28 (44e10870): 481a6000.serial (GPIO UNCLAIMED) function pinmux_bb_uart4_pins group pinmux_bb_uart4_pins
+
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pinmux-pins | grep 954
+pin 85 (44e10954): 48022000.serial (GPIO UNCLAIMED) function pinmux_bb_uart2_pins group pinmux_bb_uart2_pins
+/sys/kernel/debug/pinctrl/44e10800.pinmux # cat pinmux-pins | grep 950
+pin 84 (44e10950): 48022000.serial (GPIO UNCLAIMED) function pinmux_bb_uart2_pins group pinmux_bb_uart2_pins
+/sys/kernel/debug/pinctrl/44e10800.pinmux # 
+
+
+/ # ls -l  /sys/bus/platform/drivers/omap_uart/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:16 44e09000.serial -> ../../../../devices/ocp.3/44e09000.serial
+lrwxrwxrwx    1 0        0                0 Jan  1 00:20 48022000.serial -> ../../../../devices/ocp.3/48022000.serial
+lrwxrwxrwx    1 0        0                0 Jan  1 00:16 481a6000.serial -> ../../../../devices/ocp.3/481a6000.serial
+--w-------    1 0        0             4096 Jan  1 00:18 bind
+--w-------    1 0        0             4096 Jan  1 00:16 uevent
+--w-------    1 0        0             4096 Jan  1 00:18 unbind
+
+/ # echo -n 48022000.serial  > /sys/bus/platform/drivers/omap_uart/unbind 
+/ # 
+/ # echo -n 48022000.serial  > /sys/bus/platform/drivers/omap_uart/bind 
+[ 1089.537348] 48022000.serial: ttyO1 at MMIO 0x48022000 (irq = 73) is a OMAP UART1
+/ # 
+
+
+ls -l /dev/ttyO*
+
+dmesg | grep tty
+dmesg | grep  error
+dmesg | grep uart
+dmesg | grep serial
+mount -t debugfs none /sys/kernel/debug
+cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pins | grep 
+
+cat  /sys/kernel/debug/pinctrl/44e10800.pinmux/pinmux-pins
+
+
+
+
+
+
+
+
+
+I2C turns out to be fairly easy and straightforward on the BBB.
+
+There are three I2C busses (I2C0, I2C1, I2C2), of which I2C2 is easily usable (Expansion port P9, see table 11 in the SRM).
+
+ 
+
+I2C0: used for some on-board components (HDMI, EEPROM, power mgmt). Not brought out to any connector/header
+
+I2C1: entirely free to use, but doesn't seem to be enabled
+
+I2C2: entirely free to use, and works
+
+
+
+confusingly, under linux, the buses are named in the order they are enumerated which may have nothing to do with the physical names.
+
+So, it’s best to check the memory addresses:
+
+    i2c0: 0x44E0_B000
+    i2c1: 0x4802_A000
+    i2c2: 0x4819_C000
+
+
+/ # ls  -l  /sys/bus/i2c/devices/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 0-0024 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0/0-0024
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 0-0050 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0/0-0050
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 1-0054 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1/1-0054
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 1-0055 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1/1-0055
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 1-0056 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1/1-0056
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 1-0057 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1/1-0057
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 i2c-0 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 i2c-1 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1
+
+
+/ # ls  -l  /sys/bus/i2c/devices/i2c-0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 /sys/bus/i2c/devices/i2c-0 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0
+/ # 
+/ # ls  -l  /sys/bus/i2c/devices/i2c-1
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 /sys/bus/i2c/devices/i2c-1 -> ../../../devices/ocp.3/4819c000.i2c/i2c-1
+/ # 
+
+
+
+
+picocom -b 115200 -p n -d 8 /dev/ttyUSB0
+ping 192.168.3.10
+setenv ipaddr 192.168.3.20
+setenv serverip 192.168.3.10
+setenv bootargs 'console=ttyO0,115200n8 root=/dev/nfs rw ip=192.168.3.20  nfsroot=192.168.3.10:/root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/'
+tftp 0x80007fc0  uImage4
+tftp 0x80f80000 am335x-boneblack_i2c_en.dtb
+bootm 0x80007fc0 - 0x80f80000
+
+
+dtc -@ -O dtb -o bar.dtbo -b 0 bar.dts
+
+cp /home/jaguar/Documents/embedded_linux_july_august_2015/class_delivery_day3/samples/BB-I2C1-00A0.dts  /root/dtb_comp/overlaysDir/
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -@ -O dtb -o BB-I2C1-00A0.dtbo -b 0 BB-I2C1-00A0.dts
+cp BB-I2C1-00A0.dtbo /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -@ -O dtb -o /root/dtb_comp/dtbs/BB-I2C1-00A0.dtbo -b 0 BB-I2C1-00A0.dts
+cp  /root/dtb_comp/dtbs/BB-I2C1-00A0.dtbo /root/beagleboneb_emb_linux_2015/busybox-1.23.2/staging_area/rfs_bb_static_latest/rfs_bb_static_1.23.2/lib/firmware
+
+echo BB-I2C1 > /sys/devices/bone_capemgr.9/slots
+
+/lib/firmware # echo BB-I2C1 > /sys/devices/bone_capemgr.10/slots 
+[ 1505.103150] bone-capemgr bone_capemgr.10: part_number 'BB-I2C1', version 'N/A'
+[ 1505.111022] bone-capemgr bone_capemgr.10: slot #7: generic override
+[ 1505.117616] bone-capemgr bone_capemgr.10: bone: Using override eeprom data at slot 7
+[ 1505.125750] bone-capemgr bone_capemgr.10: slot #7: 'Override Board Name,00A0,Override Manuf,BB-I2C1'
+[ 1505.135402] bone-capemgr bone_capemgr.10: slot #7: Requesting part number/version based 'BB-I2C1-00A0.dtbo
+[ 1505.145544] bone-capemgr bone_capemgr.10: slot #7: Requesting firmware 'BB-I2C1-00A0.dtbo' for board-name 'Override Board Name', version '00A0'
+[ 1505.159057] bone-capemgr bone_capemgr.10: slot #7: dtbo 'BB-I2C1-00A0.dtbo' loaded; converting to live tree
+[ 1505.169276] of_resolve 236
+[ 1505.172213] of_resolve 278
+[ 1505.175061] bone-capemgr bone_capemgr.10: slot #7: Failed to resolve tree
+sh: write error: Invalid argument
+/lib/firmware # 
+
+jaguar-ThinkPad-X1-Carbon i2c_enable # pwd
+/root/dtb_comp/dtss/i2c_enable
+
+jaguar-ThinkPad-X1-Carbon i2c_enable # ls
+am335x-boneblack_i2c_en.dts  am335x-bone-common.dtsi  am33xx.dtsi  skeleton.dtsi  tps65217.dtsi
+
+
+/root/beagleboneb_emb_linux_2015/emb_linux_kernel/bb-kernel/KERNEL/scripts/dtc/dtc  -I dts  -O dtb  -o /tftpboot/am335x-boneblack_i2c_en.dtb  /root/dtb_comp/dtss/i2c_enable/am335x-boneblack_i2c_en.dts
+
+/sys/bus/i2c/devices # ls -l
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 0-0024 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0/0-0024
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 0-0050 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0/0-0050
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 1-0050 -> ../../../devices/ocp.3/4802a000.i2c/i2c-1/1-0050
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 2-0054 -> ../../../devices/ocp.3/4819c000.i2c/i2c-2/2-0054
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 2-0055 -> ../../../devices/ocp.3/4819c000.i2c/i2c-2/2-0055
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 2-0056 -> ../../../devices/ocp.3/4819c000.i2c/i2c-2/2-0056
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 i2c-0 -> ../../../devices/ocp.3/44e0b000.i2c/i2c-0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 i2c-1 -> ../../../devices/ocp.3/4802a000.i2c/i2c-1
+lrwxrwxrwx    1 0        0                0 Jan  1 00:01 i2c-2 -> ../../../devices/ocp.3/4819c000.i2c/i2c-2
+
+sys/bus/i2c/devices # ls -l  /sys/class/i2c-adapter
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:12 i2c-0 -> ../../devices/ocp.3/44e0b000.i2c/i2c-0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:12 i2c-1 -> ../../devices/ocp.3/4802a000.i2c/i2c-1
+lrwxrwxrwx    1 0        0                0 Jan  1 00:12 i2c-2 -> ../../devices/ocp.3/4819c000.i2c/i2c-2
+/sys/bus/i2c/devices # 
+
+/sys/bus/i2c/devices # cd /sys/bus/i2c/devices/0-0024/
+/sys/devices/ocp.3/44e0b000.i2c/i2c-0/0-0024 # ls -l
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 driver -> ../../../../../bus/i2c/drivers/tps65217
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 input
+-r--r--r--    1 0        0             4096 Jan  1 00:13 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:13 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:13 power
+drwxr-xr-x    9 0        0                0 Jan  1 00:13 regulator
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 subsystem -> ../../../../../bus/i2c
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 tps65217-bl
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 tps65217-pmic
+-rw-r--r--    1 0        0             4096 Jan  1 00:13 uevent
+/sys/devices/ocp.3/44e0b000.i2c/i2c-0/0-0024 # cd ..
+/sys/bus/i2c/devices # 
+
+
+
+
+
+/sys/devices/ocp.3 # ls -l 44e0b000.i2c/i2c-0/
+total 0
+drwxr-xr-x    7 0        0                0 Jan  1 00:02 0-0024
+drwxr-xr-x    3 0        0                0 Jan  1 00:02 0-0050
+--w-------    1 0        0             4096 Jan  1 00:13 delete_device
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 device -> ../../44e0b000.i2c
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 i2c-dev
+-r--r--r--    1 0        0             4096 Jan  1 00:13 name
+--w-------    1 0        0             4096 Jan  1 00:13 new_device
+drwxr-xr-x    2 0        0                0 Jan  1 00:13 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 subsystem -> ../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:13 uevent
+
+
+/sys/devices/ocp.3 # ls -l 44e0b000.i2c/i2c-0/0-0024/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 driver -> ../../../../../bus/i2c/drivers/tps65217
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 input
+-r--r--r--    1 0        0             4096 Jan  1 00:13 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:13 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:13 power
+drwxr-xr-x    9 0        0                0 Jan  1 00:13 regulator
+lrwxrwxrwx    1 0        0                0 Jan  1 00:13 subsystem -> ../../../../../bus/i2c
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 tps65217-bl
+drwxr-xr-x    3 0        0                0 Jan  1 00:13 tps65217-pmic
+-rw-r--r--    1 0        0             4096 Jan  1 00:13 uevent
+/sys/devices/ocp.3 # ls -l 44e0b000.i2c/i2c-0/0-00
+0-0024/  0-0050/
+/sys/devices/ocp.3 # ls -l 44e0b000.i2c/i2c-0/0-0050/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:15 driver -> ../../../../../bus/i2c/drivers/at24
+-rw-------    1 0        0            32768 Jan  1 00:15 eeprom
+-r--r--r--    1 0        0             4096 Jan  1 00:15 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:15 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:15 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:15 subsystem -> ../../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:15 uevent
+/sys/devices/ocp.3 # 
+
+
+
+/sys/devices/ocp.3 # ls -l  4802a000.i2c/i2c-1/1-0050/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:16 driver -> ../../../../../bus/i2c/drivers/at24
+-rw-------    1 0        0            32768 Jan  1 00:16 eeprom
+-r--r--r--    1 0        0             4096 Jan  1 00:16 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:16 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:16 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:16 subsystem -> ../../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:16 uevent
+/sys/devices/ocp.3 # 
+
+
+/sys/devices/ocp.3 # ls -l 4819c000.i2c/i2c-2/2-0054/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 driver -> ../../../../../bus/i2c/drivers/at24
+-rw-------    1 0        0            32768 Jan  1 00:10 eeprom
+-r--r--r--    1 0        0             4096 Jan  1 00:10 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:10 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:10 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 subsystem -> ../../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:10 uevent
+/sys/devices/ocp.3 # 
+/sys/devices/ocp.3 # ls -l 4819c000.i2c/i2c-2/2-0055/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 driver -> ../../../../../bus/i2c/drivers/at24
+-rw-------    1 0        0            32768 Jan  1 00:10 eeprom
+-r--r--r--    1 0        0             4096 Jan  1 00:10 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:10 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:10 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 subsystem -> ../../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:10 uevent
+/sys/devices/ocp.3 # ls -l 4819c000.i2c/i2c-2/2-0056/
+total 0
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 driver -> ../../../../../bus/i2c/drivers/at24
+-rw-------    1 0        0            32768 Jan  1 00:10 eeprom
+-r--r--r--    1 0        0             4096 Jan  1 00:10 modalias
+-r--r--r--    1 0        0             4096 Jan  1 00:10 name
+drwxr-xr-x    2 0        0                0 Jan  1 00:10 power
+lrwxrwxrwx    1 0        0                0 Jan  1 00:10 subsystem -> ../../../../../bus/i2c
+-rw-r--r--    1 0        0             4096 Jan  1 00:10 uevent
+/sys/devices/ocp.3 # 
+
+
+
+/usr/i2ctools # 
+/usr/i2ctools # ./i2cdetect -l
+i2c-0	i2c       	OMAP I2C adapter                	I2C adapter
+i2c-1	i2c       	OMAP I2C adapter                	I2C adapter
+i2c-2	i2c       	OMAP I2C adapter                	I2C adapter
+/usr/i2ctools # 
+
+/usr/i2ctools # ./i2cdetect  -r 0
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-0 using read byte commands.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- UU -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- 34 -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: UU -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+/usr/i2ctools # 
+As you can see, my device with slave address 0x34 was detected. 
+
+
+/usr/i2ctools # 
+/usr/i2ctools # ./i2cdetect  -r 1
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-1 using read byte commands.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: UU -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+/usr/i2ctools # 
+/usr/i2ctools # ./i2cdetect  -r 2
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-2 using read byte commands.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- UU UU UU -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+/usr/i2ctools # 
+
+
+The 'UU' means busy. The addresses marked busy were probably reserved by a driver as the cape EEPROMs have address 0x54-0x57.
+i have commented cape_eeprom3@57 in dts file as below so 57 is not busy
+/*
+        cape_eeprom3: cape_eeprom3@57 {
+                compatible = "at,24c256";
+                reg = <0x57>;
+        };
+*/
+
+
+
+The '0' is the bus number, the 0x34 is the slave address, and the 'c' is the mode (consecutive byte). 
+/usr/i2ctools # 
+/usr/i2ctools # ./i2cdump 0 0x34 c
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-0, address 0x34, mode byte consecutive read
+Continue? [Y/n] y
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+10: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+20: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+30: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+40: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+50: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+60: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+70: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+80: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+90: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+a0: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+b0: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+c0: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+d0: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0    ????????????????
+e0: d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 d0 01 00 00 00    ?????????????...
+f0: 42 11 00 fc ca 81 10 ff 00 00 00 80 00 00 00 40    B?.????....?...@
+/usr/i2ctools # 
+
