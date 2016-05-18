@@ -661,3 +661,135 @@ UART_FIFOLVL_TXFIFOLVL macro is needed in ioutilsTX_CHARS_FROM_QUEUE_FROM_ISR ca
 #define UART_FIFOLVL_TXFIFOLVL(n)	((uint32_t)((n>>8)&0x0F))	/**< Reflects the current level of the UART transmitter FIFO */
 #define UART_FIFOLVL_BITMASK		((uint32_t)(0x0F0F))		/**< UART FIFO Level Register bit mask */
 
+
+/**************************************************************************
+some previous trials
+***************************************************/
+
+
+
+vI2CTaskStart() -->  prvI2CTask  ---->
+
+step1:
+--------------
+FreeRTOS_open --->boardFreeRTOS_PopulateFunctionPointers--->FreeRTOS_I2C_open
+
+
+				taskENTER_CRITICAL();
+				{
+					/* Setup the pins for the I2C being used. */
+					boardCONFIGURE_I2C_PINS( cPeripheralNumber, xPinConfig );
+
+					/* Set up the default I2C configuration. */
+					I2C_Init( pxI2C, boardDEFAULT_I2C_SPEED );
+					I2C_Cmd( pxI2C, ENABLE );
+				}
+				taskEXIT_CRITICAL();
+
+
+replace with:
+
+					Board_I2C_Init(cPeripheralNumber);
+
+					/* Initialize I2C */
+					Chip_I2C_Init(cPeripheralNumber);
+					Chip_I2C_SetClockRate(cPeripheralNumber, boardDEFAULT_I2C_SPEED);
+
+
+
+step2:
+--------------
+
+
+
+
+
+
+vI2C_EEPROMTest( xI2CPort );
+
+FreeRTOS_ioctl( xI2CPort, ioctlSET_SPEED, i2cEEPROM_CLOCK );---> xReturn = pxPeripheralControl->ioctl( pxPeripheralControl, ulRequest, pvValue );
+
+FreeRTOS_I2C_ioctl
+
+LPC_I2C_TypeDef * pxI2C = ( LPC_I2C_TypeDef * ) diGET_PERIPHERAL_BASE_ADDRESS( ( ( Peripheral_Control_t * const ) pxPeripheral ) );
+defined in CMSISv2p00_LPC17xx --include file LPC17xx.h 
+
+   Peripheral memory map of  LPC17xx.h  ===========>  lpc_chip_175x_6x/inc/chip_lpc175x_6x.h
+
+   typedef enum IRQn                    ===========>    } LPC175X_6X_IRQn_Type;  in cmsis_175x_6x.h
+
+} LPC_PINCON_TypeDef;                  =============>    } LPC_IOCON_T;   iocon_17xx_40xx.h
+
+LPC_I2C_TypeDef; in   LPC17xx.h    ==============>       } LPC_I2C_T; in  i2c_17xx_40xx.h
+case ioctlSET_SPEED :
+Chip_I2C_SetClockRate(cPeripheralNumber, clockrate);
+FreeRTOS_I2C_write:
+
+LPC_I2C_TypeDef; in   LPC17xx.h    ==============>       } LPC_I2C_T; in  i2c_17xx_40xx.h
+
+} I2C_M_SETUP_Type; in  lpc17xx_i2c.h   ===============>	} I2C_XFER_T; in  i2c_17xx_40xx.h
+
+I2C_MasterTransferData  lpc17xx_i2c.c =============>    Chip_I2C_MasterSend  i2c_17xx_40xx.c
+
+I2C_IntCmd( pxI2C, DISABLE )     ===================>   NVIC_DisableIRQ(xIRQ[cPeripheralNumber]),
+I2C_IntCmd( pxI2C, ENABLE );	====================>	NVIC_EnableIRQ(xIRQ[cPeripheralNumber]),
+
+I2C_IntCmd( LPC_I2C2, DISABLE ); ============>NVIC_DisableIRQ(I2C2_IRQn);
+
+               ioutilsINITIATE_ZERO_COPY_TX
+	            (
+		             pxPeripheralControl,
+					 NVIC_DisableIRQ(xIRQ[cPeripheralNumber]),	/* Disable interrupt.  Not really necessary in this case as it should not be enabled anyway. */
+		             ( void ) 0, 					/* As the start condition has not been sent, the interrupt is not enabled yet. */
+		              0,  							/* In this case no write is attempted and all that should happen is the buffer gets set up ready. */
+		              pvBuffer, 						/* Data source. */
+		              xReturn							/* Number of bytes to be written.  This will get set to zero if the write mutex is not held. */
+	            );
+
+pxI2C->I2CONCLR  =============>    pxI2C->CONCLR
+pxI2C->I2CONSET                    pxI2C->CONSET
+
+LPC_I2C2->I2DAT           LPC_I2C2->DAT
+FreeRTOS_lpc17xx_i2c.c ---->  UNDEFINED REF Chip_I2C_Init
+FreeRTOS_lpc17xx_i2c.c   :   #include "FreeRTOS_IO.h" --->
+
+#include "FreeRTOS_DriverInterface.h" ----------> #include "FreeRTOSIOConfig.h"
+#include "FreeRTOS_IO_BSP.h"  ---------->  #include "LPCXpresso17xx-base-board.h"
+
+------->
+
+FreeRTOSConfig.h---------> #include "board.h"
+
+[Firmware example}-->i2c.c --->board.h ------>chip.h ------> chip_lpc175x_6x.h------->
+#include "sysctl_17xx_40xx.h"
+#include "clock_17xx_40xx.h"
+#include "iocon_17xx_40xx.h"
+#include "adc_17xx_40xx.h"
+#include "can_17xx_40xx.h"
+#include "dac_17xx_40xx.h"
+#include "enet_17xx_40xx.h"
+#include "gpdma_17xx_40xx.h"
+#include "gpio_17xx_40xx.h"
+#include "gpioint_17xx_40xx.h"
+uint32_t SystemCoreClock = __CORE_CLK;/*!< System Clock Frequency (Core Clock)*/  in  system_LPC17xx.c of(CMSISv2p00_LPC17xx/src)
+
+port.c
+----------------------------
+port.c ----------> vPortSetupTimerInterrupt--->
+configSYSTICK_CLOCK_HZ ---->    #define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ ---> #define configCPU_CLOCK_HZ				( SystemCoreClock )
+-------->uint32_t SystemCoreClock = __CORE_CLK;/*!< System Clock Frequency (Core Clock)*/ ---->  #define __CORE_CLK (__FCCO(OSC_CLK) / __CCLK_DIV)
+
+with lpcopen
+
+#define configCPU_CLOCK_HZ			( ( unsigned long ) SystemCoreClock )---->
+
+uint32_t SystemCoreClock; in   chip_17xx_40xx.c
+
+ioutilsINITIATE_ZERO_COPY_TX  -------------->xSemaphoreGetMutexHolder ---> #define xSemaphoreGetMutexHolder( xSemaphore ) xQueueGetMutexHolder( ( xSemaphore ) )
+void* xQueueGetMutexHolder( xQueueHandle xSemaphore ) PRIVILEGED_FUNCTION;  (in queue.h)
+#define INCLUDE_xQueueGetMutexHolder    1  in FreeRTOSconfig.h
+
+
+
+
+
