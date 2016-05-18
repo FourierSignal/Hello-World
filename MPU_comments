@@ -1,0 +1,551 @@
+
+/home/jaguar/Documents/FreeRtos/MPU/mpu1/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/portable/GCC
+
+ls   ARM_CM3
+
+Exclude ARM_CM3 from source.
+
+Add new directory  ARM_CM3_MPU .
+
+./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c: In function 'MPU_FreeRTOS_ioctl':
+../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:1300:1: error: unknown type name 'BaseType_t'
+ BaseType_t xRunningPrivileged = prvRaisePrivilege();
+
+
+It is defined in portmacro.h.
+
+portmacro.h should be included through FreeRtos.h --------->Portable.h -------->mpu_wrappers.h
+###################################################################################################
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source
+
+FreeRTOS-8.2.3
+Finished building: ../Source/sysinit.c
+ 
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T FreeRTOS-Plus-Demo-1_Debug.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o: In function `prvSetupMPU':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:563: undefined reference to `__FLASH_segment_start__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:563: undefined reference to `__FLASH_segment_end__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:563: undefined reference to `__privileged_functions_end__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:563: undefined reference to `__SRAM_segment_start__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:563: undefined reference to `__SRAM_segment_end__'
+./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o: In function `vPortStoreTaskMPUSettings':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:701: undefined reference to `__SRAM_segment_start__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:701: undefined reference to `__SRAM_segment_end__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:701: undefined reference to `__privileged_data_start__'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:701: undefined reference to `__privileged_data_end__'
+./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o: In function `FreeRTOS_I2C_write':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.c:376: undefined reference to `MPU_xTaskGetCurrentTaskHandle'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+15:35:18 Build Finished (took 1s.209ms)
+
+These are available with the linker script which is included in the ---demo code provided for MPU by babu.
+
+
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/MPU/MPU $ grep __FLASH_segment_start__ -Rni *
+RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld:24:__FLASH_segment_start__ = ORIGIN( FLASH );
+RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld:25:__FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( FLASH );
+RTOSDemo_MPU_RDB1768/src/main.c:904:extern unsigned long __FLASH_segment_start__[];
+RTOSDemo_MPU_RDB1768/src/main.c:925:	pul = __FLASH_segment_start__;
+RTOSDemo_MPU_RDB1768/src/main.c:947:extern unsigned long __FLASH_segment_start__[];
+RTOSDemo_MPU_RDB1768/src/main.c:1017:extern unsigned long __FLASH_segment_start__[];
+RTOSDemo_MPU_RDB1768/src/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:492:extern uint32_t __FLASH_segment_start__[];
+RTOSDemo_MPU_RDB1768/src/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:503:        *portMPU_REGION_BASE_ADDRESS =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
+RTOSDemo_MPU_RDB1768/src/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:509:									( prvGetMPURegionSizeSetting( ( uint32_t ) __FLASH_segment_end__ - ( uint32_t ) __FLASH_segment_start__ ) ) |
+RTOSDemo_MPU_RDB1768/src/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:516:        *portMPU_REGION_BASE_ADDRESS =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
+RTOSDemo_MPU_RDB1768/src/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:522:									( prvGetMPURegionSizeSetting( ( uint32_t ) __privileged_functions_end__ - ( uint32_t ) __FLASH_segment_start__ ) ) |
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_RDB1768.dis:290:00000000 g       *ABS*	00000000 __FLASH_segment_start__
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_RDB1768.map:1068:                0x00000000                __FLASH_segment_start__ = ORIGIN (FLASH)
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_RDB1768.map:1069:                0x00080000                __FLASH_segment_end__ = (__FLASH_segment_start__ + 0x80000)
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/MPU/MPU $ 
+
+
+These symbols are used in main and ARM_CM3_MPU/port.c    so we need --- rtosdemo_rdb1768_Debug.ld:
+
+
+Note also ---  __text,__data ...etc symbols ( which are used by cr_startup_lpc17.c) are also provided by linker script rtosdemo_rdb1768_Debug.ld:
+
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/MPU/MPU $ grep  _data  -Rniw  *
+RTOSDemo_MPU_RDB1768/src/cr_startup_lpc17.c:200:extern unsigned long _data;
+RTOSDemo_MPU_RDB1768/src/cr_startup_lpc17.c:221:    for(pulDest = &_data; pulDest < &_edata; )
+RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld:94:		_data = .;	
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_RDB1768.dis:474:10004d54 g       .data	00000000 _data
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_RDB1768.map:1664:                0x10004d54                _data = .
+RTOSDemo_MPU_RDB1768/Debug/RTOSDemo_MPU_RDB1768_Debug.ld:106:	   _data = . ;
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/MPU/MPU $ 
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/MPU/MPU $ 
+
+so include that linker script  in this project
+
+
+"${workspace_loc:/RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld}"
+
+cp /home/jaguar/Documents/FreeRtos/MPU/MPU/RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld  /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "FreeRTOS-Plus-Demo-1.ld" -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/bin/ld: cannot open linker script file FreeRTOS-Plus-Demo-1.ld: No such file or directory
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+It needs linker  script  to be included at proper place.
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "FreeRTOS-Plus-Demo-1.ld" -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/bin/ld: cannot open linker script file FreeRTOS-Plus-Demo-1.ld: No such file or directory
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+based on 
+"${workspace_loc:/RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld}"
+
+-----> at C/C++ build settings -->settings--->  MCU Linker----> Managed Linker script 
+
+${workspace_loc:/${ProjName}/Source/FreeRTOS-Plus-Demo-1.ld}
+
+"${workspace_loc:/RTOSDemo_MPU_RDB1768/src/rtosdemo_rdb1768_Debug.ld}"
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   
+./Source/cr_startup_lpc175x_6x.o: In function `ResetISR':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:308: undefined reference to `__main'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__data_section_table'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__data_section_table_end'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__bss_section_table_end'
+./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o: In function `prvSetupTimerInterrupt':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.c:486: undefined reference to `SystemCoreClock'
+./Source/main.o: In function `vMainConfigureTimerForRunTimeStats':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/main.c:314: undefined reference to `SystemCoreClock'
+./Source/main.o: In function `ulMainGetRunTimeCounterValue':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/main.c:366: undefined reference to `SystemCoreClock'
+./Source/sysinit.o: In function `SystemInit':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/sysinit.c:78: undefined reference to `Board_SystemInit'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+
+
+
+
+13:41:48 Build Finished (took 1s.159ms)
+
+
+
+-----> at C/C++ build settings -->settings--->  MCU Linker----> Libraries
+ add board library and chip library of lpcopen.
+
+
+
+
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/cr_startup_lpc175x_6x.o: In function `ResetISR':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:308: undefined reference to `__main'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__data_section_table'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__data_section_table_end'
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:318: undefined reference to `__bss_section_table_end'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+14:59:54 Build Finished (took 105ms)
+
+
+
+`__data_section_table,__data_section_table_end,`__bss_section_table_end':
+these are the symbols  which gets included by system generated linker script,  when settings
+
+-----> at C/C++ build settings -->settings--->  MCU Linker----> Managed Linker script----> Manage linker script is selected.
+
+system generated linker script is @ location:   FreeRTOS-Plus-Demo-1/Debug/FreeRTOS-Plus-examples1_Debug.ld
+example:
+FreeRTOS-Plus-Demo-1/Debug/FreeRTOS-Plus-examples1_Debug.ld:29:        __data_section_table = .;
+FreeRTOS-Plus-Demo-1/Debug/FreeRTOS-Plus-examples1_Debug.ld:36:        __data_section_table_end = .;
+
+but we opted for our own linker script @${workspace_loc:/${ProjName}/Source/FreeRTOS-Plus-Demo-1.ld}
+to be used  by  unchecking the option Manage linker script at C/C++ build settings -->settings--->  MCU Linker----> Managed Linker script-
+
+when this is done --->option Library  is also grayed out -- so REDLIB is not linked with Applic =>  __main  is missing
+
+Library option is under C/C++ build settings -->settings--->  MCU Linker----> Managed Linker script
+
+
+
+text , data ... sections are setup by cr_startup_lpc17.c is different from how it is done in  cr_startup _lpc175x_6x.c
+Just check ---they may be same except for symbol names  -----   ????
+
+
+
+
+/* zero initialized data */		 
+	privileged_data : 
+	{ 
+		__bss_section_table = . ;    /* _bss = .; aaa-zzz  */
+		*(privileged_data) 
+		/* Non kernel data is kept out of the first 256 bytes of SRAM. */ 
+	} > SRAM	 
+ 
+	. = ORIGIN( SRAM ) + _Privileged_Data_Region_Size; 
+ 
+	.bss : 
+	{ 
+		*(.bss*) 
+		*(COMMON) 
+		__bss_section_table_end = .;  /* _ebss = .;  aaa-zzz */ 
+	} > SRAM 
+	 
+	.data : AT (__exidx_end) 
+	{ 
+	    __data_section_table = . ;             /* 	_data = .;	aaa-zzzz  */
+		*(vtable) 
+		*(.data*) 
+		__data_section_table_end = . ;             /* _edata = .;  aaa-zzz */ 
+	} > SRAM 
+ 
+ 
+	/* Where we put the heap with cr_clib */ 
+	.cr_heap : 
+	{ 
+		end = .; 
+		_pvHeapStart = .; 
+	} > SRAM 
+
+
+
+ Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/cr_startup_lpc175x_6x.o: In function `ResetISR':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/cr_startup_lpc175x_6x.c:308: undefined reference to `__main'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+16:23:30 Build Finished (took 55ms)
+
+
+
+remove symbol __REDLIB_ from  settings---> MCU C compiler---> symbols
+
+ settings ---> -> MCU C compiler--> miscallaneous --->  Library headers  = set to <none>
+
+MCU assembler --> Architecture & headers ---> Library headers  = set to <none>
+
+
+
+
+
+nvoking: MCU C Compiler
+arm-none-eabi-gcc -D__USE_LPCOPEN -DCORE_M3 -DDEBUG -D__CODE_RED -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/Examples/Include" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-CLI" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-CLI" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/inc" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/inc" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/SupportedBoards" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Include" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/include" -I../CMSISv2p00_LPC17xx/inc -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -Wextra -mcpu=cortex-m3 -mthumb -MMD -MP -MF"Source/Examples/Semihosting/basic_io.d" -MT"Source/Examples/Semihosting/basic_io.o" -MT"Source/Examples/Semihosting/basic_io.d" -o "Source/Examples/Semihosting/basic_io.o" "../Source/Examples/Semihosting/basic_io.c"
+In file included from ../Source/Examples/Semihosting/basic_io.c:32:0:
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/Examples/Include/consoleprint.h:34:2: error: #error "consoleprint.c can only be built for projects built with Redlib"
+ #error "consoleprint.c can only be built for projects built with Redlib"
+  ^
+make: *** [Source/Examples/Semihosting/basic_io.o] Error 1
+
+
+
+Include  symbol __REDLIB_ from  settings---> MCU C compiler---> symbols
+
+ settings ---> -> MCU C compiler--> miscallaneous --->  Library headers  = set to <redlib auto>
+
+MCU assembler --> Architecture & headers ---> Library headers  = set to <redlib auto>
+
+
+
+
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o: In function `FreeRTOS_I2C_write':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.c:376: undefined reference to `MPU_xTaskGetCurrentTaskHandle'
+./Source/Examples/Semihosting/consoleprint.o: In function `consoleprint':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/Examples/Semihosting/consoleprint.c:66: undefined reference to `__write'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-sbrkr.o): In function `_sbrk_r':
+sbrkr.c:(.text._sbrk_r+0xc): undefined reference to `_sbrk'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-writer.o): In function `_write_r':
+writer.c:(.text._write_r+0x10): undefined reference to `_write'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-closer.o): In function `_close_r':
+closer.c:(.text._close_r+0xc): undefined reference to `_close'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-fstatr.o): In function `_fstat_r':
+fstatr.c:(.text._fstat_r+0xe): undefined reference to `_fstat'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-isattyr.o): In function `_isatty_r':
+isattyr.c:(.text._isatty_r+0xc): undefined reference to `_isatty'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-lseekr.o): In function `_lseek_r':
+lseekr.c:(.text._lseek_r+0x10): undefined reference to `_lseek'
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libc.a(lib_a-readr.o): In function `_read_r':
+readr.c:(.text._read_r+0x10): undefined reference to `_read'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+
+
+Note that if you are providing your own linker script (you are not using the "Manage linker script" option), you will need to add appropriate entries to the linker script detailing the library/variants to use. For more details, please see the FAQ: Using your own linker scripts.
+
+
+Linker scripts and C (or C++) libraries
+
+If you are providing your own linker script, you will need to add one of the following entries before the SECTION line in your linker script:
+
+    Redlib (None), add
+
+[C project only]: GROUP(libcr_c.a libcr_eabihelpers.a)
+
+    Redlib (Nohost), add
+
+[C projects only]: GROUP(libcr_nohost.a libcr_c.a libcr_eabihelpers.a)
+
+    Redlib (Semihost), add
+
+[C projects only]: GROUP(libcr_semihost.a libcr_c.a libcr_eabihelpers.a)
+
+    Newlib (None), add
+
+[C projects]: GROUP(libgcc.a libc.a libm.a)
+[C++ projects]: GROUP(libgcc.a libc.a libstdc++.a libm.a)
+
+    Newlib (Nohost), add
+
+[C projects]: GROUP(libgcc.a libc.a libm.a libcr_newlib_nohost.a)
+[C++ projects]: GROUP(libgcc.a libc.a libstdc++.a libm.a libcr_newlib_nohost.a)
+
+    Newlib (Semihost), add
+
+[C projects]: GROUP(libgcc.a libc.a libm.a libcr_newlib_semihost.a)
+[C++ projects]: GROUP(libgcc.a libc.a libstdc++.a libm.a libcr_newlib_semihost.a)
+
+
+
+
+
+ /* GROUP(libgcc.a libc.a)  aaa-zzz */
+GROUP(libcr_semihost.a libcr_c.a libcr_eabihelpers.a)  /* for redlib semi-Host aaa-zzz */
+
+
+
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__USE_LPCOPEN -DCORE_M3 -DDEBUG -D__CODE_RED -D__NEWLIB__ -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/Examples/Include" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-CLI" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-CLI" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/inc" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/inc" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/SupportedBoards" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Include" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source" -I"/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/include" -I../CMSISv2p00_LPC17xx/inc -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -Wextra -mcpu=cortex-m3 -mthumb -D__NEWLIB__ -MMD -MP -MF"Source/Examples/Semihosting/basic_io.d" -MT"Source/Examples/Semihosting/basic_io.o" -MT"Source/Examples/Semihosting/basic_io.d" -o "Source/Examples/Semihosting/basic_io.o" "../Source/Examples/Semihosting/basic_io.c"
+In file included from ../Source/Examples/Semihosting/basic_io.c:32:0:
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/Examples/Include/consoleprint.h:34:2: error: #error "consoleprint.c can only be built for projects built with Redlib"
+ #error "consoleprint.c can only be built for projects built with Redlib"
+  ^
+make: *** [Source/Examples/Semihosting/basic_io.o] Error 1
+
+
+In MCU compiler settins ---> symbols  
+
+ add   __REDLIB__
+
+or
+select redlib auto in miscallaneous  of  compiler settings and  Architecture and headers of assembler settings.
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2_freertos8.2.3_lpcopen/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2_freertos8.2.3_lpcopen/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2_freertos8.2.3_lpcopen/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/Examples/Semihosting/consoleprint.o: In function `consoleprint':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2_freertos8.2.3_lpcopen/FreeRTOS-Plus-Demo-1/Debug/../Source/Examples/Semihosting/consoleprint.c:66: undefined reference to `_swiwrite'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 
+
+
+Include  symbol __REDLIB_ from  settings---> MCU C compiler---> symbols
+
+ settings ---> -> MCU C compiler--> miscallaneous --->  Library headers  = set to <redlib auto>
+
+MCU assembler --> Architecture & headers ---> Library headers  = set to <redlib auto>
+
+
+
+
+
+ 
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o: In function `FreeRTOS_I2C_write':
+/home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Debug/../Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.c:376: undefined reference to `MPU_xTaskGetCurrentTaskHandle'
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+18:07:06 Build Finished (took 1s.207ms)
+
+
+
+
+#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE     //aaa-zzz
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
+/* IO library includes. */
+#include "FreeRTOS_IO.h"
+#include "IOUtils_Common.h"
+#include "FreeRTOS_i2c.h"
+
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/MPU/mpu2/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T /home/jaguar/Documents/FreeRtos/MPU/mpu2/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Plus-Demo-1.ld -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3_MPU/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/event_groups.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/Semihosting/basic_io.o ./Source/Examples/Semihosting/consoleprint.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/font5x7.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/sysinit.o   -llpc_board_nxp_lpcxpresso_1769 -llpc_chip_175x_6x
+Finished building target: FreeRTOS-Plus-Demo-1.axf
+ 
+make --no-print-directory post-build
+Performing post-build steps
+arm-none-eabi-size FreeRTOS-Plus-Demo-1.axf; # arm-none-eabi-objcopy -O binary FreeRTOS-Plus-Demo-1.axf FreeRTOS-Plus-Demo-1.bin ; checksum -p LPC1769 -d FreeRTOS-Plus-Demo-1.bin;
+   text	   data	    bss	    dec	    hex	filename
+  51916	    532	  15888	  68336	  10af0	FreeRTOS-Plus-Demo-1.axf
+ 
+
+19:05:13 Build Finished (took 1s.207ms)
+
+#####################################################################################################################################
+
+
+below
+
+Replacing CMSIS with lpcopen  in 
+
+/home/jaguar/Documents/FreeRtos/MPU/MPU_demoB_code
+
+#########################################################################################
+
+lcd_driver.c
+// #include "LPC17xx.h"  //aaa-zzz
+
+
+In Hard Fault Handler
+SCB->HFSR =   0X40000000
+SCB->CFSR =   0X8200
+SCB->BFSR =   0X82
+SCB->BFAR =   0X1c30f86d
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+HardFault is occuring due to BUS fault exception.
+Busfault address register is showing some -value 0X1c30f86d .
+
+and the exception is occuring at below point :
+
+xTaskCreateRestricted( prvI2CTask )------>MPU_xTaskGenericCreate ---->xTaskGenericCreate--->prvAddTaskToReadyList( pxNewTCB );  ---->  vListInsertEnd -->   
+                          pxNewListItem->pxPrevious = pxIndex->pxPrevious; @ here Busfault occurs.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+step by step debugging ==> reveals that
+
+Below -Variables are not initialized to Expected values.
+
+PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks     = ( UBaseType_t ) 0U;
+PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
+
+during First task creation  itself --->     uxCurrentNumberOfTasks and  pxCurrentTCB  contain Junk values .
+
+and program crashes @  Function: vListInsertEnd... --> line :   pxNewListItem->pxPrevious = pxIndex->pxPrevious
+                   due to BUS-fault, acessing 163f86d.    { pxIndex  =  163f865}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     program crashes @  Function: vListInsertEnd... --> line :   pxNewListItem->pxPrevious = pxIndex->pxPrevious
+                   due to BUS-fault, acessing 163f86d.    { pxIndex  =  163f865}
+
+    In this case there is BUS-fault while accessing data of  list.c
+
+    It doesn't seem to be any access permission issue with MPU as first task is not yet created and also crashed code  is part of kernel code.
+--- i am suspecting problem as below.-
+
+It seems to be something related to why iam not getting pxCurrentTCB = NULL and uxCurrentNumberOfTasks =0 during first task creation.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Problem:=>   observed a problem with  macro PRIVILEGED_DATA
+
+In task.c
+PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
+PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+PRIVILEGED_DATA static List_t xDelayedTaskList1;                        /*< Delayed tasks. */
+PRIVILEGED_DATA static List_t xDelayedTaskList2;                        /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;                /*< Points to the delayed task list currently being used. */
+PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;        /*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+PRIVILEGED_DATA static List_t xPendingReadyList;   
+
+
+After compilation PRIVILEGED_DATA is showing up as  syntax error : can not be mapped to symbol name.  but Final Image   FreeRTOS-Plus-Demo-1.axf is created.
+This may be due to    conditional Inclusion of    Macro  PRIVILEGED_DATA in mpuwrappers.h function
+
+I am not sure about  few things about this :
+
+1)  what is  purpose of MACRO :  #define PRIVILEGED_FUNCTION    ?? {with out  value assigned for it  in mpuwrappes.h  file }
+   
+2)   #ifdef portUSING_MPU_WRAPPERS
+                          #ifndef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+                                     // some API macros here
+                                      #define PRIVILEGED_FUNCTION
+                          #else
+                                      #define PRIVILEGED_FUNCTION __attribute__((section("privileged_functions")))
+                                      #define PRIVILEGED_DATA __attribute__((section("privileged_data")))
+                          #endif
+     #else
+
+                         #define PRIVILEGED_FUNCTION
+                         #define PRIVILEGED_DATA
+                         #define portUSING_MPU_WRAPPERS 0
+     #endif
+ 
+ 
+Here   PRIVILEGED_DATA is defined only  - when mpuwrappers.h is  inclueded from  API file -- i.e from RTOS files
+/*
+Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+all the API functions to use the MPU wrappers.  That should only be done when
+task.h is included from an application file.
+*/
+--------
+based on the above  : Is this  Interpretation correct ??
+here  if  MPU_WRAPPERs.h is  Included from Application  ---  Definitions are for non-MPU case
+                                                                                           because of -- not defining macro -MPU_WRAPPERS_INCLUDED_FROM_API_FILE in Application file.
+
+here  if  MPU_WRAPPERs.h is  Included from RTOS files   ---  Definitions are for MPU case
+                                                                                            because of the usage of MPU_WRAPPERS_INCLUDED_FROM_API_FILE in task.c
+
+3) Is below understanding correct??
+
+xTaskCreateRestricted  --- can be used to create both trivialized tasks as well as user level tasks
+                                       It has to be used with MPU-port of FreeRTOS to use all the features of MPU.
+
+xTaskCreate --  can be used to create both privileged tasks as well as user level tasks.
+                        But it can't fully utilize MPU features.
+
+4)
+Also I observed  below code is commented in  prvSetupMPU Fn of port.c  of sample code provided.
+But not suspecting this because  start scheduler is not yet called from main.
+a
+/*        *portMPU_REGION_BASE_ADDRESS =    ( ( uint32_t ) __privileged_data_start__ ) |
+                                        ( portMPU_REGION_VALID ) |
+                                        ( portPRIVILEGED_RAM_REGION );
+
+        *portMPU_REGION_ATTRIBUTE =        ( portMPU_REGION_PRIVILEGED_READ_WRITE ) |
+                                        ( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
+                                        prvGetMPURegionSizeSetting( ( uint32_t ) __privileged_data_end__ - ( uint32_t ) __privileged_data_start__ ) |
+                                        ( portMPU_REGION_ENABLE );
+*/
+
+FreeRTOS_lpc17xx_uart.c:264: undefined reference to `MPU_xTaskGetCurrentTaskHandle'
+
+
+
+ioutilsINITIATE_ZERO_COPY_TX : 
+
+	if( xSemaphoreGetMutexHolder( pxZeroCopyState->xWriteAccessMutex ) == xTaskGetCurrentTaskHandle() )	
+port.c
+#if ( INCLUDE_xTaskGetCurrentTaskHandle == 1 )
+	TaskHandle_t MPU_xTaskGetCurrentTaskHandle( void )
+	{
+	TaskHandle_t xReturn;
+    BaseType_t xRunningPrivileged = prvRaisePrivilege();
+
+FreeRtos.h 
+#ifndef INCLUDE_xTaskGetCurrentTaskHandle
+	//#define INCLUDE_xTaskGetCurrentTaskHandle 0
+    #define INCLUDE_xTaskGetCurrentTaskHandle 1  //aaa-zzz
+#endif
+
+
+
