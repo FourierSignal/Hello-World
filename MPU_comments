@@ -547,5 +547,48 @@ FreeRtos.h
     #define INCLUDE_xTaskGetCurrentTaskHandle 1  //aaa-zzz
 #endif
 
+#####################################################################################
+Hard-fault occuring ---- proj: i2cEprom_FreeRTOS8.2.3_MPU_lpcopen.
+
+SCB->HFSR =  1073741824 40000000 
+SCB->CFSR =  33280 8200 
+SCB->BFSR =  130 82 
+SCB->BFAR =  305419896 12345678 
+SCB->MFAR =  305419896 12345678 
+
+SCB->BFSR =  130 = 82h  ===========> 
+
+[7] BFARVALID
+Bus Fault Address Register (BFAR) valid flag:
+0 = value in BFAR is not a valid fault address
+1 = BFAR holds a valid fault address.
+The processor sets this bit to 1 after a bus fault where the address is
+known. Other faults can set this bit to 0, such as a memory management
+fault occurring later.
+If a bus fault occurs and is escalated to a hard fault because of priority,
+the hard fault handler must set this bit to 0. This prevents problems if
+returning to a stacked active bus fault handler whose BFAR value has
+been overwritten.
+
+[1]
+PRECISERR
+Precise data bus error:
+0 = no precise data bus error
+1 = a data bus error has occurred, and the PC value stacked for the
+exception return points to the instruction that caused the fault.
+When the processor sets this bit is 1, it writes the faulting address to the BFAR
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
