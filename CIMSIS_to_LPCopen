@@ -1,0 +1,663 @@
+
+Add FreeRTOS-Plus-Demo-1, BSP, CSP to project.
+
+1)
+LPCXpresso17xx-base-board.h    comment CMSIS headers
+
+#include "lpc17xx_uart.h"
+#include "lpc17xx_ssp.h"
+#include "lpc17xx_i2c.h"
+
+2)
+FreeRTOS_lpc17xx_i2c.c   ---- comment CMSIS headers
+ //#include "lpc17xx_pinsel.h"  
+
+3)
+FreeRTOS_lpc17xx_i2c.c ----------
+
+I2C_IntCmd( pxI2C, DISABLE ) ---> DISABLE  defined in lpc_types.h of CMSIS
+lpc_chip_175x_6x --- has lpc_types.h
+
+add location of lpc_chip_175x_6x to include paths variable.
+
+project --> properties -> c/c++ build --> settings-> includes { include paths }
+
+${workspace_loc:/lpc_chip_175x_6x/inc}
+
+Also include lpcopen-header files in  FreeRTOS_lpc17xx_i2c.c 
+
+board.h ------>chip.h ------> chip_lpc175x_6x.h------->
+#include "sysctl_17xx_40xx.h"
+#include "clock_17xx_40xx.h"
+#include "iocon_17xx_40xx.h"
+#include "adc_17xx_40xx.h"
+#include "can_17xx_40xx.h"
+#include "dac_17xx_40xx.h"
+#include "enet_17xx_40xx.h"
+#include "gpdma_17xx_40xx.h"
+#include "gpio_17xx_40xx.h"
+#include "gpioint_17xx_40xx.h"
+
+so include board.h at proper place so that all lpcopen headers are included with FreeRTOS_lpc17xx_i2c.c 
+
+#include "FreeRTOS_IO.h" --->  #include "FreeRTOS_DriverInterface.h" -----> /* Header files for all the driver libraries that can be used with this BSP. */
+so better include board.h here.
+
+
+#include "board.h"  //aaa-zzz  in   FreeRTOS_DriverInterface.h
+also add location of board.h to include paths variable.
+
+${workspace_loc:/lpc_board_nxp_lpcxpresso_1769/inc} in project --> properties -> c/c++ build --> settings-> includes { include paths }
+
+
+4)
+ missing declaration LPC_I2C_TypeDef; in   LPC17xx.h     replace it with  } LPC_I2C_T; in  i2c_17xx_40xx.h
+
+//LPC_I2C_TypeDef * const pxI2C = ( LPC_I2C_TypeDef * const ) diGET_PERIPHERAL_BASE_ADDRESS( pxPeripheralControl );
+LPC_I2C_T * const pxI2C = ( LPC_I2C_T * const ) diGET_PERIPHERAL_BASE_ADDRESS( pxPeripheralControl );
+
+} I2C_M_SETUP_Type; in  lpc17xx_i2c.h   ===============>	} I2C_XFER_T; in  i2c_17xx_40xx.h
+
+I2C_TRANSFER_POLLING in  lpc17xx_i2c.h ===================>   not used
+
+LPC_I2C2->I2STAT =============>     LPC_I2C2->STAT
+LPC_I2C2->I2CONCLR ============>  LPC_I2C2->CONCLR
+LPC_I2C2->I2DAT =================>  LPC_I2C2->DAT
+
+
+				pxI2CTransferDefinition->slaveAddr = ucSlaveAddresses[ cPeripheralNumber ];
+				pxI2CTransferDefinition->txBuff = ( uint8_t * ) pvBuffer;
+				pxI2CTransferDefinition->txSz = xBytes;
+				pxI2CTransferDefinition->rxBuff = NULL;
+				pxI2CTransferDefinition->rxSz = 0;
+				//pxI2CTransferDefinition->retransmissions_max = boardI2C_MAX_RETRANSMISSIONS;
+
+				//
+				//lecture - refer to lpc17xx_i2c.c firmware driver code and comments
+				//
+
+				if( Chip_I2C_MasterTransfer( cPeripheralNumber, pxI2CTransferDefinition)  == I2C_STATUS_DONE )
+				{
+					xReturn = xBytes;
+				}
+
+
+
+
+				pxI2CTransferDefinition->slaveAddr = ucSlaveAddresses[ cPeripheralNumber ];
+				pxI2CTransferDefinition->txBuff = NULL;
+				pxI2CTransferDefinition->txSz = 0;
+				pxI2CTransferDefinition->rxBuff = ( uint8_t * ) pvBuffer;;
+				pxI2CTransferDefinition->rxSz = xBytes;
+
+				if( Chip_I2C_MasterTransfer( cPeripheralNumber, pxI2CTransferDefinition ) == I2C_STATUS_DONE )
+				{
+					xReturn = xBytes;
+				}
+
+
+//                pxI2CTransferDefinition->retransmissions_max = boardI2C_MAX_RETRANSMISSIONS;  //no member retransmissions_max
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/lpc_chip_175x_6x/inc/chip.h:123:2: error: #error CORE_M3 is not defined for the LPC17xx architecture
+ #error CORE_M3 is not defined for the LPC17xx architecture
+  ^
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/lpc_chip_175x_6x/inc/chip.h:124:2: error: #error CORE_M3 should be defined as part of your compiler define list
+ #error CORE_M3 should be defined as part of your compiler define list
+
+
+project --> properties -> c/c++ build --> settings-> symbols --->
+
+
+
+FreeRTOS_I2C_open:
+//PINSEL_CFG_Type xPinConfig;  ==>   comment definition from  //#include "lpc17xx_pinsel.h" of CMSIS
+FreeRTOS_open --->boardFreeRTOS_PopulateFunctionPointers--->FreeRTOS_I2C_open
+
+				taskENTER_CRITICAL();
+				{
+					/* Setup the pins for the I2C being used. */
+					boardCONFIGURE_I2C_PINS( cPeripheralNumber, xPinConfig );
+
+					/* Set up the default I2C configuration. */
+					I2C_Init( pxI2C, boardDEFAULT_I2C_SPEED );
+					I2C_Cmd( pxI2C, ENABLE );
+				}
+				taskEXIT_CRITICAL();
+
+
+replace with:
+
+					Board_I2C_Init(cPeripheralNumber);
+
+					/* Initialize I2C */
+					Chip_I2C_Init(cPeripheralNumber);
+					Chip_I2C_SetClockRate(cPeripheralNumber, boardDEFAULT_I2C_SPEED);
+
+
+
+
+To include and exclude a file from build : Rightclick
+Resource configurations  ---> Exclude from build
+
+
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__REDLIB__ -DCORE_M3 -DDEBUG -D__CODE_RED -D__USE_CMSIS=CMSISv2p00_LPC17xx -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/lpc_chip_175x_6x/inc" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/lpc_board_nxp_lpcxpresso_1769/inc" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/SupportedBoards" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Include" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-CLI" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/include" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source/Examples/Include" -I"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailA/FreeRTOS-Plus-Demo-1/Source" -O0 -Os -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -Wextra -mcpu=cortex-m3 -mthumb -D__REDLIB__ -specs=redlib.specs -MMD -MP -MF"Source/cr_startup_lpc176x.d" -MT"Source/cr_startup_lpc176x.d" -o "Source/cr_startup_lpc176x.o" "../Source/cr_startup_lpc176x.c"
+../Source/cr_startup_lpc176x.c:51:28: fatal error: system_LPC17xx.h: No such file or directory
+ #include "system_LPC17xx.h"
+                            ^
+
+cr_startup_lpc176x.c  ========>
+
+#if defined (__USE_CMSIS)
+#include "system_LPC17xx.h"
+#endif
+
+
+
+
+
+
+arm-none-eabi-gcc -nostdlib -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "FreeRTOS-Plus-Demo-1_Debug.ld" -o "FreeRTOS-Plus-Demo-1.axf"  ./Source/FreeRTOS-Products/FreeRTOS/portable/MemMang/heap_2.o  ./Source/FreeRTOS-Products/FreeRTOS/portable/GCC/ARM_CM3/port.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_i2c.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_DriverInterface.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/FreeRTOS_IOUtils.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CharQueueTxAndRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_CircularBufferRx.o ./Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Common/IOUtils_ZeroCopyTx.o  ./Source/FreeRTOS-Products/FreeRTOS-Plus-CLI/FreeRTOS_CLI.o  ./Source/FreeRTOS-Products/FreeRTOS/croutine.o ./Source/FreeRTOS-Products/FreeRTOS/list.o ./Source/FreeRTOS-Products/FreeRTOS/queue.o ./Source/FreeRTOS-Products/FreeRTOS/tasks.o ./Source/FreeRTOS-Products/FreeRTOS/timers.o  ./Source/Examples/UART/CLI-commands.o ./Source/Examples/UART/UART-interrupt-driven-command-console.o ./Source/Examples/UART/UART-operation-modes-test.o  ./Source/Examples/I2C/Copy\ of\ I2C-to-and-from-EEPROM.o ./Source/Examples/I2C/I2C-coordinator.o ./Source/Examples/I2C/I2C-to-OLED.o ./Source/Examples/I2C/font5x7.o ./Source/Examples/I2C/oled.o  ./Source/cr_startup_lpc175x_6x.o ./Source/main.o ./Source/printf-stdarg.o   -llpc17xx.cmsis.driver.library -lCMSISv2p00_LPC17xx
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/bin/ld: cannot find -llpc17xx.cmsis.driver.library
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/bin/ld: cannot find -lCMSISv2p00_LPC17xx
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+project --> properties -> c/c++ build --> settings-> symbols --->
+remove symbol  __USE_CMSIS=CMSISv2p00_LPC17xx  
+add symbol    __USE_LPCOPEN
+
+
+project --> properties -> c/c++ build --> settings-> symbols --->Libraries--->
+Library search path
+${workspace_loc:/lpc_board_nxp_lpcxpresso_1769/Debug}
+${workspace_loc:/lpc_chip_175x_6x/Debug}
+
+libraries
+remove   CMSISv2p00_LPC17xx               , lpc17xx.cmsis.driver.library
+add      lpc_board_nxp_lpcxpresso_1769    , lpc_chip_175x_6x
+
+
+add files - sysinit and 
+
+
+
+
+
+ls -l /usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin
+
+ls -l /usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/arm-none-eabi/bin
+
+PATH=$PATH:/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin
+
+cd /home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug
+
+arm-none-eabi-nm liblpc_board_nxp_lpcxpresso_1769.a
+
+*.a files --> archive library files -- they are statically linked when application is compiled.
+              If you use code stored inside them, it's taken from them and embedded into your own binary.
+              equivalent to .lib files of windows.
+
+.so files---> shared object files ----they are linked dynamically  when appliation is running.
+              If you use code stored inside them, it's not taken and embedded into your own binary. 
+			  Instead it's just referenced, so the binary will depend on them and the code from the so file is added/loaded at runtime.
+              equivalent to .dll files in windows.
+
+
+
+T : Global text symbol.
+t  : Local text symbol.
+U : Undefined symbol.
+
+
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug $ arm-none-eabi-nm -u liblpc_board_nxp_lpcxpresso_1769.a
+
+board.o:
+         U Chip_Clock_EnablePeriphClock
+         U Chip_I2S_Init
+         U Chip_I2S_TxConfig
+         U Chip_IOCON_PinMux
+         U Chip_UART_Init
+         U Chip_UART_SetBaud
+         U Chip_UART_TXEnable
+         U memcpy
+
+board_sysinit.o:
+         U Chip_IOCON_SetPinMuxing
+         U Chip_SetupXtalClocking
+
+lpc_phy_smsc87x0.o:
+         U Chip_ENET_ReadMIIData
+         U Chip_ENET_StartMIIRead
+         U Chip_ENET_StartMIIWrite
+
+
+
+00000000 t Chip_IOCON_EnableOD
+
+Board_I2C_Init(board.c) --->Chip_IOCON_EnableOD (definition in iocon_17xx_40xx.h ) ---->
+
+#include "board.h" (board.c) ---> #include "chip.h" (board.h) ----> #include "chip_lpc175x_6x.h"(chip.h)--->iocon_17xx_40xx.h (chip_lpc175x_6x.h)---> 
+
+
+	U Chip_IOCON_PinMux
+Board_I2C_Init(board.c) --->Chip_IOCON_PinMux (prototype in iocon_17xx_40xx.h ,  defined in iocon_17xx_40xx.c) --->
+
+here --we have no linker option in settings for project:lpc_board_nxp_lpcxpresso_1769
+
+
+
+
+
+
+arm-none-eabi-nm -u liblpc_board_nxp_lpcxpresso_1769.a
+
+iocon_17xx_40xx.o:
+00000000 T Chip_IOCON_PinMux
+00000000 T Chip_IOCON_PinMuxSet
+
+
+FreeRTOS_I2C_open --->Board_I2C_Init(board.c) --->  Chip_IOCON_PinMux (iocon_17xx_40xx.c) ---> 
+                       [lpc_chip_175x_6x]            [ lpc_board_nxp_lpcxpresso_1769 ]
+
+Eventhough application code linked to libraries (lpc_chip_175x_6x , lpc_board_nxp_lpcxpresso_1769): getting this error.
+why is this happening ?? 
+Is it because symbol  Chip_IOCON_PinMux  is  missing in lpc_board_nxp_lpcxpresso_1769 ?? but it is available in lpc_chip_175x_6x  ,which is also linked. 
+
+
+
+Building target: FreeRTOS-Plus-Demo-1.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug" -L"/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_chip_175x_6x/Debug" -Xlinker -Map=FreeRTOS-Plus-Demo-1.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "FreeRTOS-Plus-Demo-1_Debug.ld" -o "FreeRTOS-Plus-Demo-1.axf"    -llpc_chip_175x_6x -llpc_board_nxp_lpcxpresso_1769
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug/liblpc_board_nxp_lpcxpresso_1769.a(board.o): In function `Board_I2C_Init':
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug/../src/board.c:269: undefined reference to `Chip_IOCON_PinMux'
+
+-------------------------
+
+
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/lpcopen_trailB/lpc_board_nxp_lpcxpresso_1769/Debug $ arm-none-eabi-objdump -a  liblpc_board_nxp_lpcxpresso_1769.a 
+In archive liblpc_board_nxp_lpcxpresso_1769.a:
+
+board.o:     file format elf32-littlearm
+rw-r--r-- 1000/1000 141396 Apr 10 22:08 2016 board.o
+
+
+board_sysinit.o:     file format elf32-littlearm
+rw-r--r-- 1000/1000 117864 Apr 10 22:08 2016 board_sysinit.o
+
+
+lpc_phy_smsc87x0.o:     file format elf32-littlearm
+rw-r--r-- 1000/1000 121756 Apr 10 22:08 2016 lpc_phy_smsc87x0.o
+
+
+
+
+
+
+
+
+Disassembly of section .text.Chip_IOCON_EnableOD
+
+Disassembly of section .text.Chip_IOCON_PinMux
+
+
+
+added  semihosting code from FreeRTOS library .
+getting following error.
+
+/usr/local/lpcxpresso_7.8.0_426/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv7-m/libcr_nohost.a(__sys_write.o): In function `__write':
+__sys_write.c:(.text.__sys_write+0x0): multiple definition of `__sys_write'
+
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailD_semi/lpc_board_nxp_lpcxpresso_1769/Debug/liblpc_board_nxp_lpcxpresso_1769.a(board.o):
+
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trialC/lpc_board_nxp_lpcxpresso_1769/Debug/../src/retarget.h:224: first defined here
+
+collect2: error: ld returned 1 exit status
+make: *** [FreeRTOS-Plus-Demo-1.axf] Error 1
+
+
+cd /home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailD_semi/lpc_board_nxp_lpcxpresso_1769/src
+vi retarget.h 
+
+This file adds re-direction support to the library for various projects.
+ It can be configured in one of 3 ways - no redirection,redirection via a UART, or redirection via semihosting. 
+
+If DEBUG is not defined, all printf statements will do nothing with the output being throw away. 
+If DEBUG is defined, then the choice of output is selected by the DEBUG_SEMIHOSTING define. 
+If the DEBUG_SEMIHOSTING is not defined, then output is redirected via the UART. 
+If DEBUG_SEMIHOSTING is defined, then output will be attempted to be redirected via semihosting.
+
+board.h ==>
+
+#define DEBUG_ENABLE
+
+#define DEBUG_UART LPC_UART3
+
+
+// #define DEBUG_SEMIHOSTING
+
+
+comment out DEBUG_UART LPC_UART3 , Board_Debug_Init,Board_UARTPutChar, Board_UARTPutSTR, Board_UARTGetChar
+
+
+
+In file included from ../Source/main.c:171:0:
+/home/jaguar/Documents/FreeRtos/nxp/lpcopen_trailD_semi/FreeRTOS-Plus-Demo-1/Source/Examples/Include/basic_io.h:36:6: note: expected 'const int *' but argument is of type 'const char *'
+ void vPrintString( const portCHAR *pcString );
+      ^
+make: *** [Source/main.o] Error 1
+
+
+
+
+
+ project-->Properties---> C/C++ Build------->Settings----->MCU Linker ----> Managed Linker Script
+
+ Library drop-down, select the Newlib, NewlibNano or Redlib library variant that you require (None, Nohost, Semihost).
+
+
+
+
+main.c --->  #include "FreeRTOS.h" ---->#include "portable.h"-------->
+
+#ifdef GCC_ARMCM3
+	#include "../../Source/portable/GCC/ARM_CM3/portmacro.h"         //aaa-zzz
+#endif
+
+#include "../portable/GCC/ARM_CM3/portmacro.h" 
+#define GCC_ARMCM3   //aaa-zzz  (freertos.h)
+
+
+in main   basic_io.h after FreeRTOS.h
+
+#include "FreeRTOS.h"
+#include "task.h"
+
+#include <basic_io.h> //aaa-zzz
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define  EEPROM_24XX256                7
+#define  EEPROM_MAX_ADDR_24XX256   0x7FFF   //-- 32 KBytes
+
+
+
+test_i2c_at24c256_flash
+
+
+m24xx_write(EEPROM_24XX256, 0 , 0 , (char *)buf , sizeof(buf));
+
+
+int m24xx_write(int eeprom_type, int eeprom_addr,int eeprom_cs_val, char * buf, int num) ;
+
+
+int m24xx_write(
+    int eeprom_type,    //-- EEPROM type
+    int eeprom_addr,    //-- start eeprom addr ( not included Hardware A2,A1,A0)
+    int eeprom_cs_val,  //-- Hardware A2,A1,A0 (valid from 24XX32)
+    char * buf,         //-- Data src buf
+    int num)            //-- Bytes to write qty
+{
+int page_size = 0;
+      rc = m24xx_page_size(eeprom_type,eeprom_addr,&page_size);  ---> 7,0,page_sizep
+
+static int m24xx_page_size(int eeprom_type, int eeprom_addr,int * pg_sz)
+{
+   switch(eeprom_type)
+      case EEPROM_24XX256:
+         if(eeprom_addr > EEPROM_MAX_ADDR_24XX256)
+            rc = I2C_ERR_24XX_BAD_ADDR;
+         else
+            page_size = 64;
+         break;
+
+   if(page_size == 0)  //-- Bad eeprom_type
+      return I2C_ERR_24XX_BAD_TYPE;
+
+   if(pg_sz)
+      *pg_sz = page_size;
+
+}
+
+      rc = eeprom_addr%page_size;---------> 0%64 = 0
+      b_to_wr = page_size - rc;-----------> 64
+
+i2c_lpc_m24xx_wr(eeprom_type,eeprom_addr,eeprom_cs_val, buf,b_to_wr);  ----->  7,0,0,bufp,64
+
+             num -= b_to_wr;
+             eeprom_addr += b_to_wr;
+             buf += b_to_wr;
+
+
+
+static int i2c_lpc_m24xx_wr(
+     int eeprom_type,    //-- EEPROM type
+     int eeprom_addr,    //-- start eeprom addr ( not included Hardware A2,A1,A0)
+     int eeprom_cs_val,  //-- Hardware A2,A1,A0 (valid from 24XX32)
+     char * buf,         //-- Data srs buf
+     int num )            //-- Bytes to write qty
+{
+  int ctrl;
+  int addr_hi;
+   int addr_lo;
+
+m24xx_set_addr(eeprom_type,eeprom_addr,eeprom_cs_val, &ctrl,&addr_hi,&addr_lo);--> 7,0,0,ctrlp,addr_hp,addr_lp
+
+static int m24xx_set_addr(
+    int eeprom_type,     //-- EEPROM type
+    int eeprom_addr,     //-- start eeprom addr ( not included Hardware A2,A1,A0)
+    int eeprom_cs_val,   //-- Hardware A2,A1,A0 (valid from 24XX32)
+    int * ctrl_val,      //-- Value of ctrl(return)
+    int * addr_hi_val,   //-- Value of addr_hi(return)
+    int * addr_lo_val)   //-- Value of addr_lo(return)
+{
+
+   int ctrl;
+  int addr_hi;
+   int addr_lo;
+
+   switch(eeprom_type)
+      case EEPROM_24XX256:
+
+         ctrl = (eeprom_cs_val<<1) & 0x07; //-- 00001110               ---------->  0000|0000
+         ctrl |= 0xA0; //-- 1010xxxx                               ---------->  1010|0000 
+         addr_hi = (eeprom_addr>>8) & 0x7F; ---------->  0000|0000
+         addr_lo = eeprom_addr & 0xFF;---------->  0000|0000
+         break;
+
+
+if(ctrl_val)
+      *ctrl_val = ctrl;
+   if(addr_hi_val)
+      *addr_hi_val = addr_hi;
+   if(addr_lo_val)
+      *addr_lo_val = addr_lo;
+ 
+i2c_lpc_ctrl(ctrl); ----------> 1010|0000
+static int i2c_lpc_ctrl(int ctrl)
+{
+   int chk;
+   //-- Set START
+   LPC_I2C0->I2CONCLR = 0xFF; // Clear all bits
+   LPC_I2C0->I2CONSET |= I2C_FLAG_I2EN | I2C_FLAG_STA;
+   while(!(LPC_I2C0->I2CONSET & I2C_FLAG_SI));      //--- End START
+   //-- Set ADDRESS
+   LPC_I2C0->I2DAT = ctrl;
+   LPC_I2C0->I2CONCLR = I2C_FLAG_STA | I2C_FLAG_SI; //-- Clear START & SI
+   if(ctrl & 1) //-- RD
+      chk = 0x40; //-- 40H - SLA+R has been transmitted; ACK has been received
+   else
+      chk = 0x18; //-- 18H - SLA+W has been transmitted; ACK has been received
+   while(!(LPC_I2C0->I2CONSET & I2C_FLAG_SI));      //-- End CTRL
+   if(LPC_I2C0->I2STAT != chk)
+   {
+      i2c_lpc_stop();
+      return I2C_ERR_NO_RESPONSE;
+   }
+   return I2C_NO_ERR;
+}
+
+
+
+ i2c_lpc_wr_byte(addr_hi);7
+   if(addr_lo != -1)
+      i2c_lpc_wr_byte(addr_lo);
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+50  --> 0101|0000
+ucSlaveAddresses[2]= 0101|0000
+
+
+ucDataBuffer[ 0 ]= byteaddress(0000|0000)
+
+FreeRTOS_write( xI2CPort, ucDataBuffer, i2cPAGE_SIZE + 1 );
+
+size_t FreeRTOS_I2C_write( Peripheral_Descriptor_t const pxPeripheral, const void *pvBuffer, const size_t xBytes )
+
+
+pxI2CTransferDefinition->slaveAddr = ucSlaveAddresses[ cPeripheralNumber ];
+				pxI2CTransferDefinition->txBuff = ( uint8_t * ) pvBuffer;
+				pxI2CTransferDefinition->txSz = xBytes;
+				pxI2CTransferDefinition->rxBuff = NULL;
+				pxI2CTransferDefinition->rxSz = 0;
+
+if( I2C_MasterTransferData( pxI2C, pxI2CTransferDefinition, I2C_TRANSFER_POLLING ) == SUCCESS )
+
+
+Status I2C_MasterTransferData(LPC_I2C_TypeDef *I2Cx, I2C_M_SETUP_Type *TransferCfg,I2C_TRANSFER_OPT_Type Opt)
+
+/* Send slave address + WR direction bit = 0 ----------------------------------- */
+			CodeStatus = I2C_SendByte(I2Cx, (TransferCfg->sl_addr7bit << 1));  ---> 1010|0000
+         static uint32_t I2C_SendByte (LPC_I2C_TypeDef *I2Cx, uint8_t databyte)
+
+
+I2Cx->I2DAT = databyte & I2C_I2DAT_BITMASK;  1010|0000 & FF
+
+txdat = (uint8_t *) TransferCfg->tx_data;
+
+CodeStatus = I2C_SendByte(I2Cx, *txdat);
+
+			
+
+
+
+----------------------|---------------|----------|
+S|1010-x|B1|B0|R/W|ACK|Address-LOW|ACK|DATA1|ACK|
+
+
+
+
+
+/////////////////////////////
+
+UART command console task  --- from CMSIS to lpc open
+
+
+
+
+FreeRTOS_UART_open:
+
+
+LPC_UART_TypeDef    ===========>   LPC_USART_T
+
+
+
+boardCONFIGURE_UART_PINS( cPeripheralNumber, xPinConfig ); =========>  Chip_IOCON_PinMuxSet(LPC_IOCON, 0, 15, IOCON_MODE_INACT | IOCON_FUNC2); 
+
+
+UART_Init =====>  Chip_UART_Init,Chip_UART_SetBaud,Chip_UART_ConfigData,Chip_UART_SetupFIFOS
+
+UART_TxCmd ======== > Chip_UART_TXEnable
+
+
+			Chip_UART_Init(pxUART);
+			Chip_UART_SetBaud(pxUART, boardDEFAULT_UART_BAUD);
+			Chip_UART_ConfigData(pxUART, (UART_LCR_WLEN8 | UART_LCR_PARITY_DIS |UART_LCR_SBS_1BIT));
+			Chip_UART_SetupFIFOS(pxUART, (UART_FCR_FIFO_EN | UART_FCR_TRG_LEV2));
+			Chip_UART_TXEnable(pxUART);
+
+
+FreeRTOS_UART_write:
+
+xReturn = UART_Send( pxUART, ( uint8_t * ) pvBuffer, ( size_t ) xBytes, BLOCKING );
+
+uint32_t UART_Send(LPC_UART_TypeDef *UARTx, uint8_t *txbuf,	uint32_t buflen, TRANSFER_BLOCK_Type flag)
+vs
+int Chip_UART_SendBlocking(LPC_USART_T *pUART, const void *data, int numBytes)
+
+xReturn = Chip_UART_SendBlocking( pxUART,  pvBuffer, ( int ) xBytes );
+
+
+UART_TxCmd( pxUART, ENABLE );  ==========> Chip_UART_TXEnable(pxUART);
+
+
+
+FreeRTOS_UART_read:
+
+xReturn = UART_Receive( pxUART, pvBuffer, xBytes, NONE_BLOCKING );
+uint32_t UART_Receive(LPC_UART_TypeDef *UARTx, uint8_t *rxbuf,uint32_t buflen, TRANSFER_BLOCK_Type flag)
+VS
+int Chip_UART_Read(LPC_USART_T *pUART, void *data, int numBytes)
+xReturn = Chip_UART_Read( pxUART, pvBuffer, xBytes);
+
+
+
+
+UART_IntConfig( pxUART, UART_INTCFG_RBR, DISABLE )
+void UART_IntConfig(LPC_UART_TypeDef *UARTx, UART_INT_Type UARTIntCfg, FunctionalState NewState)
+VS
+STATIC INLINE void Chip_UART_IntDisable(LPC_USART_T *pUART, uint32_t intMask)  UART_IER_RBRINT
+Chip_UART_IntDisable(pxUART, UART_IER_RBRINT)
+
+
+							Chip_UART_IntDisable(pxUART, UART_IER_RBRINT)
+							Chip_UART_IntEnable( pxUART, UART_IER_RBRINT) 	
+
+
+	ulInterruptSource = UART_GetIntId( LPC_UART3 );
+
+
+
+UART_FIFOLVL_TXFIFOLVL macro is needed in ioutilsTX_CHARS_FROM_QUEUE_FROM_ISR call from UART3_IRQHandler
+
+/*********************************************************************//**
+ * Macro defines for Macro defines for UART FIFO Level register
+ **********************************************************************/
+#define UART_FIFOLVL_RXFIFOLVL(n)	((uint32_t)(n&0x0F))		/**< Reflects the current level of the UART receiver FIFO */
+#define UART_FIFOLVL_TXFIFOLVL(n)	((uint32_t)((n>>8)&0x0F))	/**< Reflects the current level of the UART transmitter FIFO */
+#define UART_FIFOLVL_BITMASK		((uint32_t)(0x0F0F))		/**< UART FIFO Level Register bit mask */
+
