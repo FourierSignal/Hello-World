@@ -1,2 +1,68 @@
 
-Difference Binary-semaphore and Mutex ??
+================================================================================================================================
+Q : Difference Binary-semaphore and Mutex ??
+A:
+
+Binary semaphores and mutexes are very similar
+subtle difference: 
+                      Binary semaphores                                    mutexes
+
+                    No priority inheritance mechanism                        Mutexes are binary semaphores that include
+                                                                              a priority inheritance mechanism
+                                                                              
+                                                                              
+                    This makes Binary semaphore a better choice              better choice for implementing
+                    for implementing synchronisation                          simple mutual exclusion
+                    (between tasks or between tasks and an interrupt) 
+                       
+                       
+Q:what is priority inheritance ? what is it's role in Mutex objective ?
+  
+   mutex : like a token to guard a resource.
+   When a task wishes to access the resource it must first obtain the token.
+   When it has finished with the resource it must 'give' the token back-allowing other tasks to access resource.
+   
+  scenario: Low-pri-taskA obtains mutex, high-pri-taskC which also require same mutex, got sceduled very next moment. 
+  Result :  high-prio-taskC gets blocked for mutex and now chance that a medium-pri-taskB gets oppurtunity to run and finish.
+            After taskB ,Low-pri-taskA gets chance to execute and release the mutex. high-pri-taskA gets chance to execute only
+            after { Medium-pri-taskB Execution time + time taken by Low-pri-taskA to relese mutex} = Unbounded amount of time,untill
+            Medium-pri-taskB finishes.
+  
+  Affect : Priority Inversion occured b/w Medim-pri-taskB and High-pri-taskC
+  can we mitigate the Affect?? : priority inheritance ca't avoid priority inversion but can minimise the affect
+  
+  Role of priority Inheritance of Mutex - In minimising the Priority Inversion 
+        if a high-pri-taskC blocks while attempting to obtain a mutex that is currently held by a 
+        low-pri-taskA,then the priority of the taskA holding the mutex is temporarily raised to that of the blocking taskC
+        ==> this doesn't allow Medim-pri-taskB to run.
+        Now High-pri-taskC will run as soon as Low-pri-taskB releases the Lock( still priority Inversion , but minimised effect)
+        
+  
+  
+  
+  
+            
+   
+   
+   
+   
+   .
+   
+   
+   
+   
+  
+  
+
+
+                       
+                       
+                       
+                       
+                       
+================================================================================================================================                       
+                       
+                       
+                       
+                       
+                       
