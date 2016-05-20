@@ -15,7 +15,7 @@ subtle difference:
                     for implementing synchronisation                          simple mutual exclusion
                     (between tasks or between tasks and an interrupt) 
                        
-                       
+Q: what is Mutex purpose??                       
 Q:what is priority inheritance ? what is it's role in Mutex objective ?
   
    mutex : like a token to guard a resource.
@@ -37,7 +37,12 @@ Q:what is priority inheritance ? what is it's role in Mutex objective ?
         ==> this doesn't allow Medim-pri-taskB to run.
         Now High-pri-taskC will run as soon as Low-pri-taskB releases the Lock( still priority Inversion , but minimised effect)
         
-  
+ Q: can we use Mutex in INTR-Handler ??
+ A: Interrupt handler should not block waiting for some task to release mutex(if that task obtined mutex), 
+    so we cant use mutex in INTR-Handler
+    
+    
+ 
   
   
   
