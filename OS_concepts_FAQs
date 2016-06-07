@@ -11,7 +11,7 @@ subtle difference:
                                                                               a priority inheritance mechanism
                                                                               
                                                                               
-                    This makes Binary semaphore a better choice              better choice for implementing
+                    Binary semaphore a better choice                          better choice for implementing
                     for implementing synchronisation                          simple mutual exclusion
                     (between tasks or between tasks and an interrupt) 
                        
@@ -29,7 +29,7 @@ Q:what is priority inheritance ? what is it's role in Mutex objective ?
             Medium-pri-taskB finishes.
   
   Affect : Priority Inversion occured b/w Medim-pri-taskB and High-pri-taskC
-  can we mitigate the Affect?? : priority inheritance ca't avoid priority inversion but can minimise the affect
+  can we mitigate the Affect?? : priority inheritance: can't avoid priority inversion but can minimise the affect
   
   Role of priority Inheritance of Mutex - In minimising the Priority Inversion 
         if a high-pri-taskC blocks while attempting to obtain a mutex that is currently held by a 
@@ -43,7 +43,11 @@ Q:what is priority inheritance ? what is it's role in Mutex objective ?
     
     
  
-  
+Q: Re-entrant code ?? 
+
+need :  single threaded process : -> single flow of control => code need not be re-entrant.
+        Multi threaded process : ->  same Functions and resources accessed by several threads concurrently.
+                                     re-entrant Fn : protects the resource integrity.
   
   
             
