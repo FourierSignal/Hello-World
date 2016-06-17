@@ -48,6 +48,7 @@ Feedback given by interviewer:
 If you have Enough Knowledge , then Even if you don't have Project Experience: you will be hired.
 you are going 2 steps in , but not the further 3 steps where you will touch bottom.
 get Indepth Knowledge? dont do trial and Error? Analyse Each step why you are doing.
+go through all course of action - from inserting usb stick till notification appears on screen
 If you come 2 days befor i could have hired you,...those positions are filled .
 now we need person very thourogh and well experienced.
 
@@ -75,6 +76,27 @@ Assesment about Interviewer:
 Action:
 ----------------
 Undersatnding UART driver thoroughly:
+
+UART_INIT:
+Allocate device numbers
+create class for uart
+Register the uart driver with Platform subsystem
+
+UART_EXIT:
+UnRegister the uart driver with Platform subsystem.
+destroy the class uart
+Free the device numbers allocated.
+
+
+
+
+
+
+
+
+
+
+
 
 UART-Probe:
 -----------
@@ -132,13 +154,44 @@ Request IRQ : Install ISR
 Enable Rx-Interrupt only
 
 
+UART_release:
+-------------------
+Disable Interrupts
+free irq
+Free Tx and RX kfifo's
+Disable UART==> MDR1 reg
 
 
+UART_READ:
+----------------
+
+if Intermediate Rx_kfifo_buffer is Empty : do not allow the proces to read.
+      For a non-blocking read return -EAGAIN
+      For blockable read : suspend the user process till data becomes available in Intermediate Rx_kfifo_buffer.
+                 put the process in Read-Wait-queue on the condition:till data becomes available in Rx_kfifo_buffer
+      once the data is available in Rx_kfifo_buffer : copy this to user buffer
+      
+      
+UART_WRITE:
+----------------
+if Intermediate Rx_kfifo_buffer is full : do not allow the proces to write .
+      For a non-blocking write return -EAGAIN
+      For blockable write : suspend the user process till data becomes available in Intermediate Rx_kfifo_buffer.
+              put the process in write-Wait-queue on the condition:till space is available in Tx_kfifo_buffer.
+      once Tx_kfifo_buffer is empty : copy  user buffer to Tx_kfifo_buffer.
+
+UART_FLUSH:
+--------------
+Flush - is called when a process closes its copy of the descriptor.
+   suspend the user process till data in Tx_kfifo_buffer is emptied.
+   put the process in write-Wait-queue on the condition:till Tx_kfifo_buffer is emptied.
+
+object's flush method is invoked on any and every close(), 
+the release method is invoked when the open file object's reference count drops to zero.
 
 
-
-
-
+ISR of UART
+----------------
 
 
 
