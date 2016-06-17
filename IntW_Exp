@@ -5,9 +5,16 @@ which drivers you worked on?? Have you worked on USB?
 EEPROM-driver:
 How do you read 10 bytes from EPROM? what is the use case of EPROM driver written?
 
-what is done in your device open ?
+when are the tasks created in your project compile time or runtime? 
+how to create tasks @ runtime?
+when the sceduler is invoked? how to invoke it?
+
+what is done in your device open ? ---could not able to put forward steps (better write @ some place - so glancing before going to intw may help)
 what is device Initialisation . how you did it for EEPROM?
 What is pinmuxing? what is pinconfiguration? how you did it?
+after pinmux what you did ? - clock Initialisation
+what is clock initialisation ? how you done this --> more detailed answer could have given 
+then what other things you done during device Initialisation?
 
 If you wrote 10 bytes into UART buffer.and about to Enable the TX-Interrupt.but there is 
 context switch suddenly. How do you manage the situation??
@@ -30,10 +37,12 @@ From where do you get the syscall number in system-call?
 
 what happens during  context switch from user space to kernel ??
 
+How do you get the boot-args during run time ?
+
 usrspace stack vs kernel space stack?
 
 what is copy_to_user and copy_from-user? how they help in security??
-you should know : page-tables,security in linux,user space and kernel space linux,
+you should know : page-tables,security in linux,user space and kernel space linux,ioremap
 
 Feedback given by interviewer:
 If you have Enough Knowledge , then Even if you don't have Project Experience: you will be hired.
@@ -58,6 +67,77 @@ Assesment about Interviewer:
 - knowledge wise good but not the best,good in nature,no arrogance.
 - felt ok about me , but not impressed Enough to hire me 
 -this Intervie may be First round , If Qualified there may be client Interview : Nvidea
+- since he felt i worked more on rtos and less on Linux side ..he didn't shoot many questions on Linux drivers
+  other wise there may be questions on probe , driver registration etc.
+- Also i did not putforth many of the things i have actually done.--other wise intw could have taken a different path 
+  and he might have selected me.-- i could have mentioned iomap
+  
+Action:
+----------------
+Undersatnding UART driver thoroughly:
+
+UART-Probe:
+-----------
+possible Q's: when does the probe is called ?
+             what you do in probe of device(UART)
+
+Enable UART TX and  RX pins through pin-ctrl subsystems  
+Request_mem_region: Claim the memory region of 
+Allocate the private object of UART
+io-remap
+Initialise and add the cdev
+create the device node
+
+
+UART-OPEN
+--------------
+UART-Initialisation:
+---------------------
+possible Q's:
+      what is meant by device Initialisation? what you do during UART Initialisation?
+
+
+uart clock Initialisation: 
+
+software reset of device
+
+protocol,Baud rate and Interrupt settings
+FIFO and DMA settings
+should be done as per the steps provided in data sheet.
+
+Deatiled steps:
+(A)
+1)Initiate a software reset : set SOFTRESET bit in UART_SYSC
+2)Wait for the end of the reset operation : poll RESET_DONE bit of UART_SYSS
+(B)
+Switch to Config-Mode B to Access register EFR
+3) Baud-Rate setting:    9.6Kbps/ 1.843Kbps/ 3.6884Kbps  => Load divisor value in DLH,DLL
+(C)
+switch to operational-mode:
+4) select b/w (single-granularity/N-granularity of FIFO-trigger level) /(  DMA mode ) ===>  TLR/TCR/FCR/SCR
+5)set Tx-FIFO-trigger-level,Rx-FIFO-Trigger-level ,clear FIFO & Enable FIFO==> FCR-fifo control register.
+6)Enable the baud-rate clock
+(D)
+Switch to Config-Mode B:
+7)set data-width,stop-bit,no-parity ===> LCR
+8)Disable the break-Ctrl   ===> LCR
+(E)
+9)switch to operational-mode:
+10)Disable all the Interrupts ===> IER
+11)set the UART mode: 16X / 13X ==> MDR1
+
+Allocate Tx and RX Kfifo-buffers
+Initialise WaitQ's for Read and Write operations
+Request IRQ : Install ISR
+Enable Rx-Interrupt only
+
+
+
+
+
+
+
+
 
 
 
