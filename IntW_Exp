@@ -1,0 +1,72 @@
+July17/2016: For NVIDIA through Aricent: Kiran kumar bobbu(Aricent)
+
+which drivers you worked on?? Have you worked on USB?
+
+EEPROM-driver:
+How do you read 10 bytes from EPROM? what is the use case of EPROM driver written?
+
+what is done in your device open ?
+what is device Initialisation . how you did it for EEPROM?
+What is pinmuxing? what is pinconfiguration? how you did it?
+
+If you wrote 10 bytes into UART buffer.and about to Enable the TX-Interrupt.but there is 
+context switch suddenly. How do you manage the situation??
+
+
+what are memory barriers?
+What is out of order Execution?
+
+
+How do you write PS command of Linux? 
+Iterate through task_struct list and display the state of process
+From where do you get the task_struct list ?? 
+what do you pass to / how do you ask to get state of processes??
+
+Insert a node in tree.
+delete a node from tree.
+program to check a flag and update the satus to user?
+
+From where do you get the syscall number in system-call?
+
+what happens during  context switch from user space to kernel ??
+
+usrspace stack vs kernel space stack?
+
+what is copy_to_user and copy_from-user? how they help in security??
+you should know : page-tables,security in linux,user space and kernel space linux,
+
+Feedback given by interviewer:
+If you have Enough Knowledge , then Even if you don't have Project Experience: you will be hired.
+you are going 2 steps in , but not the further 3 steps where you will touch bottom.
+get Indepth Knowledge? dont do trial and Error? Analyse Each step why you are doing.
+If you come 2 days befor i could have hired you,...those positions are filled .
+now we need person very thourogh and well experienced.
+
+Self Asseesment :
+ not going In depth - not understanding thoroughly Each step.
+ not Adventerous Enough to Experimentation : Learning new concepts, new subsystems,new devices 
+ not doing work thouroughly and slowly: need more concentration
+ not having self confidence: believe that you can get job, If you do the work thoroughly,Even if it is very small.
+Interview-Asseesment:
+- not presented the work done ..very well infront of interviwer
+- no indepth knowledge about Each concept touched.
+
+
+Assesment about Interviewer:
+- initially doubtful about me wether i have worked on drivers?
+- slowly gained belief on me.
+- knowledge wise good but not the best,good in nature,no arrogance.
+- felt ok about me , but not impressed Enough to hire me 
+-this Intervie may be First round , If Qualified there may be client Interview : Nvidea
+
+
+
+
+
+
+
+
+
+
+
+
