@@ -192,6 +192,19 @@ the release method is invoked when the open file object's reference count drops 
 
 ISR of UART
 ----------------
+check pending interrupts
+Read IIR - : type of Interrupt which is higher in priority out of currently pending interrupts
+
+if : RHR or Rx-timeout pending
+copy all the available data from rx-uart-fifo  into Internal Rx-kfifo-buffer ( RXFIFOE- rx-fifo-empty flag of LSR)
+mark Any sleeping RD-thread as Runnable => waku-up thread on RD-waitQ
+
+
+if : THR pending 
+copy data from tx-uart-fifo  into Internal Tx-kfifo-buffer till all spaces in tx-uart-fifo level are filled.
+(check for  TXFIFOE -transmithold and shift registers are not empty condition)
+mark Any sleeping WR-thread as Runnable => waku-up thread on WR-waitQ
+
 
 
 
