@@ -1,0 +1,17 @@
+
+
+DFU -  device firmware upgrade 
+
+The DFU protocol implementation in U-Boot is much faster than the FEL protocol implementation in the boot ROM 
+
+FEL is still useful for loading the U-Boot bootloader and a bootscript, which may then activate DFU in the following way:
+   setenv dfu_alt_info ${dfu_alt_info_ram}
+   dfu 0 ram 0
+   bootm ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
+   The rest of the files can be transferred to the device using the "dfu-util" tool.
+   
+USB(Device Firmware upgrade)DFU is used to upgrade the various firmwares on the deive 
+such as SPL, u-boot, kernel and the filesystem. 
+DFU exposes all the nand partitions to host machine as a different USB interfaces.   
+
+
