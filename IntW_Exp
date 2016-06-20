@@ -256,19 +256,122 @@ objec-tives of watch-dog strategy in a multitasking system:
 2)To detect   an infinite loop in any task / deadlock b/w several tasks/
 3)To detect   low-priority tasks not running due to  higher priority tasks hogging cpu 
 
+open WDT
+//Initialise WDT ?? here ?
+If( Normal reboot)
+skip below steps.
+if( watch-dog reboot) //bootstatus flag of watchdog
+ Increment the counter variable:kick_number
+ if( kick_number > 3) //on that day
+ Display : WDT+ERROR
+ else
+ read flag indicating Erraneous task From EPROM
+ Display : flag=>task caused watchdog reset
+ Read (state of system before reboot) / (state of task which caused reboot)
+ Display : Diagnostic Info regading state of system before reboot
+ 
+proceed only if(watchdog-jumper is inserted )
+else
+Display: Watch-dog Jumper not inserted. and stop.
+//Initialise WDT ?? here ?
+Initialise watch-dog timer and send open-device handle to WDT monito task
+create task1:bug_task:
+        configure a gpio-pin as i/p to get accept button press user i/p
+        Register with watchdog-monitor task
+        update flag1 only if switch is ON
+create task2: periodic task with period 1ms
+        Register with watchdog-monitor task
+        update flag2 ,every 1ms
+create task3: periodic task with period 1ms
+        Register with watchdog-monitor task
+        update flag3 ,every 2ms
+create watch-dog_monitor task
+       check the flags of all the periodic tasks
+       If all flags updated - kick the dog              
+       If any flag is not got updated -
+             store the flag in EEPROM
+             Avoid kicking the watch-dog
+       
+Analyse what are problems in kicking DOG from ISR??
+Analyse How to monitor waiting tasks?
+
+
+coding :
+
+Application:
+
+./FreeRTOS-Plus-Demo-1/Source/Examples/WDT/WDTManage.c
+#define WATCHDOG_DEVICE		(const int8_t *)"/WWDT0/"  //aaa-zzz : wdt
+
+	Peripheral_Descriptor_t WDT_handle;
+		WDT_handle = FreeRTOS_open( WATCHDOG_DEVICE, flag );
 
 
 
+BSP:
+
+./FreeRTOS-Plus-Demo-1/Source/FreeRTOSIOConfig.h
+#define ioconfigINCLUDE_WDT									1   //aaa-zzz : WDT
+
+./FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/SupportedBoards/LPCXpresso17xx-base-board.h
+#define boardAVAILABLE_DEVICES_LIST												\
+{																				\
+	{ ( const int8_t * const ) "/WWDT0/", eWWDT_TYPE, ( void * ) LPC_WWDT },	\
+	{ ( const int8_t * const ) "/GPIO0/", eGPIO_TYPE, ( void * ) LPC_GPIO }		\
+}
+
+#define boardNUM_WWDTS				1  //aaa-zzz :wdt
+
+./FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Include/FreeRTOS_DriverInterface.h
+
+typedef enum
+{.....
+	eWWDT_TYPE,
+	eGPIO_TYPE
+} Peripheral_Types_t;
 
 
+/FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_lpc17xx_DriverInterface.c
+
+  #include "FreeRTOS_wdt.h" //aaa-zzz : WDT
+
+		case eWWDT_TYPE :
+
+			#if ioconfigINCLUDE_WDT == 1   //aaa-zzz : WDT
+			{
+				xReturn = FreeRTOS_WWDT_open( pxPeripheralControl );
+			}
+			#endif
+			break;
 
 
+./FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS-Plus-IO/Device/LPC17xx/FreeRTOS_LPC17xx_wdt.c
+
+#include <FreeRTOS_wdt.h> //aaa-zzz
+
+portBASE_TYPE FreeRTOS_WWDT_open( Peripheral_Control_t * const pxPeripheralControl )
+{
 
 
+	return xReturn;
+}
 
 
+The Watchdog :  a divide by 4 fixed pre-scaler and a 32-bit counter. 
+The clock is fed to the timer via a pre-scaler. The timer decrements when clocked.
 
+The minimum value from which the counter decrements is 0xFF.
 
+  
+minimum Watchdog interval is = (T WDCLK * 256 * 4) = 10ms * 256 * 4 = 10ms x 4 x 256
+maximum Watchdog interval is = (T WDCLK * 2^32 * 4) = 10ms x 2^32 x4 = 10ms x 4 x (2x1024x1024x1024)
+                                                                     = 10ms x 4 x (2 x 1073741824)
+                                                                     = 10ms x 4 x 2147483648
 
+The watchdog timer block uses two clocks: PCLK and WDCLK. PCLK is used for the APB
+accesses to the watchdog registers. The WDCLK is used for the watchdog timer counting.                                                                     
+                                                                     
+                                                    
+                                                    
 
 
