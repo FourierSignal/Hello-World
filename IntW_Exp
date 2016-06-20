@@ -216,3 +216,59 @@ mark Any sleeping WR-thread as Runnable => waku-up thread on WR-waitQ
 
 
 
+
+
+
+
+
+
+
+
+Watch dog timer:
+http://www.embedded.com/design/debug-and-optimization/4402288/Watchdog-Timer
+Before kicking the watch-dog timer:
+1) perform set of sanity checks - kick the dog only if all sanity checks pass . if Any check fails - allow dog to bite
+2) Record cause of sanity check failure in EPROM  - because sometimes it may be difficult to find cause after reset
+3) bug-bite case ( if bite is due to S/W bug) : record the system state / currently active task state , valueble info
+when trying to diagnose the problem.
+4)
+
+
+
+
+After dog-bite:
+1)After reset , Examine status bit which indicates that bite occured : decide next course of Action
+  continue running / swich to Fail safe/ display Error-Msg
+2)record number of bites - to avoid persistently errant application resarting indefinitely
+3)
+
+
+
+choosing timeout Interval: ===> when to kick the dog??
+--------------------------
+
+
+
+
+objec-tives of watch-dog strategy in a multitasking system:
+-----------------------------------------------------------
+1)To detect an OS fail-ure that is preventing some or all ofthe tasks from running
+2)To detect   an infinite loop in any task / deadlock b/w several tasks/
+3)To detect   low-priority tasks not running due to  higher priority tasks hogging cpu 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
