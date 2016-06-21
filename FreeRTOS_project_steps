@@ -3,3 +3,100 @@ Project : Watch-dog timer implementation for monitoring helath of tasks
 problem :stack-overflow occuring 
 
 solution:
+
+In the Fn : void vTaskSwitchContext( void ) //FreeRTOS-Plus-Demo-1/Source/FreeRTOS-Products/FreeRTOS/tasks.c:2252:
+before switching to next task.
+taskCHECK_FOR_STACK_OVERFLOW(); 
+vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	
+break point here to examine name of the task
+=========> "name of task"as in below
+xTaskCreate(vTask2, (const signed portCHAR*) "Simplecount", configMINIMAL_STACK_SIZE, NULL, portPRIVILEGE_BIT | configMAX_PRIORITIES-3,NULL);
+
+in vTask2:
+//	vPrintStringAndNumber("T2:xLastWakeTime=",xLastWakeTime ); causing stack overflow
+
+
+ISP - In system programming -> programming the flash-memory of chip ,when chip is already installed/soldered in system.
+
+As soon as active low Reset pin goes high ISP-pin is checked for 3ms.
+If ISP pin is High with in this period => chip(uc)enters ISP mode.
+chip(uc)accepts Flash-programming commands via the serial interface From Host M/C.
+
+Usually, ISP requires that a service technician manually starts the re-programming procedure 
+by halting the application and setting it into a special boot and/or programming mode.
+Only after programming is completed, the application can be restarted.
+
+
+IAP - In Application Programming-> programming the flash-memory of chip ,when chip is already installed/soldered in system
+                                   and also during Application is running.
+
+With IAP it is possible to implement applications that can be re-programmed remotely 
+without the need of a service technician to actually be present
+
+With on-chip Flash, IAP is only possible if supported by the microcontroller.
+The Philips 89C51Rx2 parts support IAP also via the boot loader.
+The application code can call functions in the boot loader area 
+by loading parameters into the registers R0, R1 and DPTR and 
+then calling a specific address in the boot loader. 
+To make these functions easier to use, the Embedded Systems Academy provides a C library supporting all boot loader functions.
+This allows erasing and programming directly from the C level, simply by calling C functions.
+
+In general, IAP can always be realized with external Flash memory,
+where microcontroller and memory are separated components. 
+This is true as long as there is some additional code memory available out of which the microcontroller can execute code,
+while the Flash memory is re-programmed.
+
+
+problem 2:
+once code with Watch-dog timer Enabled is in flash.
+second time Flashing stops with error.:
+
+Target error from Commit Flash write: Em(12).System rejected access at location 0x0300FFFD - 
+verify Population of memory and peripherals
+
+This is due to - WATCHDOG exception / reboot preventing  DEBUG interface - flashing the mem.
+
+Communication between Debugger and Processor can not be established
+there is a watchdog which needs to be deactivated
+
+Regaining debug access to target MCU : https://community.nxp.com/thread/389112
+http://support.code-red-tech.com/CodeRedWiki/DebugAccessChip
+
+
+Vector catch is a mechanism used to trap processor exceptions.
+This feature is typically used in the early stages of development to trap processor exceptions before the appropriate handlers are installed. You select the vectors to trap by editing the vector_catch value.
+
+
+the NVIC’s Debug Exception and Monitor Control register, is used to control the debug activities
+It manages exception behavior under debug.
+It provides :debug monitor controlling , trace system enabling,  Vector Catch controlling
+The upper halfword is for monitor controls and the lower halfword is for halting exception support.
+This register is not reset on a system reset.
+
+Vector catching is only available to halting debug.
+The VC feature can be used only with halt mode debugging.
+When a fault (or core reset) takes place and the corresponding VC control bit is set, 
+the halt request will be set and the core will halt as soon as the current instruction completes.
+
+If watch dog causes reset exception while debug core of processor is in writing the flash memory.==> 
+
+
+
+
+
+To enable "vector catch" for the currently selected build configuration...
+
+    Right click on the project in the Project Explorer view
+
+    Select "Launch Configurations -> Open current launch configuration" from the context senstive menu.
+    Click on the "Debugger" tab, then set the "Vector catch" entry to true. 
+    
+    
+Warning about vector catch
+
+Note that once you have recovered debug access to your MCU, then in most cases you should then modify your
+Debug Configuration to turn vector catch off again. If this is not done, then this can cause problems in some circumstances with some versions of the Code Red IDE. For example with NXP LPC13xx parts, connecting more than once to the MCU with vector catch enabled can lead to the part ID being incorrectly read - which can again cause debug connections to fail:     
+
+
+
+
