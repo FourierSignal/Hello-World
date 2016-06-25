@@ -22,7 +22,7 @@ context switch suddenly. How do you manage the situation??
 
 what are memory barriers?
 What is out of order Execution?
-
+two instructions of Equal execution time may get executed out of order .  why??
 
 How do you write PS command of Linux? 
 Iterate through task_struct list and display the state of process
