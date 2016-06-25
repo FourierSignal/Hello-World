@@ -90,6 +90,8 @@ below is the interviewers expectation:
       semaphore can be released by any process / kernel ... how much this is correct?? does he mean that ...post is
       done several times...and can be done by different processes.??
 
+fork in a for loop --- he is asking for formula to know no.of processes.
+
 how to make the static variable visible in other files?
 what is the scope of static variable??
 can the static variable be declared external??
