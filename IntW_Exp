@@ -72,10 +72,50 @@ Assesment about Interviewer:
   other wise there may be questions on probe , driver registration etc.
 - Also i did not putforth many of the things i have actually done.--other wise intw could have taken a different path 
   and he might have selected me.-- i could have mentioned iomap
-  
 Action:
 ----------------
 Undersatnding UART driver thoroughly:
+
+
+
+
+june24 : wipro interview :
+
+atoi Fn, str-reverseFn.
+what is copy-on-write ? why used?
+difference b/w mutex and semaphore ?
+
+below is the interviewers expectation:
+----> mutex can be relesed only by the process which acquired it.
+      semaphore can be released by any process / kernel ... how much this is correct?? does he mean that ...post is
+      done several times...and can be done by different processes.??
+
+how to make the static variable visible in other files?
+what is the scope of static variable??
+can the static variable be declared external??
+
+delete node in binary tree  ---> try this is not that straight forward as linked list.
+
+Analysis:
+Interviewers not very good at OS...but they questioned well in C,basic linux.
+their behaviour was good .
+this interview helped me to know my weak -points: i should be continously practice intw-aproach
+keep practicing,c and DS basics...It helps to make impression during intw-for-PlatformJOB.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 UART_INIT:
 Allocate device numbers
