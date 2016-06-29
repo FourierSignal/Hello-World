@@ -14,6 +14,8 @@ subtle difference:
                     Binary semaphore a better choice                          better choice for implementing
                     for implementing synchronisation                          simple mutual exclusion
                     (between tasks or between tasks and an interrupt) 
+                    
+                    semaphore can be released by any process                 only process acquired can relaese mutex
                        
 Q: what is Mutex purpose??                       
 Q:what is priority inheritance ? what is it's role in Mutex objective ?
