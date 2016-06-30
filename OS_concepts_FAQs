@@ -206,6 +206,11 @@ Depending on architecture and kernel version, the handler may
 use either the kernel stack of the interrupted thread or a
 special interrupt stack.
 
+If a local variable is declared in an ISR, where it will be stored?
+It will be stored in ISR stack(IRQSTACKSIZE). The ISR runs on a separate interrupt stack only if the hardware supports it. 
+Otherwise, the ISR stack frames are pushed onto the stack of the interrupted thread.
+As interrupts comes per cpu, therefore ISR stack has to be per cpu.
+
 
 
 System calls:
@@ -232,7 +237,6 @@ this is done using iret instruction.
 
 
 Fast system calls:
-
 
 
 
