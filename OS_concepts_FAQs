@@ -172,6 +172,15 @@ There is just one kernel memory. In it each process has
 > > it's own task_struct + kernel stack (by default 8K). There  is no
 special address mapping for these, nor are they allocated from a special area. 
 
+The current design is :
+the kernel stack space of process and its thread_info structure are located together (at two ends because stack grows down).
+This is because it offers a key benefit in terms of efficiency: the kernel can easily obtain the address of the thread_info 
+structure of the process currently running on a CPU from the value of its kernel ESP register.
+
+task's kernel-stack to store a strcture thread_info
+thread_info and task-struct contain pointers to each other
+
+
 Switching b/w kernel stacks of processes:
 When a context of some process is entered, esp is pointed to the top of
  it's stack. That's exactly all it takes to exchange stacks. 
