@@ -112,7 +112,103 @@ If you are allocating memory that only software accesses, such as data associate
   the performance gains often are well appreciated. 
   Despite this, if you need to allocate tens of megabytes of memory in the kernel, vmalloc() is your best option. 
   
-  
+  Kmalloc                                                                           Vmalloc
+  1)contiguous physical memory & contiguous virtual memory   2) not guarenteed contiguous physical memory but contiguous virtual memory 
+  2)use for memory accessible by H/w                         2) for allocating buffers only for S/w usage
+  3) performance is high : no TLB overhead                   3) TLB overhead : so dont use if high performance required while acessing mem allocated
+
+
+
+Rules while Allocating memory in kernel:
+Decide whether you can sleep (that is, whether the call to kmalloc() can block).
+If you are in an interrupt handler, in a bottom half, or if you hold a lock, you cannot.
+If you are in process context and do not hold a lock, you probably can. 
+specify GFP_KERNEL. / specify GFP_ATOMIC accordingly
+If you need DMA-capable memory : specify GFP_DMA. 
+Always check for and handle a NULL return value from kmalloc()
+Do not leak memory; make sure you call kfree() somewhere. 
+Ensure you never access a block of memory after you free it. 
+
+
+
+
+
+Kernel stack:
+Unlike user-space processes, code executing in the kernel has neither a large nor a dynamically growing stack.
+the kernel has a small fixed-size stack - 8KB typical  --- 4KB for recent versions
+Never allocate large memory on kernel stack.
+
+
+#define BUF_LEN	2048
+
+void rabbit_function(void)
+{
+    char buf[BUF_LEN];
+    /* ...  */
+}
+
+Instead, the following is preferred:
+
+#define BUF_LEN	2048
+
+void rabbit_function(void)
+{
+    char *buf;
+
+    buf = kmalloc(BUF_LEN, GFP_KERNEL);
+    if (!buf)
+        /* error! */
+
+/* ... */
+}
+In the kernel, however, you should use dynamic memory any time the allocation size is larger than a handful of bytes or so
+
+Does each process have its own kernel stack ?
+Not just each process - each thread has its own kernel stack (and, in fact, its own user stack as well). 
+Remember the only difference between processes and threads (to Linux) is the fact that multiple threads
+can share an address space (forming a process).
+
+There is just one kernel memory. In it each process has
+> > it's own task_struct + kernel stack (by default 8K). There  is no
+special address mapping for these, nor are they allocated from a special area. 
+
+Switching b/w kernel stacks of processes:
+When a context of some process is entered, esp is pointed to the top of
+ it's stack. That's exactly all it takes to exchange stacks. 
+  The scheduler saves most of the registers onto the stack,
+then it saves the stack pointer in the task_struct of the
+current thread and loads the stack pointer of the next
+thread to be executed. Then it simply proceeds restoring
+registers from the stack.
+
+Since registers are saved both when a thread is interrupted (or enters kernel mode through a system call or an exception)
+and also by the scheduler, there will actually be two sets of registers on the stack of each thread not currently
+executing on a CPU.
+
+
+OK, lets say there are 20 processes running in the system. Then the
+> kernel must allocate 20 * 8K = 160K just for the stacks of these
+> processes. All of these 160K always occupy the kernel (kernel memory
+> is never swapped out). When a process actives, ESP would switch to
+> point to the corresponding stack (of that process). 
+
+Kernel-stack for Interrupts??
+Depending on architecture and kernel version, the handler may
+use either the kernel stack of the interrupted thread or a
+special interrupt stack.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   
