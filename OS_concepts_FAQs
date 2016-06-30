@@ -67,11 +67,24 @@ need :  single threaded process : -> single flow of control => code need not be 
                 used in process context code when it is safe to sleep.
   GFP_ATOMIC:- ensures that current process is not put to sleep if memory is low.
                This is the flag to use in interrupt handlers, bottom halves and other situations where you cannot sleep.
+  GFP_USER:-	This is a normal allocation and might block. This flag is used to allocate memory for user-space processes.
+
+
+  kmalloc return the virtual address of first page allocated. On error it returns NULL.  
   
-  kmalloc return the virtual address of first page allocated. On error it returns NULL.               
+  when to use kmalloc:
+  many hardware devices cannot address virtual memory. Therefore, in order for them to be able to access a block of memory,
+  the block must exist as a physically contiguous chunk of memory
+  Another benifit: a physically contiguous block of memory can use a single large page mapping.
+                  This minimizes the translation lookaside buffer (TLB) overhead of addressing the memory
   
   
   void kfree(const void *ptr)
+  calling kfree() on a block of memory that already has been freed or on a pointer that is not an address returned from kmalloc() 
+  is a bug, and it can result in memory corruption. 
+  
+  Calling kfree() on NULL is checked for explicitly and is safe, although it is not necessarily a sensible idea
+  
   
   When to use Kmalloc :-If memory required in driver needs to be contiguous in physical memory 
                         then we have to use kmalloc for allocation of memory.
@@ -86,9 +99,20 @@ void *vfree(const void *ptr);
 When to use vmalloc?
 When you are sure that memory required will never needs to interact with hardware in future 
 or we can if you required memory only for software purpose then we should use vmalloc for allocating memory.
+If you are allocating memory that only software accesses, such as data associated with a user process, there is no need for the memory to be physically contiguous.
 
-                        
-                        
+
+  Kmalloc or vmalloc ??                      
+  it is often hard to find physically contiguous blocks of memory, especially for large allocations.
+  Allocating memory that is only virtually contiguous has a much larger chance of success. 
+  If you do not need physically contiguous memory, use vmalloc():  
+  Nonetheless, few allocations in the kernel use vmalloc(). Most choose to use kmalloc(), even if it's not needed,
+  partly for historical and partly for performance reasons. 
+  Because the TLB overhead for physically contiguous pages is reduced greatly,
+  the performance gains often are well appreciated. 
+  Despite this, if you need to allocate tens of megabytes of memory in the kernel, vmalloc() is your best option. 
+  
+  
 
 
   
