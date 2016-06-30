@@ -199,6 +199,33 @@ special interrupt stack.
 
 
 
+System calls:
+glibc provides wrapper code which abstracts you away from the underlying code which arranges the arguments
+you’ve passed and enters the kernel.
+
+The Linux kernel includes a file which lists each system call in a table.
+There are a few scripts which run at compile time which take syscalltable and generate the syscalls_32.h file from it.
+this header file provides syscall numbers, which can be used by user programs.
+
+
+
+The Linux kernel sets aside a specific software interrupt number that can be used by user space programs to enter the kernel
+The Linux kernel registers an interrupt handler for the interrupt number: 128 (0x80)
+The userland program is expected to put the system call number in the eax register.
+The arguments for the syscall itself are to be placed in the remaining general purpose registers.
+system-call service Function indexed using syscall number in system call table.
+
+return address and the CPU flags which encode the privilege level (and other stuff),
+and more are all saved on the program stack before ia32_syscall executes.
+
+After system call service is Executed..kernel just needs to copy these values from the program stack back into the registers where they belong and execution will resume back in userland.
+this is done using iret instruction.
+
+
+Fast system calls:
+
+
+
 
 
 
