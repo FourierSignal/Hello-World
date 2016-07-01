@@ -100,3 +100,17 @@ Debug Configuration to turn vector catch off again. If this is not done, then th
 
 
 
+############################################################################################################################
+
+ look into 2 aspects of lpc17xx/cm3 :
+
+1) low-power features of the  processor/controller
+
+2) tickless mode of operation of the FreeRTOS
+
+sources of Info: lpc17xx user-manual, Definitive Guide's  and FreeRTOS site for tick less mode.
+
+understand low-power and tick less mode from embedded perspective.
+
+
+
