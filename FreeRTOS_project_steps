@@ -248,15 +248,9 @@ This is why all ARM CPUs I'm aware of will wake up even if they are
 masked at the core CPU (CPSR I bit.)
 
 
-
-
-
-
 The system can generate spurious wakeup events, for example a debug operation wakes up the processor.
 Therefore software must be able to put the processor back into sleep mode after such an event.
 A program might have an idle loop to put the processor back to sleep mode. 
-
-
 
 System Control Register:  The SCR controls features of entry to and exit from low power state.
 SEVONPEND(send event on pending bit): 
