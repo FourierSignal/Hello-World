@@ -112,5 +112,82 @@ sources of Info: lpc17xx user-manual, Definitive Guide's  and FreeRTOS site for 
 
 understand low-power and tick less mode from embedded perspective.
 
+features of cortex-m3 processor:
+ultra-low power consumption with integrated sleep modes
+fast code execution permits slower processor clock or increases sleep mode time
+power control optimization of system components
+
+
+
+
+Entering sleep mode and Wakeup from sleep mode:
+------------------------------------------------
+what are the mechanisms software can use to put the processor into sleep mode ??
+ 
+WFI(Wait for Interrupt) and WFE(Wait for Event) Instructions: allow the core to enter a low power mode and stop executing code
+
+WFI:
+When the processor executes a WFI instruction it stops executing instructions and
+enters sleep mode  unless the wake-up condition is true.
+
+Wakeup from WFI :
+the processor wakes up from WFI only when it detects an exception with sufficient priority.
+Executing restore tasks before executing an interrupt handler:
+Some embedded systems might have to execute system restore tasks after the processor wakes up,
+and before it executes an interrupt handler.
+{PRIMASK bit =1  prevents the activation of all exceptions with configurable priority.
+FAULTMASK bit=1 prevents the activation of all exceptions except for NMI.}
+achive this by setting  PRIMASK bit =1 and the FAULTMASKbit=0 => If an interrupt arrives that is enabled 
+and has a higher priority than current exception priority,
+the processor wakes up but does not execute the interrupt handler until the processor sets PRIMASK to zero
+
+
+
+
+sleep-on-exit:  Use this mechanism in applications that only require the processor to run when an exception occurs
+how to achieve this object : processor should sleep on exiting from exception handler
+If the SLEEPONEXIT bit of the SCR is set to 1, when the processor completes the execution of all exception handlers
+it returns to Thread mode and immediately enters sleep mode
+
+
+
+
+WFE:
+The Wait For Event instruction, WFE, causes entry to sleep mode depending on the value of a one-bit event register.
+When the processor executes a WFE instruction, it checks the value of the event register:
+0 ------->     The processor stops executing instructions and enters sleep mode.
+1 ------->     The processor clears the register to 0 and continues executing instructions without entering sleep mode.
+               event register is 1=> an external event signal is asserted, or a processor in the system has executed an SEV instruction
+               SEV(send event)is a hint instruction that causes an event to be signaled to all processors within a multiprocessor system               
+               It  sets the local event register to 1
+               
+Wakeup from WFE
+-------------------
+The processor wakes up if:
+    it detects an exception with sufficient priority to cause exception entry
+    it detects an external event signal.{Your device might include an external event input signal, so that device peripherals can signal the processor}
+    in a multiprocessor system, another processor in the system executes an SEV instruction.
+
+ if the SEVONPEND bit in the SCR is set to 1, any new pending interrupt triggers an event and 
+ wakes up the processor, even if the interrupt is disabled or has insufficient priority to cause exception entry.  
+ 
+               
+
+
+
+
+
+
+
+
+The system can generate spurious wakeup events, for example a debug operation wakes up the processor.
+Therefore software must be able to put the processor back into sleep mode after such an event.
+A program might have an idle loop to put the processor back to sleep mode. 
+
+
+
+System Control Register:  The SCR controls features of entry to and exit from low power state.
+SEVONPEND(send event on pending bit): 
+
 
 
