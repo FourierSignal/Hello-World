@@ -117,7 +117,9 @@ ultra-low power consumption with integrated sleep modes
 fast code execution permits slower processor clock or increases sleep mode time
 power control optimization of system components
 
-
+sleep modes : normal sleep and deep sleep
+normal sleep might result in some of the clock signals being switched off, 
+deep sleep might also reduce voltage supplies to the memory blocks and might switch off additionl components in the system. 
 
 
 Entering sleep mode and Wakeup from sleep mode:
@@ -125,10 +127,22 @@ Entering sleep mode and Wakeup from sleep mode:
 what are the mechanisms software can use to put the processor into sleep mode ??
  
 WFI(Wait for Interrupt) and WFE(Wait for Event) Instructions: allow the core to enter a low power mode and stop executing code
+The power modes on a device are a combination of peripheral/device configuration and the WFE and WFI instructions
 
 WFI:
+WFI is targeted for entering either standby, dormant or shutdown mode, where an interrupt is required to wake-up the processor.
 When the processor executes a WFI instruction it stops executing instructions and
 enters sleep mode  unless the wake-up condition is true.
+
+Wait for Interrupt mode disables most of the clocks of a CPU, while keeping its logic powered up.
+To ensure that the memory system is not affected by the entry into the Standby state, the following operations are performed:
+    A Data Synchronization Barrier, so ensuring that all explicit memory accesses occurring in program order before the WFI have completed. This avoids any possible deadlocks that could be caused in a system where memory access triggers or enables an interrupt that the core is waiting for.
+    Any other memory accesses that have been started at the time that the WFI instruction is executed are completed as normal. This ensures that the Level 2 memory system does not see any disruption caused by the WFI.
+    The debug channel remains active throughout a WFI. 
+The transition from the WFI mode to the Run mode is caused by: masked or unmasked INTR,a debug request(regardless of whether debug is enabled )
+a reset.
+
+
 
 Wakeup from WFI :
 the processor wakes up from WFI only when it detects an exception with sufficient priority.
@@ -153,6 +167,15 @@ it returns to Thread mode and immediately enters sleep mode
 
 
 WFE:
+
+A usage for WFE is to put processor into a spinlock loop.
+If multiple CPUs are trying to access the resource, one will get access and will start to 
+use the resource while the other CPUs will be stuck in the spinlock loop. To save power, you can 
+insert the WFE instruction into the loop so the CPUs instead of looping continuously will enter 
+STANDBTWFE. Then the CPU who has been using the resource should execute SEV instruction after it 
+has finished using the resource. This will wake up all other CPUs from STANDBYWFE and another CPU 
+can then access the shared resource.
+
 The Wait For Event instruction, WFE, causes entry to sleep mode depending on the value of a one-bit event register.
 When the processor executes a WFE instruction, it checks the value of the event register:
 0 ------->     The processor stops executing instructions and enters sleep mode.
@@ -170,6 +193,7 @@ The processor wakes up if:
 
  if the SEVONPEND bit in the SCR is set to 1, any new pending interrupt triggers an event and 
  wakes up the processor, even if the interrupt is disabled or has insufficient priority to cause exception entry.  
+
  
                
 
