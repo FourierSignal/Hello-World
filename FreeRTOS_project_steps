@@ -228,6 +228,24 @@ Similar to the DMA controller example, the WFE sleep operation can be used to re
 
 
 
+race conditions :
+
+  if (!dont_sleep)
+    WFI();
+
+would run the risk that an interrupt could occur between the 'if' and the 'wfi' and set dont_sleep, 
+but the wfi would go ahead and execute anyway.
+
+how to prevent that?
+
+Set PRIMASK to 1 to prevent interrupts from interrupting the processor just before executing the WFI,
+and clear it immediately after?
+
+No matter how good your code is, if you don't disable interrupts, you
+will always have a race between preparing to go to sleep and actually
+going to sleep, which results in lost wake up events.
+This is why all ARM CPUs I'm aware of will wake up even if they are
+masked at the core CPU (CPSR I bit.)
 
 
                
