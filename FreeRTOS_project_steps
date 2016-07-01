@@ -248,11 +248,6 @@ This is why all ARM CPUs I'm aware of will wake up even if they are
 masked at the core CPU (CPSR I bit.)
 
 
-               
-
-
-
-
 
 
 
