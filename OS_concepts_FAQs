@@ -1,4 +1,71 @@
 
+
+=======================================================================================================================
+
+MUTEX vs SPINLOCK:
+
+Mutex
+ thread tries to lock a mutex and it does not succeed, because the mutex is already locked, it will go to sleep.
+ immediately allowing another thread to run. 
+ It will continue to sleep until being woken up, which will be the case once the mutex is being unlocked
+ by whatever thread was holding the lock before.
+ 
+Disadvantage: 
+putting threads to sleep and waking them up again are both rather expensive operations.
+they’ll need quite a lot of CPU instructions and thus also take some time.
+If now the mutex was only locked for a very short amount of time, the time spent in putting a thread to sleep 
+and waking it up again might exceed the time the thread has actually slept by far and it might even exceed 
+the time the thread would have wasted by constantly polling on a spinlock
+
+when to use Mutex??
+when Lock is held for long time.
+
+Spinlock: 
+When a thread tries to lock a spinlock and it does not succeed, it will continuously re-try locking it,
+until it finally succeeds; thus it will not allow another thread to take its place.
+(however,once the CPU runtime quantum of the current thread has been exceeded, OS will forcefully switch to another thread,).
+
+disadvantages:
+polling on a spinlock will constantly waste CPU time.
+if the lock is held for a longer amount of time, this will waste a lot more CPU time and it would have been much better 
+if the thread was sleeping instead.
+
+when to use spinlocaks??
+Using spinlocks on a single-core/single-CPU system makes usually no sense, since as long as the spinlock polling is blocking
+the only available CPU core, no other thread can run and since no other thread can run, the lock won’t be unlocked in the
+quantum of time allocated for thread spinning...this merely wastes quantum of thread trying for spinlock.
+
+On a multi-core/multi-CPU systems, with plenty of locks that are held for a very short amount of time only, 
+the time wasted for constantly putting threads to sleep and waking them up again might decrease runtime performance noticeably. 
+When using spinlocks instead, threads get the chance to take advantage of their full runtime quantum 
+(always only blocking for a very short time period, but then immediately continue their work), leading to much higher processing throughput.
+
+The Practice
+Since very often programmers cannot know in advance if mutexes or spinlocks will be better 
+(e.g. because the number of CPU cores of the target architecture is unknown), nor can operating systems know 
+if a certain piece of code has been optimized for single-core or multi-core environments,
+most systems don’t strictly distinguish between mutexes and spinlocks.
+In fact, most modern operating systems have hybrid mutexes and hybrid spinlocks.
+
+hybrid mutexes: 
+behaves like a spinlock at first on a multi-core system.
+Only if the lock has still not been obtained after a certain amount of time (or retries or any other measuring factor), 
+the thread is really put to sleep.
+
+
+
+
+
+
+
+
+ 
+ .
+ 
+
+
+
+
 ================================================================================================================================
 Q : Difference Binary-semaphore and Mutex ??
 A:
