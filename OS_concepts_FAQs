@@ -52,21 +52,7 @@ behaves like a spinlock at first on a multi-core system.
 Only if the lock has still not been obtained after a certain amount of time (or retries or any other measuring factor), 
 the thread is really put to sleep.
 
-
-
-
-
-
-
-
- 
- .
- 
-
-
-
-
-================================================================================================================================
+===============================================================================================================================
 Q : Difference Binary-semaphore and Mutex ??
 A:
 
