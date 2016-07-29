@@ -242,3 +242,81 @@ while (1)
 return 0; 
 }
 
+
+//##################################################################################################################
+
+Binary Tree
+
+
+
+Algorithm:
+
+1. if no root node , create node, Initialise left,right pointers to NULL, point root to the node.
+
+2. if root node exist ,
+   find val is left to node or right to node.
+   if left , pass pointer to left pointer, val 
+   if right, pass pointer to right pointer , val
+   recursively
+
+
+ void insert(node ** tree, int val)
+ {
+    node *temp = NULL;
+    if(!(*tree))
+    {
+       temp = (node *)malloc(sizeof(node));
+       temp->left = temp->right = NULL;
+       temp->data = val;
+       *tree = temp;
+       return;
+    }
+
+    if(val < (*tree)->data)
+    {
+      insert(&(*tree)->left, val);
+    }
+    else if(val > (*tree)->data)
+    {
+      insert(&(*tree)->right, val);
+    }
+ }
+
+
+
+ node* search(node ** tree, int val)
+ {
+    if(!(*tree))
+    {
+      return NULL;
+    }
+    if(val == (*tree)->data)
+    {
+       return *tree;
+    }
+    else if(val < (*tree)->data)
+    {
+       search(&((*tree)->left), val);
+    }
+    else if(val > (*tree)->data)
+    {
+      search(&((*tree)->right), val);
+    }
+ }
+
+
+ void deltree(node * tree)
+ {
+   if(tree)
+   {
+      deltree(tree->left);
+      deltree(tree->right);
+      free(tree);
+   }
+ }
+
+
+
+
+
+
