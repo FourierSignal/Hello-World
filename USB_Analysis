@@ -1,0 +1,17 @@
+
+
+
+ mount -t debugfs none_debugs /sys/kernel/debug
+ modprobe usbmon
+  ls /sys/kernel/debug/usbmon
+  
+  cat /proc/bus/usb/devices : find the T-line which corresponds tothe device
+  lsusb
+  
+  
+  # cat /sys/kernel/debug/usbmon/3u > /tmp/1.mon.out
+
+to listen on a single bus, otherwise, to listen on all buses, type:
+
+# cat /sys/kernel/debug/usbmon/0u > /tmp/1.mon.out
+ 
