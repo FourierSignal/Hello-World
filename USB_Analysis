@@ -1,6 +1,10 @@
 
 https://www.kernel.org/doc/Documentation/usb/usbmon.txt
 
+http://www.linux-usb.org/usb.ids
+
+
+
 
  mount -t debugfs none_debugs /sys/kernel/debug
  modprobe usbmon
