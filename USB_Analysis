@@ -77,6 +77,61 @@ tshark: The file to which the capture would be saved ("/home/jaguar/trace1.pcap"
 
 
 
+When a device plugs into a port, the device’s pull-up brings its line high,
+enabling the hub to detect that a device is attached
+The hub detects the device.
+
+Each hub uses its interrupt endpoint
+to report events at the hub. The report indicates only whether the hub or a
+port (and if so, which port) has experienced an event
+
+ffff8801f6e0a6c0 3824618392 C Ii:1:001:1 0:2048 2 = 4000
+explaination:
+C - callback event 
+Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
+URB type and direction, Bus number, Device address, Endpoint number
+
+ffff8801f6e0a6c0 3824618402 S Ii:1:001:1 -115:2048 4 <
+S - setup event 
+Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
+URB type and direction, Bus number, Device address, Endpoint number
+
+-115:2048 
+status-EINPROGRESS: Interval-2048
+URB-status-word:=> 
+(URB status, interval, start frame, and error count)
+a letter/several numbers separated by colon 
+(all fields except the status are optional : Interval is printed  only for interrupt and isochronous URBs. Start frame is printed only for
+  isochronous URBs,Error count is printed only for isochronous callback  events.)
+
+URB status : number
+              This field makes no sense for submissions
+              In case of a submission of a Control packet, this field contains a Setup Tag
+              
+              
+              
+              
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
