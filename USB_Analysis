@@ -23,3 +23,63 @@ to listen on a single bus, otherwise, to listen on all buses, type:
 
 # cat /sys/kernel/debug/usbmon/0u > /tmp/1.mon.out
  
+
+sudo tshark -D
+
+
+
+
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ sudo tshark -D
+Running as user "root" and group "root". This could be dangerous.
+tshark: Lua: Error during loading:
+ [string "/usr/share/wireshark/init.lua"]:44: dofile has been disabled due to running Wireshark as superuser. See https://wiki.wireshark.org/CaptureSetup/CapturePrivileges for help in running Wireshark as an unprivileged user.
+1. wlan0
+2. nflog
+3. nfqueue
+4. pan1
+5. usbmon1
+6. usbmon2
+7. usbmon3
+8. usbmon4
+9. any
+10. lo (Loopback)
+
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 005: ID 0471:df55 Philips (or NXP) LPCXpresso LPC-Link
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+to capture 0471:df55 on bus 1 ----- in a file trace1.pcap
+
+jaguar@jaguar-ThinkPad-T540p ~ $ tshark -i usbmon2 -w trace1.pcap 
+Capturing on 'usbmon2'
+tshark: Couldn't run /usr/bin/dumpcap in child process: Permission denied
+
+jaguar@jaguar-ThinkPad-T540p ~ $ sudo tshark -i usbmon1 -w ~/trace1.pcap 
+Running as user "root" and group "root". This could be dangerous.
+tshark: Lua: Error during loading:
+ [string "/usr/share/wireshark/init.lua"]:44: dofile has been disabled due to running Wireshark as superuser. See https://wiki.wireshark.org/CaptureSetup/CapturePrivileges for help in running Wireshark as an unprivileged user.
+Capturing on 'usbmon1'
+tshark: The file to which the capture would be saved ("/home/jaguar/trace1.pcap") could not be opened: Permission denied.
+
+
+
+
+
+
+
+
+
+
+
+
+
