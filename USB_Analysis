@@ -85,19 +85,8 @@ Each hub uses its interrupt endpoint
 to report events at the hub. The report indicates only whether the hub or a
 port (and if so, which port) has experienced an event
 
-ffff8801f6e0a6c0 3824618392 C Ii:1:001:1 0:2048 2 = 4000
-explaination:
-C - callback event 
-Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
-URB type and direction, Bus number, Device address, Endpoint number
 
-ffff8801f6e0a6c0 3824618402 S Ii:1:001:1 -115:2048 4 <
-S - setup event 
-Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
-URB type and direction, Bus number, Device address, Endpoint number
 
--115:2048 
-status-EINPROGRESS: Interval-2048
 URB-status-word:=> 
 (URB status, interval, start frame, and error count)
 a letter/several numbers separated by colon 
@@ -108,7 +97,60 @@ URB status : number
               This field makes no sense for submissions
               In case of a submission of a Control packet, this field contains a Setup Tag
               
-              
+if Setup Tag was 's': then only decode below
+Setup packet : ( bmRequestType, bRequest, wValue, wIndex, wLength):as per USB-2.0.
+
+ffff8801f6e0a6c0 3824618392 C Ii:1:001:1 0:2048 2 = 4000
+explaination:
+C - callback event 
+Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
+URB type and direction, Bus number, Device address, Endpoint number
+
+0:2048
+status-0: Interval-2048
+
+---------------------------------------------------------------------------------------------------------
+
+ffff8801f6e0a6c0 3824618402 S Ii:1:001:1 -115:2048 4 <
+S - setup event 
+Ii:1:001:1   ====   Interrupt : IN : bus-1 : device-1 : endpoint-1   // bus1,dev-1 is HUB.
+URB type and direction, Bus number, Device address, Endpoint number
+
+-115:2048 
+status-EINPROGRESS: Interval-2048
+ 
+ 4 <  
+ requested data length =4
+ -----------------------------------------------------------------------------------------------------------------
+ 
+ ffff8800b5c8fa80 3824618413 S Ci:1:001:0 s a3 00 0000 0006 0004 4 <
+ S - setup event 
+ Ci:1:001:0   ====   Control : IN : bus-1 : device-1 : endpoint-0
+ 
+ s 
+ Setup Tag
+ 
+ a3 00 0000 0006 0004
+ bmRequestType = a3 , bRequest =00 , wValue=0000, wIndex=0006, wLength=0004
+ 
+ bmRequestType: direction of data flow, the type of request, and the recipient.
+ 1(OUT/IN)010(standard/class-specific/vendor-specific)0011
+ a3 = 1010 0011   ===> 1(dev->host) 01(class)  00011(other element in device)
+ 
+ bRequest: 00 (GET_STATUS)
+ wValue : request-specific value -
+ wIndex : enpoint-index/interface-index  --- endpoint 6 => port6
+ wLength: number of data bytes in the Data stage that follow
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
               
               
               
