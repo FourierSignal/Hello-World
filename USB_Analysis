@@ -16,6 +16,38 @@ jaguar-ThinkPad-T540p usbmon # ls
 
  
   
+   sysfs structures for Linux USB:
+   
+   
+   jaguar@jaguar-ThinkPad-T540p ~ $ ls   /sys/bus/usb/devices/
+1-0:1.0  1-12:1.0  1-3      1-7      2-0:1.0  3-1      4-0:1.0  4-1:1.0  usb2  usb4
+1-12     1-12:1.1  1-3:1.0  1-7:1.0  3-0:1.0  3-1:1.0  4-1      usb1     usb3
+
+USB-controllers:
+The names that begin with "usb" refer to USB controllers.
+More accurately, they refer to the "root hub" associated with each controller. 
+usb1 ---> root hub of usb-controller. It's bus number is 1.
+usb2 ---> root hub of usb-controller. It's bus number is 2
+
+USB devices:   bus-port.port.port....
+eg: 1-2.3.1 ==> bus1(root-hub) - device plugged into port2 of root-hub.This device is another hub
+=> device plugged into port3 of that hub.this device is another hub
+==> device plugged into port1 of that hub.this device is not a hub.
+simply 1-2.3.1 == device plugged into : bus1--port2 of root-hub .port3 of 1st level-hub . port1 of 2nd level hub.
+1-12 ---->  bus1 - port12  : device is attached to the port12 of roothub
+4-1  ---->  bus4 - port1   : device is attached to port1 of roothub
+
+
+
+
+
+
+
+
+
+
+  
+  
   
   cat /proc/bus/usb/devices : find the T-line which corresponds tothe device
   lsusb
