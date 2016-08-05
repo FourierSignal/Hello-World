@@ -241,7 +241,33 @@ status-EINPROGRESS: Interval-2048
 
 
 
+Data transactions occur in three phases: Token, Data, and Handshake.
 
+All communication on the USB is host-directed. 
+
+In the Token phase, the host will generate a Token packet which will address a specific device/endpoint combination.
+A Token packet can be IN, OUT, or SETUP.
+
+IN  :  The host is requesting data from the addressed dev/ep.
+
+OUT : The host is sending data to the addressed dev/ep.
+
+SETUP:  The host is transmitting control information to the device.
+
+In the data phase, the transmitter will send one data packet.
+For IN requests, the device may send a NAK or STALL packet during the data phase to 
+indicate that it isn’t able to service the token that it received.
+
+ in the Handshake phase the receiver can send an ACK, NAK, or STALL indicating the success or failure of the transaction.
+ 
+ All of the transfers described above follow this general scheme with the exception of the Isochronous transfer.
+ In this case, no Handshake phase occurs because it is more important to stream data out in a timely fashion.
+ It is acceptable to drop packets occasionally and there is no need to waste time by attempting to retransmit.
+ 
+ 
+ 
+ 
+ 
 
 
 
