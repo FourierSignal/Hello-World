@@ -26,7 +26,7 @@ jaguar-ThinkPad-T540p usbmon # ls
 USB-controllers:
 The names that begin with "usb" refer to USB controllers.
 More accurately, they refer to the "root hub" associated with each controller. 
-usb1 ---> root hub of usb-controller. It's bus number is 1.
+usb1 ---> root hub of usb-controller. It's bus number is 1. //bus1-port0(not actually a port) is used to refer roothub of bus1
 usb2 ---> root hub of usb-controller. It's bus number is 2
 
 USB devices:   bus-port.port.port....
@@ -34,8 +34,32 @@ eg: 1-2.3.1 ==> bus1(root-hub) - device plugged into port2 of root-hub.This devi
 => device plugged into port3 of that hub.this device is another hub
 ==> device plugged into port1 of that hub.this device is not a hub.
 simply 1-2.3.1 == device plugged into : bus1--port2 of root-hub .port3 of 1st level-hub . port1 of 2nd level hub.
+
 1-12 ---->  bus1 - port12  : device is attached to the port12 of roothub
 4-1  ---->  bus4 - port1   : device is attached to port1 of roothub
+
+Interfaces of devices :  bus-port.port.port..... :config.interface
+Each interface gets its own entry in sysfs and can have its own driver.
+
+eg:     1-2.3:1.0	 ==> device plugged into : bus1--port2 of root-hub .port3 of 1st level-hub . port1 of 2nd level hub
+              device is using configuration 1 and this configuration has only a single interface, number 0.
+1-12:1.1 
+
+Special case : ROOT-HUB's interface
+A hub will never have more than a single interface; that's part of the USB spec. 
+But other devices can have multiple interfaces (and sometimes multiple configurations)
+ eg: "1-0:1.0"  It refers to the root hub's interface. 
+This acts just like the interface in an actual hub an almost every respec
+1-0:1.0 -->  bus1-port0 is used to refer roothub of bus1 -- here roothub is part of controller,not actually a port.
+2-0:1.0 
+3-0:1.0
+4-0:1.0
+
+
+
+
+
+
 
 
 
