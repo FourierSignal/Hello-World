@@ -271,6 +271,746 @@ indicate that it isn’t able to service the token that it received.
 
 
 
+cat 1u > ~/link.mon
+vusb-analyzer ~/link.mon
+
+USB class/device drivers communicate with USB host controllers by submitting URBs.
+Each URB request host controller to send/rxv data to/from  an EP on device.
+host controller schedules the request on the bus and notifies the driver when request completes.
+
+URB submission to USB-subsystem:
+usb_submit_urb :  submits URB and transfers control of the URB ,describing that request ,to the USB subsystem
+If the submission is successful, the complete callback from the URB will be called exactly once, 
+when the USB core and Host Controller Driver (HCD) are finished with the URB. 
+When the completion function is called, control of the URB is returned to the device driver which issued the request. 
+The completion handler may then immediately free or reuse that URB. 
+
+
+
+
+
+
+ffff8801f6e36480 1880200748 C Ii:1:001:1 0:2048 2 = 0800
+ffff8801f6e36480 1880200759 S Ii:1:001:1 -115:2048 4 <
+ffff8801f5393540 1880200792 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880200803 C Ci:1:001:0 0 4 = 01010100
+ffff8801f5393540 1880200807 S Co:1:001:0 s 23 01 0010 0003 0000 0
+ffff8801f5393540 1880200816 C Co:1:001:0 0 0
+ffff8801f5393540 1880200824 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880200839 C Ci:1:001:0 0 4 = 01010000
+ffff8801f5393540 1880230373 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880230388 C Ci:1:001:0 0 4 = 01010000
+ffff8801f5393540 1880262368 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880262384 C Ci:1:001:0 0 4 = 01010000
+ffff8801f5393540 1880294432 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880294460 C Ci:1:001:0 0 4 = 01010000
+ffff8801f5393540 1880326439 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880326465 C Ci:1:001:0 0 4 = 01010000
+ffff8801f5393540 1880326556 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8801f5393540 1880326586 C Co:1:001:0 0 0
+ffff8801f5393540 1880382396 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880382426 C Ci:1:001:0 0 4 = 03051000
+ffff8801f5393540 1880382439 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8801f5393540 1880382455 C Co:1:001:0 0 0
+ffff8801f5393540 1880438526 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
+ffff8801f5393540 1880438700 C Ci:1:000:0 0 18 = 12010002 00000040 710455df 01000000 0001
+ffff8801f5393540 1880438780 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8801f5393540 1880438806 C Co:1:001:0 0 0
+ffff8801f5393540 1880494395 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880494429 C Ci:1:001:0 0 4 = 03051000
+ffff8801f5393540 1880494441 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8801f5393540 1880494456 C Co:1:001:0 0 0
+ffff8801f5393540 1880566429 S Ci:1:010:0 s 80 06 0100 0000 0012 18 <
+ffff8801f5393540 1880566631 C Ci:1:010:0 0 18 = 12010002 00000040 710455df 01000000 0001
+ffff8801f5393540 1880566674 S Ci:1:010:0 s 80 06 0200 0000 0009 9 <
+ffff8801f5393540 1880566863 C Ci:1:010:0 0 9 = 09021900 01010080 32
+ffff8801f5393540 1880566897 S Ci:1:010:0 s 80 06 0200 0000 0019 25 <
+ffff8801f5393540 1880567111 C Ci:1:010:0 0 25 = 09021900 01010080 32090400 0000fe01 00000721 01ffff00 08
+ffff8801f5393600 1880567333 S Co:1:010:0 s 00 09 0001 0000 0000 0
+ffff8801f5393600 1880567452 C Co:1:010:0 0 0
+
+
+
+
+
+
+
+
+
+
+decoding URB with Id: ffff8801f5393540
+
+ffff8801f5393540 1880200792 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+
+S: Event is an URB submission :
+
+Ci:1:001:0  ==> driver is  submitting control request for IN data to bus1-dev1-Ep0
+
+s a3 00 0000 0003 0004 ==>   setup-stage-data: bmRequestType,bRequest,wValue,wIndex,wLength
+                             
+                             req-direction:dev-host,req for a specific class,req to other element in device. 
+ 
+                             request = GET_STATUS
+
+                             Endpoint = 03  which is OUT ep  
+
+                             number of data bytes in the Data stage that follow = 4
+
+===> Host initiated control transfer by sending setup type token packet.
+     token indicates device should transmit the status of EP-3
+
+setup stage of Control-IN transfer is completed.
+
+ffff8801f5393540 1880200803 C Ci:1:001:0 0 4 = 01010100
+
+ C : Event is URB-callback
+
+ C Ci:1:001:0   ==> call-back event of URB-submitted for control request for IN data to bus1-dev1-Ep0
+ 0 => URB's status is success.
+ 4 => data bytes recieved in the data stage .
+01010100 ==> EP3 status of bus1-dev1
+
+==> device recieved the control-IN request and replied with control-info requested,successfully.
+
+
+
+
+ffff8801f5393540 1880200807 S Co:1:001:0 s 23 01 0010 0003 0000 0
+setup stage of control-OUT request : to bus1-dev1-ep0 : host-dev-->clear-feature request for ep3
+                                    feature =10 (C_PORT_CONNECTION) , no data-stage follows
+
+====>  host sent control-OUT request to device asking for clear-C_PORT_CONNECTION : disable the feature(connection status)on ep3.
+
+
+ffff8801f5393540 1880200816 C Co:1:001:0 0 0 
+--> call back event--of URB-submitted for OUT-control request--success.
+
+ 
+
+
+ffff8801f5393540 1880200824 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880200839 C Ci:1:001:0 0 4 = 01010000
+get-status( dev-->host),ep3 
+success : 01010000 -->
+
+Above is repeted 5 times..
+
+
+ffff8801f5393540 1880326556 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8801f5393540 1880326586 C Co:1:001:0 0 0
+
+(host-->dev)Set_Feature : PORT_RESET -reset processing is not yet completed.
+success.
+
+
+ffff8801f5393540 1880382396 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880382426 C Ci:1:001:0 0 4 = 03051000
+setup-CTRL-IN-Get_status of ep3
+successfull - status = 03051000
+
+
+ffff8801f5393540 1880382439 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8801f5393540 1880382455 C Co:1:001:0 0 0
+setup-CTRL-out:CLEAR_FEATURE= C_PORT_RESET -
+
+
+ffff8801f5393540 1880438526 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
+ffff8801f5393540 1880438700 C Ci:1:000:0 0 18 = 12010002 00000040 710455df 01000000 0001
+setup-CTRL-IN: 
+ 80= 1000 0000 = 1 00 0000 => dev->host,std-req,req to device.
+ 06 --> get_descriptor
+0100 -->00 01 --.> bDescriptorType =01 ==> device descriptor type.
+64 bytes of data expecting in data stage
+
+success : 18 bytes
+
+
+
+ffff8801f5393540 1880438780 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8801f5393540 1880438806 C Co:1:001:0 0 0
+h->dev:SET_FEATURE : PORT_RESET
+
+ffff8801f5393540 1880494395 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8801f5393540 1880494429 C Ci:1:001:0 0 4 = 03051000
+dev-->host GET_STATUS :ep3
+
+ffff8801f5393540 1880494441 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8801f5393540 1880494456 C Co:1:001:0 0 0
+host-->dev  clear_feature -C_PORT_RESET
+
+ffff8801f5393540 1880566429 S Ci:1:010:0 s 80 06 0100 0000 0012 18 <
+ffff8801f5393540 1880566631 C Ci:1:010:0 0 18 = 12010002 00000040 710455df 01000000 0001
+
+
+
+
+
+
+
+#########################################################################################
+
+
+
+
+
+
+
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
+/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/6p, 480M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/15p, 480M
+    |__ Port 7: Dev 2, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 12: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 12: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls  /sys/bus/usb/devices/
+1-0:1.0  1-12:1.0  1-7      2-0:1.0  3-1      4-0:1.0  4-1:1.0  usb2  usb4
+1-12     1-12:1.1  1-7:1.0  3-0:1.0  3-1:1.0  4-1      usb1     usb3
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls  /sys/bus/usb/devices/
+
+usb1  --> usb controller
+1-0:1.0  root-hub --part of usb1-controller/not a port
+1-12  ----> Accer camera @ bus1-port12
+1-12:1.0 -- interface 0 of accer camera to port 12 of bus1
+1-12:1.1 -- interface 1 of accer camera to port 12 of bus1
+1-7    -----validity sensors@ bus1-port7
+1-7:1.0 ----validity sensors: bus1-port7
+
+2-0:1.0
+
+3-1   
+3-0:1.0  
+3-1:1.0  
+
+4-0:1.0
+4-1:1.0 
+4-1   
+
+usb2  usb3 usb4
+
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l   /sys/bus/usb/devices/
+total 0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12:1.1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-7 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-7:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7/1-7:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 2-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb2/2-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-0:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-1 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-1:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-0:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-1 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-1:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1/4-1:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb2 -> ../../../devices/pci0000:00/0000:00:14.0/usb2
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb3 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb4 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l   /sys/bus/usb/drivers
+total 0
+drwxr-xr-x 2 root root 0 Aug  6 17:23 btusb
+drwxr-xr-x 2 root root 0 Aug  6 17:23 hub
+drwxr-xr-x 2 root root 0 Aug  6 17:23 uas
+drwxr-xr-x 2 root root 0 Aug  6 17:23 usb
+drwxr-xr-x 2 root root 0 Aug  6 17:23 usbfs
+drwxr-xr-x 2 root root 0 Aug  6 17:23 usbhid
+drwxr-xr-x 2 root root 0 Aug  6 17:23 usb-storage
+drwxr-xr-x 2 root root 0 Aug  6 17:23 uvcvideo
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l   /sys/bus/usb/drivers/usb
+total 0
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 1-12 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1/1-12
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 1-7 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1/1-7
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 3-1 -> ../../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 4-1 -> ../../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1
+--w------- 1 root root 4096 Aug  6 17:24 bind
+--w------- 1 root root 4096 Aug  6 17:24 uevent
+--w------- 1 root root 4096 Aug  6 17:24 unbind
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb1 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb2 -> ../../../../devices/pci0000:00/0000:00:14.0/usb2
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb3 -> ../../../../devices/pci0000:00/0000:00:1a.0/usb3
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb4 -> ../../../../devices/pci0000:00/0000:00:1d.0/usb4
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+
+
+
+
+
+
+
+jaguar-ThinkPad-T540p usbmon # cat ~/link.mon
+ffff8801f6e36480 169368299 C Ii:1:001:1 0:2048 2 = 0800
+ffff8801f6e36480 169368319 S Ii:1:001:1 -115:2048 4 <
+ffff8800c8ce5000 169368408 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169368428 C Ci:1:001:0 0 4 = 01010100
+ffff8800c8ce5000 169368438 S Co:1:001:0 s 23 01 0010 0003 0000 0
+ffff8800c8ce5000 169368453 C Co:1:001:0 0 0
+ffff8800c8ce5000 169368461 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169368503 C Ci:1:001:0 0 4 = 01010000
+ffff8800c8ce5000 169398438 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169398468 C Ci:1:001:0 0 4 = 01010000
+ffff8800c8ce5000 169430417 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169430443 C Ci:1:001:0 0 4 = 01010000
+ffff8800c8ce5000 169462445 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169462480 C Ci:1:001:0 0 4 = 01010000
+ffff8800c8ce5000 169494368 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169494390 C Ci:1:001:0 0 4 = 01010000
+ffff8800c8ce5000 169494446 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8800c8ce5000 169494462 C Co:1:001:0 0 0
+ffff8800c8ce5000 169550437 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169550465 C Ci:1:001:0 0 4 = 03051000
+ffff8800c8ce5000 169550474 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8800c8ce5000 169550489 C Co:1:001:0 0 0
+ffff8800c8ce5000 169606486 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
+ffff8800c8ce5000 169606646 C Ci:1:000:0 0 18 = 12010002 00000040 710455df 01000000 0001
+ffff8800c8ce5000 169606682 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8800c8ce5000 169606709 C Co:1:001:0 0 0
+ffff8800c8ce5000 169662395 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8ce5000 169662426 C Ci:1:001:0 0 4 = 03051000
+ffff8800c8ce5000 169662435 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8800c8ce5000 169662449 C Co:1:001:0 0 0
+ffff8800c8ce5000 169734381 S Ci:1:014:0 s 80 06 0100 0000 0012 18 <
+ffff8800c8ce5000 169734579 C Ci:1:014:0 0 18 = 12010002 00000040 710455df 01000000 0001
+ffff8800c8ce5000 169734613 S Ci:1:014:0 s 80 06 0200 0000 0009 9 <
+ffff8800c8ce5000 169734869 C Ci:1:014:0 0 9 = 09021900 01010080 32
+ffff8800c8ce5000 169734921 S Ci:1:014:0 s 80 06 0200 0000 0019 25 <
+ffff8800c8ce5000 169735169 C Ci:1:014:0 0 25 = 09021900 01010080 32090400 0000fe01 00000721 01ffff00 08
+ffff8800c8ce59c0 169735461 S Co:1:014:0 s 00 09 0001 0000 0000 0
+ffff8800c8ce59c0 169735565 C Co:1:014:0 0 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
+/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/6p, 480M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/15p, 480M
+    |__ Port 3: Dev 14, If 0, Class=Application Specific Interface, Driver=, 480M
+    |__ Port 7: Dev 2, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 12: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 12: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 014: ID 0471:df55 Philips (or NXP) LPCXpresso LPC-Link
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls  /sys/bus/usb/devices/
+1-0:1.0  1-12:1.0  1-3      1-7      2-0:1.0  3-1      4-0:1.0  4-1:1.0  usb2  usb4
+1-12     1-12:1.1  1-3:1.0  1-7:1.0  3-0:1.0  3-1:1.0  4-1      usb1     usb3
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l   /sys/bus/usb/devices/
+total 0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-12:1.1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.1
+lrwxrwxrwx 1 root root 0 Aug  6 17:27 1-3 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-3
+lrwxrwxrwx 1 root root 0 Aug  6 17:27 1-3:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-7 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 1-7:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7/1-7:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 2-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb2/2-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-0:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-1 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 3-1:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-0:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-0:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-1 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 4-1:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1/4-1:1.0
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb2 -> ../../../devices/pci0000:00/0000:00:14.0/usb2
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb3 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3
+lrwxrwxrwx 1 root root 0 Aug  6 17:23 usb4 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l   /sys/bus/usb/drivers/usb
+total 0
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 1-12 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1/1-12
+lrwxrwxrwx 1 root root    0 Aug  6 17:28 1-3 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1/1-3
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 1-7 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1/1-7
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 3-1 -> ../../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 4-1 -> ../../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1
+--w------- 1 root root 4096 Aug  6 17:24 bind
+--w------- 1 root root 4096 Aug  6 17:24 uevent
+--w------- 1 root root 4096 Aug  6 17:24 unbind
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb1 -> ../../../../devices/pci0000:00/0000:00:14.0/usb1
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb2 -> ../../../../devices/pci0000:00/0000:00:14.0/usb2
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb3 -> ../../../../devices/pci0000:00/0000:00:1a.0/usb3
+lrwxrwxrwx 1 root root    0 Aug  6 17:24 usb4 -> ../../../../devices/pci0000:00/0000:00:1d.0/usb4
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+
+
+###########################################################################################################3
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
+/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/6p, 480M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/15p, 480M
+    |__ Port 7: Dev 2, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 12: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 12: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls  /sys/bus/usb/devices/
+1-0:1.0  1-12  1-12:1.0  1-12:1.1  1-7  1-7:1.0  2-0:1.0  3-0:1.0  3-1  3-1:1.0  4-0:1.0  4-1  4-1:1.0  usb1  usb2  usb3  usb4
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+
+usb1  --> usb controller
+1-0:1.0  root-hub --part of usb1-controller/not a port
+1-12  ----> Accer camera @ bus1-port12
+1-12:1.0 -- interface 0 of accer camera to port 12 of bus1
+1-12:1.1 -- interface 1 of accer camera to port 12 of bus1
+1-7    -----validity sensors@ bus1-port7
+1-7:1.0 ----validity sensors: bus1-port7
+
+2-0:1.0
+
+3-1   
+3-0:1.0  
+3-1:1.0  
+
+4-0:1.0
+4-1:1.0 
+4-1   
+
+usb2  usb3 usb4
+
+
+
+jaguar-ThinkPad-T540p usbmon # cat ~/link.mon
+
+
+URB-ffff8801f6e36480
+addressing bus1-dev1-ep1 rootHUB-ep1 
+
+ffff8801f6e36480 2403355872 C Ii:1:001:1 0:2048 2 = 0800
+ffff8801f6e36480 2403355895 S Ii:1:001:1 -115:2048 4 <
+
+Each hub uses its interrupt endpoint to report events at the hub.
+ The report indicates only whether the hub or a port (and if so, which port) has experienced an event
+
+
+URB- ffff8800c8c10900
+addressing bus1-dev1-ep0 rootHUB-ep0 
+
+ffff8800c8c10900 2403355967 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403355987 C Ci:1:001:0 0 4 = 01010100
+GET_STATUS
+
+ffff8800c8c10900 2403355994 S Co:1:001:0 s 23 01 0010 0003 0000 0
+ffff8800c8c10900 2403356008 C Co:1:001:0 0 0
+CLEAR_FEATURE : C_PORT_CONNECTION
+
+ffff8800c8c10900 2403356014 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403356025 C Ci:1:001:0 0 4 = 01010000
+GET_STATUS
+
+ffff8800c8c10900 2403386434 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403386460 C Ci:1:001:0 0 4 = 01010000
+GET_STATUS
+
+ffff8800c8c10900 2403418425 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403418450 C Ci:1:001:0 0 4 = 01010000
+GET_STATUS
+
+ffff8800c8c10900 2403450419 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403450442 C Ci:1:001:0 0 4 = 01010000
+GET_STATUS
+
+ffff8800c8c10900 2403482387 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403482408 C Ci:1:001:0 0 4 = 01010000
+GET_STATUS
+
+ffff8800c8c10900 2403482467 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8800c8c10900 2403482481 C Co:1:001:0 0 0
+SET_FEATURE  : PORT_RESET 
+
+
+ffff8800c8c10900 2403538391 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403538412 C Ci:1:001:0 0 4 = 03051000
+GET_STATUS
+
+ffff8800c8c10900 2403538420 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8800c8c10900 2403538431 C Co:1:001:0 0 0
+CLEAR_FEATURE= C_PORT_RESET 
+
+
+addressing bus1-dev0-ep0   LPC-link-ep-0 (Univeral-address 0 on bus1)
+
+ffff8800c8c10900 2403594509 S Ci:1:000:0 s 80 06 0100 0000 0040 64 <
+ffff8800c8c10900 2403594674 C Ci:1:000:0 0 18 = 12010002 00000040 710455df 01000000 0001
+GET_DESCRIPTOR : DEVICE_DESCRIPTOR
+
+
+addressing bus1-dev1-ep0 rootHUB-ep-0
+
+ffff8800c8c10900 2403594723 S Co:1:001:0 s 23 03 0004 0003 0000 0
+ffff8800c8c10900 2403594740 C Co:1:001:0 0 0
+SET_FEATURE : PORT_RESET
+
+ffff8800c8c10900 2403650385 S Ci:1:001:0 s a3 00 0000 0003 0004 4 <
+ffff8800c8c10900 2403650407 C Ci:1:001:0 0 4 = 03051000
+GET_STATUS
+
+ffff8800c8c10900 2403650415 S Co:1:001:0 s 23 01 0014 0003 0000 0
+ffff8800c8c10900 2403650428 C Co:1:001:0 0 0
+CLEAR_FEATURE= C_PORT_RESET 
+
+addressing bus1-dev17-ep0 LPC-link-ep-0
+
+ffff8800c8c10900 2403722370 S Ci:1:017:0 s 80 06 0100 0000 0012 18 <
+ffff8800c8c10900 2403722547 C Ci:1:017:0 0 18 = 12010002 00000040 710455df 01000000 0001
+GET_DESCRIPTOR=DEVICE
+
+ffff8800c8c10900 2403722579 S Ci:1:017:0 s 80 06 0200 0000 0009 9 <
+ffff8800c8c10900 2403722727 C Ci:1:017:0 0 9 = 09021900 01010080 32
+GET_DESCRIPTOR=CONFIGURATION
+CONFIGURATION DESCRIPTOR
+    bLength: 9
+    bDescriptorType: 0x02 (CONFIGURATION)
+    wTotalLength: 25
+    bNumInterfaces: 1
+    bConfigurationValue: 1
+    iConfiguration: 0
+    Configuration bmAttributes: 0x80  NOT SELF-POWERED  NO REMOTE-WAKEUP
+        1... .... = Must be 1: Must be 1 for USB 1.1 and higher
+        .0.. .... = Self-Powered: This device is powered from the USB bus
+        ..0. .... = Remote Wakeup: This device does NOT support remote wakeup
+    bMaxPower: 50  (100mA)
+
+
+ffff8800c8c10900 2403722758 S Ci:1:017:0 s 80 06 0200 0000 0019 25 <
+ffff8800c8c10900 2403722964 C Ci:1:017:0 0 25 = 09021900 01010080 32090400 0000fe01 00000721 01ffff00 08
+GET_DESCRIPTOR=CONFIGURATION
+CONFIGURATION DESCRIPTOR
+    bLength: 9
+    bDescriptorType: 0x02 (CONFIGURATION)
+    wTotalLength: 25
+    bNumInterfaces: 1
+    bConfigurationValue: 1
+    iConfiguration: 0
+    Configuration bmAttributes: 0x80  NOT SELF-POWERED  NO REMOTE-WAKEUP
+        1... .... = Must be 1: Must be 1 for USB 1.1 and higher
+        .0.. .... = Self-Powered: This device is powered from the USB bus
+        ..0. .... = Remote Wakeup: This device does NOT support remote wakeup
+    bMaxPower: 50  (100mA)
+INTERFACE DESCRIPTOR (0.0): class Application Specific
+    bLength: 9
+    bDescriptorType: 0x04 (INTERFACE)
+    bInterfaceNumber: 0
+    bAlternateSetting: 0
+    bNumEndpoints: 0
+    bInterfaceClass: Application Specific (0xfe)
+    bInterfaceProtocol: Device Firmware Upgrade (0x01)
+    bInterfaceProtocol: Unknown (0x00)
+    iInterface: 0
+DFU Descriptor: DFU FUNCTIONAL
+    bLength: 7
+    bDescriptorType: 0x21 (DFU FUNCTIONAL)
+    0000 .... = Reserved: 0x00
+    .... 0... = Will Detach: False
+    .... .0.. = Manifestation Tolerant: False
+    .... ..0. = Can Upload: False
+    .... ...1 = Can Download: True
+    wDetachTimeOut: 65535
+    wTransferSize: 2048
+
+
+
+URB-ffff8800c8c10780
+addressing bus1-dev14-ep0 LPC-link-ep-0
+
+ffff8800c8c10780 2403723183 S Co:1:017:0 s 00 09 0001 0000 0000 0
+ffff8800c8c10780 2403723295 C Co:1:017:0 0 0
+SET_CONFIGURATION
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
+/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/6p, 480M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/15p, 480M
+    |__ Port 3: Dev 17, If 0, Class=Application Specific Interface, Driver=, 480M
+    |__ Port 7: Dev 2, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 12: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 12: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb 
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 017: ID 0471:df55 Philips (or NXP) LPCXpresso LPC-Link
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls  /sys/bus/usb/devices/
+1-0:1.0  1-12:1.0  1-3      1-7      2-0:1.0  3-1      4-0:1.0  4-1:1.0  usb2  usb4
+1-12     1-12:1.1  1-3:1.0  1-7:1.0  3-0:1.0  3-1:1.0  4-1      usb1     usb3
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+
+all hubs only have one interface; the interrupt interface to notify of events on the hub
+
+Root Hub: The USB controller implements a root hub
+The hub driver lives in drivers/usb/core/hub.c.
+The USB initialisation function starts up the khubd thread which waits for and handles USB events.
+(drivers/usb/core/hub.c:usb_hub_init()) 
+
+hub driver setup:
+usb_init() ---> usb_hub_init()--->usb_register_driver(): adds itself(hub-driver) to the USB bus and sets up usb_probe_device() 
+
+The root hub setup : The Linux driver core goes through all devices on the PCI bus
+including the USB host controller,and calls the probe() function registerd by deriver of host controller (uhci_hcd_init())
+
+The USB host controller driver-->usb_hcd_pci_probe() --->does some generic setup, then calls back into the host driver start()
+--->calls usb_add_hcd() which does some generic HCD setup and ends up calling register_root_hub().
+
+register_root_hub() creates a new USB device and registers it with drivers/usb/core/hub.c
+usb_new_device() first calls drivers/usb/core/config.c:usb_get_configuration which sets up the interface(Interrupt interface of hub)
+ for the device before registering with the Linux driver core via drivers/base/core/device_add()-->which rescans USB bus
+
+
+
+
+Binding root hub to a driver:
+
+USB core  usb_init()-->usb_register_device_driver(): setting up usb_probe_device() --->driver_register
+ore/device_add()-->which rescans USB bus-->driver core will now see this new device and start probing for a driver to handle it. 
+
+usb_probe_device() of The USB generic drive is called back.This converts the Linux driver core device back to a USB device
+ that was registered by register_root_hub()) and calls calls the drivers probe function generic_probe().
+
+
+The role of the generic driver is to get the interfaces on the device up and running
+ Firstly it calls :choose_configuration() which simply reads through the device data and chooses a sane configuration
+how does it know what is a sane configuration for the root hub? All the information has been "faked" for the root hub in drivers/usb/core/hcd.c:usb2_rh_dev_descriptor and the like. The root hub details are defined by the USB specification, so these can be kept statically.
+
+usb_set_configuration() is called to set up the chosen configuration.
+It uses the helper function usb_control_message() to send a message to the device about what configuration mode to go into
+It then goes through the available interfaces setting up the kernel structures, and adds them with device_add().
+
+
+When a new interface is added, the driver core will now try and find a driver to handle it.
+When an interface driver is registered with drivers/usb/core/driver.c:usb_register_driver() it sets the probe function to drivers/usb/core/driver.c:usb_probe_interface(). 
+
+driver core calls this function, and the first thing it does is checks the ID against the IDs the driver is happy to handle from the drivers id_table: usb_match_one_id() :  match the class, subclass and protocol
+
+
+The root hub is part of the hub class, so can be handled by the hub drive
+ drivers/usb/core/hub.c:hub_probe() will be called to get the hub driver to bind with the new hub
+hub_probe() ---> hub_configure() 
+does  some setup . Interesting is setting up Interrupt end point of roothub.
+
+The interrupt end-point on a hub will send an event whenever something happens on the hub, such as a device being plugged in or unplugged.
+Interrupt end-point is setup:
+
+This is done by creating a URB and binding it to the end-point, asking that hub_irq be called whenever this URB is complete (e.g. when an event is received).
+
+
+New events on the hub:
+ The root hub is setup and listening for new events - 
+ plug in our device : host controller will raise an interrupt signalling that one of its ports has changed state.
+ This will be handled by drivers/usb/host/uhci-hcd.c:uhci_irq() ---> uhci_scan_schedule()
+
+uhci_scan_schedule : implements the interface between the UHCI "transfer data" messages and the Linux URB scheme
+                    It goes through the queues and finds any complete URBs and calls their completion function
+
+ kernel starts the khubd daemon to handle hub events. We can see that hub_irq does some simple error checking, but its real job is to notify khubd that there is a new event on this hub.
+hub_events() is the khubd daemon thread doing all the work. Once notified the hub has new event, it goes and reads the hub status to see what to do. A new device appearing will trigger a port change event, which is handled by hub_port_connect_change(). This does some initial setup of the device, but most importantly now calls usb_new_device().
+
+At this point, if the USB driver for this device is loaded, the device is essentially ready to go. As with the root hub, the device will be probed and its interfaces found with the generic driver, and then those interfaces will be registered and any driver asked if they wish to bind to them.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
