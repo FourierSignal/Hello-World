@@ -762,6 +762,30 @@ While CPU 1 (in process context) is holding the lock, any incoming interrupt req
 
 
 
+Sometimes it is wanted to allow spin locks to be nested. 
+
+a nesting counter and a variable indicating which CPU holds the lock
+
+the lock is held, the lock function checks if the current CPU is the one holding the lock. In this case, the nesting counter is incremented and it exits from the spin loop.
+The unlock function decrements the nesting counter. The lock is released when the unlock function has been called the same number of times the lock function was called before. This kind of spin lock is called a recursive lock.
+
+
+adaptive locks.:
+ When one thread attempts to acquire one of these that is held by another thread, it checks to see if the second thread is active on a processor. If it is, the first thread spins. If the second thread is blocked, the first thread blocks as well.
+
+
+
+Using mutexes instead of spin locks is productive, if the critical section takes longer than a context switch. Else, the overhead of blocking compared to busy waiting for a lock to be released is worse. On the pro side, mutexes imply a kind of fairness, while processes could starve on heavily contended spin locks. Mutexes can not be used in interrupts, because it is generally not allowed to block in interrupt context.
+
+Mutex:/Binary-semaphore:
+semaphores (initialized with a counter value of 1) can also be used for protecting critical sections. For performance reasons, semaphores used for this kind of work are often realized as a separate primitive, called mutex, that replaces the counter with a simple lock status flag.
+
+surprise !!!!!!
+A semaphore is a complex shared data structure itself, and must therefore be protected by an own spin lock.
+
+
+
+
 
 
 
