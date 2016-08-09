@@ -507,6 +507,64 @@ Example:
 342
 
 
+Thundering Herd Problem:  arises due to the use of the wake_up_all function
+
+scenario :  set of processes are sleeping on a wait queue, wanting to acquire a lock.
+            Once the process that has acquired the lock is done with it,
+            it releases the lock and wakes up all the processes sleeping on the wait queue.
+            All the processes try to grab the lock. Eventually, only one of these acquires the lock
+            and the rest go back to sleep.
+penalty : It consumes valuable CPU cycles and incurs context-switching overheads
+
+Q: If we already know that only one process is going to resume while the rest of the processes go back to sleep again,
+   why wake them up in the first place?
+A: wake_up_all function should be done carefully, only when you know that it is required.
+Otherwise, go ahead and use the wake_up function that wakes up only one process at a time. 
+
+Q: when would the wake_up_all function be used? 
+A: It is used in scenarios when processes want to take a shared lock on something. 
+  For example, processes waiting to read data on a page could all be woken up at the same moment. 
+  
+Time-Bound Sleep":
+schedule_timeout(timeout), a variant of schedule():  puts the process to sleep until timeout jiffies have elapsed.
+set_current_state(TASK_INTERRUPTIBLE);
+schedule_timeout(20msec);
+
+If execution of your process to be delayed for a given amount of time. 
+It may be required to allow the hardware to catch up 
+or to carry out an activity after specified time intervals, such as polling a device, flushing data to disk or retransmitting a network request.
+
+1415  set_current_state(TASK_INTERRUPTIBLE);
+1416  for (;;) {
+1417     schedule_timeout(APM_CHECK_TIMEOUT);
+1418     if (exit_kapmd)
+1419         break;
+1421      * Ok, check all events, check for idle
+....      * (and mark us sleeping so as not to
+....      * count towards the load average)..
+1423      */
+1424      set_current_state(TASK_INTERRUPTIBLE);
+1425      apm_event_handler();
+1426  }
+
+ You also may use a more convenient API, with which you can specify time in milliseconds and seconds:
+    msleep(time_in_msec);
+    msleep_interruptible(time_in_msec);
+    ssleep(time_in_sec); 
+These higher-level routines internally convert the time into jiffies,
+appropriately change the state of the process and call schedule_timeout(), thus making the process sleep.     
+
+
+    
+                   
+                   
+                   
+  
+
+   
+   
+   
+            
 
 
 
