@@ -661,6 +661,105 @@ preempt_enable();
 
 
 
+Uniprocessor Kernel  VS SMP-symmetric Multi-processor Kernel
+
+
+If more than one process can access data at the same time, 
+mutual exclusion must be introduced to protect this shared data.
+
+
+
+race conditions occur when two processes access the same data structure in memory.
+causing inconsistent states of data
+
+if such critical sections are short,
+Short-term mutual exclusion  :  
+
+
+
+On UP systems: this could only occur if one process is preempted by the other.
+ To protect critical sections, they are guarded with some sort of preempt_disable/ preempt_enable call to disable preemption,
+ so a process can finish the critical section without being interrupted by another process.
+ In a non- preemptive kernel, no measures have to be taken at all
+In SMP-system : disabling pre-emption won't help as process2 may get sceduled in other cpu.
+
+
+interrupt handlers that access shared data
+interrupt handler code from interrupting a process in a critical section
+short-term mutual exclusion with interrupts:
+To prevent ,guard a critical section in the process context with some sort of cli/sti(disable/ enable all interrupts) call. 
+
+SMP systems as well, because all other CPUs' interrupts are still active and can execute the interrupt handler code at any time.
+
+
+
+
+processes being held up accessing a shared resource for a longer time. 
+For example, once a write system call to a regular file begins, it is guaranteed by the operating system that any other read or write system calls to the same file will be held until the current one completes
+long-term mutual exclusion: 
+
+A write system call may require one or more disk I/O operations in order to complete the system call. Disk I/O operations are relatively long operations when compared to the amount of work that the CPU can accomplish during that time.
+It would therefore be highly undesirable to inhibit preemption for such long operations, because the CPU would sit idle waiting for the I/O to complete
+
+semaphores are used to solve this problem. This also holds true for SMP systems.
+
+what is MutualExclusion :?
+
+mutual exclusion : 
+ we want changes to appear as if they were an atomic operation.
+ If we can not update data with an atomic operation,
+ we need to make an update uninterruptible and sequentialize it with all other processes
+ that could access the data
+
+
+Most SMP architectures possess some operations that read and change data within a single, uninterruptible step, called atomic operations.  
+test and set (TSR)
+compare and swap (CAS),
+load link/ store conditional instruction pair (LL/SC).
+
+atomic_t counter = ATOMIC_INIT(0); atomic_inc(&counter);   ==.> use such instructions
+
+
+
+Spin Locks:
+
+A flag variable indicates if a process is currently in the critical section (lock_var = 1) or if no process is in the critical section (lock_var = 0)
+A process spins (busy waits) until the lock is reset, then sets the lock.
+Testing and setting of the lock status flag must be done in one step, with an atomic operation. To release the lock, a process resets the lock variable
+
+	
+    spin lock can not be acquired recursively  ===> during second call : process spins disabling pre-emption.
+     this has two implications: process cant be pre-empted till that time slot expires.
+                                as the same process holds lock,no way to unlock,==>deadlock. All the time slots allocated 
+                                for that process are wasted in spinning and process never finished.
+     
+       
+ 
+
+    process acquired spinlock , ISR interrupts  that process , try to acquire it ===> deadlock.
+      if code-spins in ISR: pre-emption disabled and INTRs disabled , so no way any other process being scheduled .
+      ===> kernel panic  
+
+SMP case : pr1 holds spinlock , ISR on cpu2 spins : not a problem because pr1 releses after some time.
+           pr1 holds spinlock , ISR1 on cpu1 spins ,ISR2 on cpu2 also spins ==> deadlock
+
+    so spin locks can not be used within interrupt handlers:
+
+
+    A critical section in process context is guarded by spin_lock_irq() :
+    irq-safe versions of spin_lock disable all interrupts on the local CPU for the critical section:
+     The possibility of a deadlock is therefore eliminated.
+      critical sections in interrupt handlers are guarded by the normal spin_lock().
+
+UP : If process1 holds spinlock, ISR is stalled.
+     once process1 releases spinlock, ISR runs .
+
+SMP:
+While CPU 1 (in process context) is holding the lock, any incoming interrupt requests on CPU 1 are stalled until the lock is released. An interrupt on CPU 2 busy waits on the lock, but it does not deadlock. After CPU 1 releases the lock, CPU 2 (in interrupt context) obtains it, and CPU 1 (now executing the interrupt handler) waits for CPU 2 to release it.
+
+
+
+
 
 
 
