@@ -372,7 +372,154 @@ such as device I/O.
 p-> state = TASK_INTERRUPTIBLE  : can be wokenup by signals or by calling wake_up_process()from other process kernel code.
 p-> state = TASK_UNINTERRUPTIBLE : can be wokenup only by wake_up_process() call.
 
+########################################################################################################
 
+
+SLEEPING in Kernel -Detailed Explaination:
+--------------------------------------------
+Typical scenario for blocking on event / sleeping:
+
+A --> processing list items 
+B---> adding items to list
+To access-List : lock should be aquired.
+
+Process A:
+1  spin_lock(&list_lock);               
+2  if(list_empty(&list_head)) {
+3      spin_unlock(&list_lock);
+4      set_current_state(TASK_INTERRUPTIBLE);
+5      schedule();
+6      spin_lock(&list_lock);
+7  }
+8
+9  /* Rest of the code ... */
+10 spin_unlock(&list_lock);
+==========>
+LOCK , listEmpty-Check
+if Empty - UNLOCK , SLEEP .
+when wokeup by B --> LOCK , process list-item , UNLOCK
+here A-> is marked as RUNNING by wake_up_process call of B.
+and is sceduled only when A get it's time slot allocated.
+
+
+
+Process B:
+100  spin_lock(&list_lock);
+101  list_add_tail(&list_head, new_node);
+102  spin_unlock(&list_lock);
+103  wake_up_process(processa_task);
+
+LOCK ,Add-listItem, UNLOCK, WAKEUP--> marks A - RUNNING., do other work, time-slotExp-> relinquish CPU 
+
+
+Lost Wake-Up Problem:
+------------------------
+Race condition: After  LOCK and before SLEEP if processA time-slot Expires.
+                process-B scheduled , adds item, and Wakesup-A, does some other work,after-timeslot expires moved out of cpu.
+                process-A sceduled , SLEEPs...woken up only when B-sceduled Again,Adds-listItem,wakes-up A.
+                processA --lost one Wakeup : common problem in kernel.
+
+solution:
+-----------
+Process A:
+
+1  set_current_state(TASK_INTERRUPTIBLE);
+2  spin_lock(&list_lock);
+3  if(list_empty(&list_head)) {
+4         spin_unlock(&list_lock);
+5         schedule();
+6         spin_lock(&list_lock);
+7  }
+8  set_current_state(TASK_RUNNING);
+9
+10 /* Rest of the code ... */
+11 spin_unlock(&list_lock);
+====> 
+A----> MARK as INTERRUPTIBLE , LOCK, check-ListEmpty, if Empty UNLOCK and yield CPU.
+
+if processA -loses cpu before schedule()---> process B adds Item and wake_up_process(A)- marks A as RUNNING.,
+B executed for some time and loses cpu.
+now  when A  runs -->schedule() call merily causes A to yields CPU.==> A wont sleep.
+hence..when A gets chance to run based on scheduler Algorithm , it processes ListItem.
+
+
+
+Example code in kernel: 
+
+
+4253  /* Wait for kthread_stop */
+4254  set_current_state(TASK_INTERRUPTIBLE);
+4255  while (!kthread_should_stop()) {
+4256          schedule();
+4257          set_current_state(TASK_INTERRUPTIBLE);
+4258  }
+4259  __set_current_state(TASK_RUNNING);
+4260 return 0;
+
+The thread cannot exit until the kthread_should_stop() function return TRUE.
+while waiting for the function to return 0 : thread sleeps 
+it keeps checking untill the Fn to return TRUE.,,whenever woken-up by other thread.
+kthread_should_stop condition is made only after the state is TASK_INTERRUPTIBLE. 
+Hence, the wake-up received after the condition check but before the call to schedule() function is not lost. 
+
+
+Wait queues:  higher-level mechanism used to put processes to sleep and wake them up
+
+wait_queue_head_t my_event;
+init_waitqueue_head(&my_event);
+(or)
+DECLARE_WAIT_QUEUE_HEAD(my_event);
+
+Wait:
+     wait_event(&my_event, (event_present == 1) );   -------------------->  UNINTERRUPTIBLE sleep
+    wait_event_interruptible(&my_event, (event_present == 1) ); --------->  INTERRUPTIBLE sleep
+
+Wakeup:    
+    wake_up(&my_event);: wakes up only one process from the wait queue.
+    wake_up_all(&my_event);: wakes up all the processes on the wait queue.
+    wake_up_interruptible(&my_event);: wakes up only one process from the wait queue that is in interruptible sleep. 
+    
+Example:
+291 static int smbiod(void *unused)
+292 {
+299     for (;;) {
+300             struct smb_sb_info *server;
+301             struct list_head *pos, *n;
+302
+303             /* FIXME: Use poll? */
+304             wait_event_interruptible(smbiod_wait,
+305                     test_bit(SMBIOD_DATA_READY,
+                                 &smbiod_flags));
+...
+...             /* Some processing */
+312
+313             clear_bit(SMBIOD_DATA_READY,
+                          &smbiod_flags);
+                     
+...             /* Code to perform the requested I/O */
+...
+...
+337     }
+338
+339     VERBOSE("SMB Kernel thread exiting (%d)...\n", current->pid);
+340     module_put_and_exit(0);
+341 }
+342
+
+
+
+
+
+
+
+
+
+
+
+                
+                
+                
+                
 
 
 
