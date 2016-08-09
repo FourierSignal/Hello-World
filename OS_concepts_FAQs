@@ -562,9 +562,109 @@ appropriately change the state of the process and call schedule_timeout(), thus 
   
 
    
+PREEMPTION in linux:   
    
-   
-            
+Until kernel version 2.4, only user processes were preemptive, 
+i.e., in addition to time quantum expiration, an execution of current process in user mode would be interrupted 
+if higher dynamic priority processes entered TASK_RUNNING state .
+
+Toward 2.6 series of the Linux kernel, an ability to interrupt a task executing kernel code was added, 
+although with that not all sections of the kernel code can be preempted.
+
+The Linux kernel provides preemptive scheduling under certain conditions.
+
+Through the use of the real-time Linux kernel patch PREEMPT_RT, 
+support for full preemption of critical sections, interrupt handlers, and "interrupt disable" code sequences can be supported.
+
+Preemption improves latency, increases responsiveness, and makes Linux more suitable for desktop and real-time applications
+
+Critical sections protected by semaphores can be preempted at any time, 
+as every contention will end in a schedule and there can't be any deadlock.
+
+However, critical sections protected by fast spin locks or by hand locks cannot be preempted unless we block the timer IRQ. 
+So all spin locks should be IRQ-safe.
+
+
+
+Preemption 
+----------------
+
+On UP, spin_lock is defined as preempt_disable, and spin_unlock is defined as preempt_enable.
+On SMP, they also perform locking.
+
+The nestable preemption markers(preempt_disable and preempt_enable) operate on preempt_count,
+ a new integer stored in each task_struct.
+
+preempt_disable effectively is:
+
+++current->preempt_count;
+barrier();
+
+
+and preempt_enable is:
+
+--current->preempt_count;
+barrier();
+if (unlikey(!current->preempt_count
+    && current->need_resched))
+    preempt_schedule();
+
+
+
+The result is we do not preempt when the count is greater than zero. 
+
+preempt_schedule:  It sets a flag in the current process to signify it was preempted,
+calls schedule and, upon return, unsets the flag:
+
+asmlinkage void preempt_schedule(void)
+{
+    do {
+        current->preempt_count += PREEMPT_ACTIVE;
+        schedule();
+        current->preempt_count -= PREEMPT_ACTIVE;
+    } while (current->need_resched);
+}
+
+
+
+Implicitly locked data vs pre-emption
+-----------------------------------------
+In non-preemptive kernel:
+per-CPU data (data structures unique to each CPU) do not require locking. 
+such data is protected by its nature, is considered to be “implicitly locked”.
+a task on another CPU cannot mangle the first CPU's data. 
+
+But Implicitly locked data and preemption do not get along.
+With preemption, a process on the same CPU can find itself preempted,
+and a second process can then trample on the data of the first.
+
+such data can be  protected by the existing SMP locks.
+
+is there any other way to protect such a data without using SMP-locks??
+
+The solution, thankfully, is simple: disable preemption around access to the data. 
+
+For example:
+
+int catface[NR_CPUS];
+preempt_disable();
+catface[smp_processor_id()] = 1;  /* index catface
+                                     by CPU number */
+/* operate on catface */
+preempt_enable();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
