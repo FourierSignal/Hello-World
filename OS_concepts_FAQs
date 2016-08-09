@@ -305,6 +305,84 @@ Fast system calls:
 
 
 
+SCHEDULER:
+
+From a high level, the scheduler is simply a grouping of functions that operate on given data structures.--kernel/sched.c 
+A task/process/thread in the scheduler is a collection of data structures and flow of control.
+
+
+a process has been initialized and placed on a run queue:
+
+struct task_struct *p;
+
+p->state = TASK_RUNNING ; =====> task is in run-Q
+
+In Linux, the run queue is composed of two priority arrays:
+
+    Active.: Stores processes that have not yet used up their timeslice
+
+    Expired.: Stores processes that have used up their timeslice.
+
+From a high level, the scheduler’s job in Linux is to take the highest priority active processes, 
+let them use the CPU to execute, 
+and place them in the expired array when they use up their timeslice.
+
+ at some time, this process should have access to the CPU to execute.
+ The two functions that are responsible for passing CPU control to different processes are schedule() and scheduler_tick()
+schedule(): how the Linux kernel decides which process to execute next
+scheduler_tick() : how the kernel determines which processes need to yield the CPU ??
+
+When a timer event occurs,the current process is put on hold and the Linux kernel itself takes control of the CPU.
+scheduler_tick() is a system timer isr that the kernel calls and marks processes as needing rescheduling / not needed.
+When the timer event finishes, the Linux kernel normally passes control back to the process that was put on hold. However, when the held process has been marked as needing rescheduling, the kernel calls schedule() to choose which process to activate instead of the process that was executing before the kernel took control. The process that was executing before the kernel took control is called the current process.
+
+Example:
+
+Process A has control of the CPU and is executing.
+
+The system timer scheduler_tick() goes off, takes control of the CPU from A, and marks A as needing rescheduling.
+The Linux kernel calls schedule(), which chooses Process B and the control of the CPU is given to B.
+
+Process B executes for a while and then voluntarily yields the CPU.
+This commonly occurs when a process waits on some resource.
+B calls schedule(), which chooses Process C to execute next.
+
+Process C executes until scheduler_tick() occurs, which does not mark C as needing rescheduling.
+This results in schedule() not being called and C regains control of the CPU.
+
+The system timer scheduler_tick() goes off, takes control of the CPU from C, and marks C as needing rescheduling
+The Linux kernel calls schedule(), which chooses Process A and the control of the CPU is given to A.
+
+
+PROCESS states in KERNEL-SPACE:
+----------------------------------
+
+p->state = RUNNING : run-Q => ready state==> ready to run in run-Q / running on cpu.
+yielding the processor:
+calling schedule();==> when p->state = RUNNING,merely moves process to run-Q. this will execute again when scheduler chooses it.
+
+sceduler can't choose to execute a process , if it is sleeping / waiting on an Event.:
+SLEEPING in the kernel:
+If procesing is waiting on some resource , It blocks by calling schedule().
+set_current_state(TASK_INTERRUPTIBLE); or set_current_state(TASK_UNINTERRUPTIBLE);
+schedule();
+Interruptible and Uninterruptible Sleep:
+Interruptible sleep is the preferred way of sleeping, unless there is a situation in which signals cannot be handled at all,
+such as device I/O. 
+p-> state = TASK_INTERRUPTIBLE  : can be wokenup by signals or by calling wake_up_process()from other process kernel code.
+p-> state = TASK_UNINTERRUPTIBLE : can be wokenup only by wake_up_process() call.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -326,14 +404,4 @@ Fast system calls:
   
 
 
-                       
-                       
-                       
-                       
-                       
-================================================================================================================================                       
-                       
-                       
-                       
-                       
-                       
+ 
