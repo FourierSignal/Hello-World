@@ -792,8 +792,70 @@ A semaphore is a complex shared data structure itself, and must therefore be pro
 
 
 
+##########################################################################################################
+http://duartes.org/gustavo/blog/post/anatomy-of-a-program-in-memory/
+Anatomy of a Program:
 
-r
+KERNEL SPACE :  1GB -- 0xFFFF|FFFF to ox0000|0000
+==> doesn't mean that this much of memory available , that portion of address space available
+    to  map to available physical memory .
+In Linux, kernel space is constantly present and maps the same physical memory in all processes.
+Kernel code and data are always addressable, ready to handle interrupts or system calls at any time.
+
+USER SPACE : 3GB ---
+ For a given process:
+     some virtual addresses are mapped to physical memory. others are not.
+      The mapped distinct bands in the address space correspond to memory segments like the heap, stack,...etc.
+      starting virtual addresses for the segments are randomised  by adding offsets to their starting addresses.--For security.
+      if they are same for all the processes, as in olden days-- security exploitation.
+      user-space of process changes whenever a process switch happens:
+      For each process there is distinct bands of address segments which map to different Physical pages.
+
+
+Linux processes are implemented in the kernel as instances of task_struct, the process descriptor.
+The mm field in task_struct points to the memory descriptor, mm_struct,: summary of a program’s memory.
+ = the set of virtual memory areas and the page tables.
+ 
+ 
+ struct vm_area_struct
+ Each virtual memory area (VMA) is a contiguous range of virtual addresses
+ vm_start --> first address within VMA.
+ vm_end ----> first address after VMA.
+ flags ----> Access permissions of Area.
+ vm_file ---->  file is being mapped by the area, if any ( A VMA that does not map a file is anonymous.)
+  VMAs do not care which segment they are in.
+  
+  Assignment:
+   A program’s VMAs are stored in its memory descriptor both as a linked list in the mmap field,
+   ordered by starting virtual address, and as a red-black tree rooted at the mm_rb field.
+   The red-black tree allows the kernel to search quickly for the memory area covering a given virtual address.
+   When you read file /proc/pid_of_process/maps, the kernel is simply going through the linked list of VMAs
+   for the process and printing each one.
+   : read the VMAs of currently(?)running process and display in proc.
+   
+   The 4GB virtual address space is divided into pages of size 4KB.
+   The size of a VMA must be a multiple of page size.
+   The processor consults page tables to translate a virtual address into a physical memory address. 
+   To each virtual page there corresponds one page table entry (PTE) in the page tables,
+   Each process has its own set of page tables; 
+   whenever a process switch occurs, page tables for user space are switched as well.
+    
+    ptr-to-(struct mm_struct) -->pgd_t * pgd ===> pointer to a process’ page tables.
+   
+   
+   
+   
+   
+   
+   
+  
+  
+  
+  
+ 
+ 
+ 
+
 
 
 
