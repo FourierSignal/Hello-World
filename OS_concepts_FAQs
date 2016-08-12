@@ -839,9 +839,60 @@ The mm field in task_struct points to the memory descriptor, mm_struct,: summary
    To each virtual page there corresponds one page table entry (PTE) in the page tables,
    Each process has its own set of page tables; 
    whenever a process switch occurs, page tables for user space are switched as well.
+   
+   typical page size = 4KB ---> 12-bit offset field in address
+   virtual-pages --> 20 bits : 1G pages ==> 1MB PTEs 
+   each PTE 4 bytes ==> 4MB memory (1k-pages per process)
+   If 100-processes==> 400MB  (100-pages per system)
+   
+   we cant keep some of them in Disk ==> because 
+   if  pageFrame not in mem : we can get it from disk via PTE.
+   if PTE is not in memory : no way to get it from Disk.
+   
+   solution : Another level of indirection : level-1-page table Always in memory , level-2 resides in disk.
+   Linux case : 3-level-page-table
+   calculation: 
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
     
     ptr-to-(struct mm_struct) -->pgd_t * pgd ===> pointer to a process’ page tables.
+      ?? which page-table?? where it resides?? level-1-page-table?? is level-1-page table common for all processes??
    
+   PTE : Base-addr of physical-page , P,
+   P ->present: 
+   R/W
+   U/S
+   D -> Dirty    : page had a write   --sticky-flag (i.e set by cpu ,cleared by kernel)
+   A -> Accessed : page accessed Read or Write-- sticky-flag (i.e set by cpu ,cleared by kernel)
+   
+   
+   Physical memory is managed with the buddy memory allocation technique:
+   
+   struct page {  :
+   Each physical page in the system has a struct page associated with it to keep track of 
+   whatever it is we are using the page for at the moment 
+   
+   Each segment in program area represented by vm_area_struct
+   vm_area_struct : has several virtual pages which are mapped to Physical page frames via Page tables
+   
+   
+   
+   
+   
+      
+         
+      
+      
    
    
    
