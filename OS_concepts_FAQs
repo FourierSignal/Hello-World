@@ -850,9 +850,37 @@ The mm field in task_struct points to the memory descriptor, mm_struct,: summary
    if PTE is not in memory : no way to get it from Disk.
    
    solution : Another level of indirection : level-1-page table Always in memory , level-2 resides in disk.
-   Linux case : 3-level-page-table
-   calculation: 
+   only first-level table needs to be reside always in memory
    
+   Linux case : 3-level-page-table   PGD(page global directory)---> PMD(page Middle directory)--> PTE
+   calculation:  
+   
+   Linux maintains the concept of a three-level page table in the architecture independent code
+   even if the underlying architecture does not support it.
+   Architectures that manage their Memory Management Unit (MMU) differently are expected to emulate the three-level page tables.
+   For example, on the x86 without PAE enabled, only two page table levels are available. 
+   (PMD) is defined to be of size 1 and “folds back” directly onto the (PGD) which is optimised out at compile time.
+   
+   
+   during context switch:
+   pointer to the current page tables is swapped
+   
+   
+   
+   Up to version 2.6.10, the Linux paging model consisted of three paging levels.
+   Starting with version 2.6.11, a four-level paging mode
+   PGD : page global directory
+   PUD : page upper directory
+   PMD : page middle directory
+   PTE : page table entry
+   
+   
+   
+   
+     
+   
+   
+   assignment: Walk through ing page tables of a process in Linux ??
    
    
    
