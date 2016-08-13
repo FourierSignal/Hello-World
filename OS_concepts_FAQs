@@ -1030,11 +1030,55 @@ task_struct structure is allocated via the slab allocator to provide object reus
 
 
   
-  
+  ###################################################################################
                
-               
-  
-  
+     get_current() and get_thread_info()     : below is random info collected about the.
+     rearrange it when time available.
+     seems they are architecture dependent.
+     so it is tough to find base of kernel stack.
+     explore bit more.
+  #####################################################################################
+  #define current get_current()
+static __always_inline struct task_struct *get_current(void)
+{
+        return this_cpu_read_stable(current_task);
+}
+
+extern struct task_struct *current_set[NR_CPUS];
+/*
+ *	On a single processor system this comes out as current_set[0] when cpp
+ *	has finished with it, which gcc will optimise away.
+ */
+
+struct thread_info *thread = current_thread_info();
+
+get_current() and get_thread_info() both of which are actually
+ * per-thread variables implemented as per-cpu variables and thus
+ * stable for the duration of the respective task
+
+vi arch/x86/include/asm/current.h +1
+
+
+kernel code that deals with processes works directly with struct task_struct. Consequently, it is very useful to be able to quickly look up the process descriptor of the currently executing task, which is done via the current macro. This macro must be separately implemented by each architecture. Some architectures save a pointer to the task_struct structure of the currently running process in a register, allowing for efficient access. Other architectures, such as x86 (which has few registers to waste), make use of the fact that struct thread_info is stored on the kernel stack to calculate the location of thread_info and subsequently the task_struct.
+
+
+On x86, current is calculated by masking out the 13 least significant bits of the stack pointer to obtain the thread_info structure. This is done by the current_thread_info() function. The assembly is shown here:
+
+movl $-8192, %eax
+andl %esp, %eax
+
+
+This assumes that the stack size is 8KB. When 4KB stacks are enabled, 4096 is used in lieu of 8192.
+
+Finally, current dereferences the task member of thread_info to return the task_struct:
+
+current_thread_info()->task;
+
+
+Contrast this approach with that taken by PowerPC (IBM's modern RISC-based microprocessor), which stores the current task_struct in a register. Thus, current on PPC merely returns the value stored in the register r2. PPC can take this approach because, unlike x86, it has plenty of registers. Because accessing the process descriptor is a common and important job, the PPC kernel developers deem using a register worthy for the task.
+
+
+
    
    
    .
