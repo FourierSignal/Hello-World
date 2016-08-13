@@ -917,9 +917,82 @@ The mm field in task_struct points to the memory descriptor, mm_struct,: summary
    
    
    
-      
+tasks in linux:
+To the Linux kernel, there is no concept of a thread. Linux implements all threads as standard tasks. 
+The Linux kernel does not provide any special scheduling semantics or data structures to represent threads. 
+Instead, a thread is merely a process that shares certain resources with other processes.
+In  Windows or Sun Solaris have  explicit kernel support for threads.
+
+Threads are created like normal tasks, with the exception that the clone() system call is passed flags corresponding to specific resources to be shared:
+clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0); //thread created with these resources shared with parent.
+ normal fork() ==> implemented as clone(SIGCHLD, 0); // regular process created.
+vfork() is implemented as clone(CLONE_VFORK | CLONE_VM | SIGCHLD, 0); // create a child process and block parent
+
+vfork() differs from fork in that the calling thread is suspended until the child terminates 
+(either normally, by calling _exit, or abnormally, after delivery of a fatal signal),or it makes a call to execve.
+It should not call exit() -- Why ???
+Until that point, the child shares all memory with its parent,including the stack.
+As with fork,the child process created by vfork() inherits copies of various of the caller's process attributes 
+(e.g., file descriptors, signal dispositions, and current working directory); 
+the vfork() call differs only in the treatment of the virtual address space
+
+Why- vfork ??
+Under Linux, fork(2) is implemented using copy-on-write pages, so the only penalty incurred by fork(2)
+is the time and memory required to duplicate the parent's page tables,and to create a unique task structure for the child.
+However, in the bad old days a fork(2) would require making a complete copy of the caller's data space, 
+often needlessly, since usually immediately afterward an exec(3) is done.
+Thus, for greater efficiency, BSD introduced the vfork() system call, which did not fully copy the address space
+of the parent process, but borrowed the parent's memory and thread of control until a call to execve(2) or an exit occurred. 
+The parent process was suspended while the child was using its resources.
+The use of vfork() was tricky: for example, not modifying data in the parent process depended on knowing 
+which variables were held in a register.  
+
          
-      
+Analysis:
+Initially vfork():  when there was no copy on write.==> to avoid duplication of Entire parent process memory
+
+
+
+Kernel thread(kernel-spae-process) VS user-space process:
+kernel threads: standard processes that exist solely in kernel-space., schedulable and preemptable like user-processes
+kernel threads do not have an address space (in fact, their mm pointer is NULL).
+a kernel thread can be created only by another kernel thread.via interface : int kernel_thread(int (*fn)(void *), void * arg, unsigned long flags)
+pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
+{
+        return do_fork(flags|CLONE_VM|CLONE_UNTRACED, (unsigned long)fn,
+                (unsigned long)arg, NULL, NULL);
+}
+ created via the usual clone() system call
+kthread function usually implements a loop in which the kernel thread wakes up as needed, performs its duties, and then returns to sleep.
+ 
+ kthread_create/kthread_run :   in kernel/kthread.c 
+ 
+ 
+task_struct :
+task_struct structure is allocated via the slab allocator to provide object reuse and cache coloring 
+ Prior to the 2.6 kernel series, struct task_struct was stored at the end of the kernel stack of each process.
+ This allowed architectures with few registers, such as x86, to calculate the location of the task structure via the stack pointer without using an extra register to store the location.
+ from 2.6:
+ a new structure, struct thread_info, was created that again lives at the bottom of the stack.
+ struct thread_info {
+    struct task_struct  *task;
+    struct exec_domain  *exec_domain;
+    unsigned long     flags;
+    unsigned long     status;
+    __u32         cpu;
+    __s32         preempt_count;
+    mm_segment_t     addr_limit;
+    struct restart_block restart_block;
+    unsigned long     previous_esp;
+    __u8         supervisor_stack[0];
+};
+
+ 
+ 
+ 
+ 
+
+
       
    
    
