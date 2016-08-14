@@ -1001,6 +1001,43 @@ At this point, if the USB driver for this device is loaded, the device is essent
 
 
 
+USB-Firmware samples helpfull:
+####################################
+for LPC1768:
+
+
+jaguar@jaguar-ThinkPad-T540p ~/Downloads/FreeRTOS_demos/FreeRTOS_V9.0.0rc2/FreeRTOS/Demo/CORTEX_LPC1768_GCC_RedSuite/src/LPCUSB $ ls
+type.h    USB_CDC.c     usbdebug.h   usbhw_lpc.h  usbstdreq.c
+usbapi.h  usbcontrol.c  usbhw_lpc.c  usbinit.c    usbstruct.h
+
+
+ TOS/Demo/CORTEX_LPC1768_GCC_RedSuite/src/LPCUSB $ ls /home/jaguar/Documents/Free
+Rtos/nxp/lpcopen_proj1 | grep usb
+lpcusblib_KeyboardHost lpcusblib_MassStorageHost usbd_lib_cdc usbd_lib_cdc_uart usbd_lib_composite
+usbd_lib_hid_generic  usbd_lib_hid_keyboard  usbd_lib_hid_mouse 
+
+####################################################
+For Beagle-bone:
+
+ ls /home/jaguar/Documents/Emb_linux/em_lin/practice/am335x_starterware/starterwarefree-code/examples/beaglebone
+cache_mmu  gpio               rtc                   usb_dev_msc
+demo       hsi2c_eeprom       uart                  usb_dev_serial
+dmtimer    hsi2c_eeprom_edma  uart_edma             usb_host_msc
+edma       hs_mmcsd           usb_dev_bulk          watchdogTimer
+enet_echo  irq_preemption     usb_dev_comp_ser_ser
+enet_lwip  neonVFPBenchmark   usb_device_host_msc
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
