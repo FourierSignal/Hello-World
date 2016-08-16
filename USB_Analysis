@@ -762,7 +762,17 @@ ffff8801f6e36480 2403355872 C Ii:1:001:1 0:2048 2 = 0800
 ffff8801f6e36480 2403355895 S Ii:1:001:1 -115:2048 4 <
 
 Each hub uses its interrupt endpoint to report events at the hub.
- The report indicates only whether the hub or a port (and if so, which port) has experienced an event
+ The report indicates only whether the hub or a port (and if so, which port) has experienced an event.
+
+-EINPROGRESS = - 115 
+ - Out of memory (-ENOMEM)
+- Unplugged device (-ENODEV)
+- Stalled endpoint (-EPIPE)
+- Too many queued ISO transfers (-EAGAIN)
+- Too many requested ISO frames (-EFBIG)
+- Invalid INT interval (-EINVAL)
+- More than one packet for INT (-EINVAL)
+
 
 
 URB- ffff8800c8c10900
