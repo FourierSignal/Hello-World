@@ -1,0 +1,20 @@
+
+
+
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/USB_project/pheri_usb_custom_proj/Hostside_driver/driver_usb/usb_transfer_2 $ sudo make -C  /lib/modules/4.3.2/build/  M=`pwd` modules
+make: Entering directory `/home/jaguar/Documents/LDD/Practice_ldd/Assign6_1/linux-4.3.2'
+  CC [M]  /home/jaguar/Documents/FreeRtos/USB_project/pheri_usb_custom_proj/Hostside_driver/driver_usb/usb_transfer_2/custom_transfer_usb_2.o
+/home/jaguar/Documents/FreeRtos/USB_project/pheri_usb_custom_proj/Hostside_driver/driver_usb/usb_transfer_2/custom_transfer_usb_2.c: In function ‘custom_probe’:
+/home/jaguar/Documents/FreeRtos/USB_project/pheri_usb_custom_proj/Hostside_driver/driver_usb/usb_transfer_2/custom_transfer_usb_2.c:411:13: error: invalid storage class for function ‘custom_disconnect’
+ static void custom_disconnect(struct usb_interface *interface)
+             ^
+/home/jaguar/Documents/FreeRtos/USB_project/pheri_usb_custom_proj/Hostside_driver/driver_usb/usb_transfer_2/custom_transfer_usb_2.c:411:1: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ static void custom_disconnect(struct usb_interface *interface)
+=========>
+Error:
+error: invalid storage class for function ‘function name’
+error: expected declaration or statement at end of input
+Reason: missing brace.
+Solution:- Verify that all the open brace is properly closed in ‘function name’.
+
+
