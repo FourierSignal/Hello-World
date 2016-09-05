@@ -413,6 +413,43 @@ maximum Watchdog interval is = (T WDCLK * 2^32 * 4) = 10ms x 2^32 x4 = 10ms x 4 
 The watchdog timer block uses two clocks: PCLK and WDCLK. PCLK is used for the APB
 accesses to the watchdog registers. The WDCLK is used for the watchdog timer counting.                                                                     
                                                                      
+
+
+
+
+
+
+embedded system startup:
+Startup of LPC1768 : 
+
+In the Cortex-M3, the initial value for the MSP is put at the beginning of the memory map-0x0000 0000
+followed by the vector table, which contains vector address values.
+the contents of the vector table are address values, not branch instructions unlike traditional ARM processors.
+0x0000 0000 ---> MSP value       // ?? how it comes here
+0x0000 0004 ---> Reset vector    // ?? how it comes here
+0x0000 0004 to 0x00000100 ==> other exception vectors
+
+ Reset vector = starting address of boot code.( 0x00000101)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                     
                                                     
 
