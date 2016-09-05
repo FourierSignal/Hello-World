@@ -416,9 +416,6 @@ accesses to the watchdog registers. The WDCLK is used for the watchdog timer cou
 
 
 
-
-
-
 embedded system startup:
 Startup of LPC1768 : 
 
@@ -427,23 +424,175 @@ followed by the vector table, which contains vector address values.
 the contents of the vector table are address values, not branch instructions unlike traditional ARM processors.
 0x0000 0000 ---> MSP value       // ?? how it comes here
 0x0000 0004 ---> Reset vector    // ?? how it comes here
-0x0000 0004 to 0x00000100 ==> other exception vectors
+0x0000 0004 to 0x00000400 ==> other exception vectors
+       Reset vector = starting address of boot code area.
+How these values (MSPvalue ,IRQ Vectors)and corresponding IRQ handlers are loaded in place ??
 
- Reset vector = starting address of boot code.( 0x00000101)
+when s/w is compiled => It generates object files which contains symbols in several sections
+                        and their offset values.
+when these object files are linked :
+specific to memory map of the target device(lpc1768) ,linker script will map each symbol to 
+the specified memory location in target.
+loader will load these sections/symbols/code into flash. 
+
+   LMA(load memory address/Load addr) and VMA(Virtual memory address/Exec addr)
+   
+
+LMA : is the address at which the section will be loaded. (in flash)
+VMA:  is the address the section will have when the output file is run.
+In most cases  : LMA = VMA .
+example of when they might be different is:
+when a data section is loaded into ROM, and then copied into RAM when the program starts up
+(this technique is often used to initialize global variables in a ROM based system). 
+In this case the ROM address would be the LMA, and the RAM address would be the VMA. 
+both LMA and VMA would be calculated by linker script.
+
+flash contains all the symbols:
+    i.e   
+         global variables initialised to their values  at
+         details of data and bss sections : offset(from starting of flash),RAM-load adresses,length of section
+         
+         constants 
+         Functons : code manipulating the memory locations(representing variables) in RAM,
+                         fetching data from flash,ram
+         
+Later when Reset ISR executes: startup code copies global variables (data & bss sections)
+from flash to RAM using the addresses of those sections
+Target LPC1768 :  512 kB of flash memory, 32 kB on-chip SRAM,
+
+Memory map of LPC1768:
+On-chip non-volatile memory :  0x0000 0000 - 0x0007 FFFF  (512 KB - flash)
+On-chip SRAM                :  0x1000 0000 - 0x1000 7FFF  (32 KB - SRAM)
+Boot-ROM                    :  0x1FFF 0000 - 0x1FFF 1FFF  (8 KB - ROM)
 
 
+how stack is setup ?
+lpc1768 has full descending stack : stack base should be 0x10007FFF + 1 (Full)=>sp points to filled mem
 
-setup of the stack
+Linker script:
+-------------------
+__top_RamLoc32 = 0x10000000 + 0x8000;
+_vStackTop =  __top_RamLoc32 - 0;
+
+startup_code :
+--------------
+extern void _vStackTop(void); 
+=> generate a symbol _vStackTop whose address will be part of irq vectors 
+
+__attribute__ ((section(".after_vectors")))  ==> keep this  in section called  after_vectors
+void
+ResetISR(void) {
+......
+.......
+}
 
 
+extern void (* const g_pfnVectors[])(void);
+__attribute__ ((section(".isr_vector")))     =====> create a section named isr_vector
+void (* const g_pfnVectors[])(void) = {
+    // Core Level - CM3
+    &_vStackTop, // The initial stack pointer
+    ResetISR,                               // The reset handler
+    NMI_Handler,                            // The NMI handler
+    HardFault_Handler,                      // The hard fault handler
+.........}
+
+Linker script:
+
+MFlash512 (rx) : ORIGIN = 0x0, LENGTH = 0x80000 /* 512K bytes */
+
+SECTIONS
+{
+
+    /* MAIN TEXT SECTION */    
+    .text : ALIGN(4)
+    {
+        FILL(0xff)
+        __vectors_start__ = ABSOLUTE(.) ;   ===> __vectors_start_ = 0x0000 0000 //MFlash512:origin
+        KEEP(*(.isr_vector))                ====> load isr_vector section here
+        
+        /* Global Section Table */
+        . = ALIGN(4) ;
+        __section_table_start = .; ==> Table describing various sections(.data ,.bss)
+...............
+...............
+        __section_table_end = . ;
+        /* End of Global Section Table */
+        *(.after_vectors*)
+    } >MFlash512
 
 
+based on the Linker script => linker generates the symbol table after linking symbols 
+in various object files.
+Address  of symbol in ELF file : indicating where in memory the  sysmbol should be loaded .
 
+Symbol table '.symtab' contains 416 entries:
+   Num:    Value    Size   Type   Bind   Vis    Ndx  Name
 
+    Num: = The symbol number
+    Value = The address of the Symbol
+    Size = The size of the symbol
+    Type = symbol type: Func = Function, Object, File (source file name), Section = memory section, Notype = untyped absolute symbol or undefined
+    Bind = GLOBAL binding means the symbol is visible outside the file. LOCAL binding is visible only in the file. WEAK is like global, the symbol can be overridden.
+    Vis = Symbols can be default, protected, hidden or internal.
+    Ndx = The section number the symbol is in. ABS means absolute: not adjusted to any section address's relocation
+    Name = symbol name
+   
 
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/Firmware_project_lpcopen/Blinky_fw_code_work/periph_blinky/Debug $ arm-none-eabi-readelf  -a   periph_blinky.axf | grep    g_pfnVectors
+   392: 00000000   204 OBJECT  GLOBAL DEFAULT    1 g_pfnVectors
 
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/Firmware_project_lpcopen/Blinky_fw_code_work/periph_blinky/Debug $ arm-none-eabi-readelf  -a   periph_blinky.axf | grep    _vStackTop
+   350: 10008000     0 NOTYPE  GLOBAL DEFAULT  ABS _vStackTop
 
+jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/Firmware_project_lpcopen/Blinky_fw_code_work/periph_blinky/Debug $ arm-none-eabi-readelf  -a   periph_blinky.axf | grep    ResetISR
+   393: 00000171   120 FUNC    GLOBAL DEFAULT    1 ResetISR
 
+====> g_pfnVectors : vector table is loaded starting from 0000 0000
+====> _vStackTop which is part of vector table has absolute value 10008000 (stack base).
+====> ResetISR : reset vector also part of vector table has value 00000171 ( )
+====> After the vector table , Global Section Table is loaded.
+====> After this IRQ handlers are loaded.
+
+ when processor is reset :
+ processor  Fetches  Initial Stack pointer value from location 0x00000000 and loads R13=> SP
+            Fetches  Reset vector from 0x0000 0004 and loads pc and jumps to reset-ISR.
+
+SECTIONS
+{
+
+    /* MAIN TEXT SECTION */    
+    .text : ALIGN(4)
+    {
+        FILL(0xff)
+        __vectors_start__ = ABSOLUTE(.) ;   ===> __vectors_start_ = 0x0000 0000 //MFlash512:origin
+        KEEP(*(.isr_vector))                ====> load isr_vector section here
+        
+        /* Global Section Table */
+        . = ALIGN(4) ;
+        __section_table_start = .; ==> Table describing various sections(.data ,.bss)
+        __data_section_table = .;
+        LONG(LOADADDR(.data));    ==> load address of data section in memory (RAM here)
+        LONG(    ADDR(.data));   ==>  Address of data section in the current ELF file.
+        LONG(  SIZEOF(.data));   ===> size of data section
+        LONG(LOADADDR(.data_RAM2)); ===> 
+        LONG(    ADDR(.data_RAM2));
+        LONG(  SIZEOF(.data_RAM2));
+        __data_section_table_end = .;
+        __bss_section_table = .;
+        LONG(    ADDR(.bss));  ===> Address of bss section in the current ELF file
+        LONG(  SIZEOF(.bss));  ===> size of bss section in the current ELF file
+                                    /* bss section in ELF file is just starting address and size.
+        LONG(    ADDR(.bss_RAM2));
+        LONG(  SIZEOF(.bss_RAM2));
+        __bss_section_table_end = .;
+        __section_table_end = . ;
+        /* End of Global Section Table */
+        
+
+        *(.after_vectors*)
+        
+    } >MFlash512
 
 
 
