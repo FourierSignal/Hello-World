@@ -417,8 +417,11 @@ accesses to the watchdog registers. The WDCLK is used for the watchdog timer cou
 
 
 embedded system startup:
-Startup of LPC1768 : 
 
+open the project for analyzing : linkerscript , startup code and elffile,
+/home/jaguar/Documents/FreeRtos/nxp/Firmware_project_lpcopen/Blinky_fw_code_work/periph_blinky/Debug
+
+Startup of LPC1768 : 
 In the Cortex-M3, the initial value for the MSP is put at the beginning of the memory map-0x0000 0000
 followed by the vector table, which contains vector address values.
 the contents of the vector table are address values, not branch instructions unlike traditional ARM processors.
@@ -428,16 +431,25 @@ the contents of the vector table are address values, not branch instructions unl
        Reset vector = starting address of boot code area.
 How these values (MSPvalue ,IRQ Vectors)and corresponding IRQ handlers are loaded in place ??
 
+Target LPC1768 :  512 kB of flash memory, 32 kB on-chip SRAM,
+
+Memory map of LPC1768:
+On-chip non-volatile memory :  0x0000 0000 - 0x0007 FFFF  (512 KB - flash)
+On-chip SRAM                :  0x1000 0000 - 0x1000 7FFF  (32 KB - SRAM)
+Boot-ROM                    :  0x1FFF 0000 - 0x1FFF 1FFF  (8 KB - ROM)
+
+
+
+Loading of Executable into Target flash:
 when s/w is compiled => It generates object files which contains symbols in several sections
                         and their offset values.
 when these object files are linked :
-specific to memory map of the target device(lpc1768) ,linker script will map each symbol to 
-the specified memory location in target.
+using linker script specific to memory map of the target device(lpc1768) ,
+linker will map each symbol to the specified memory location in target=> generates elf file.
 loader will load these sections/symbols/code into flash. 
 
-   LMA(load memory address/Load addr) and VMA(Virtual memory address/Exec addr)
-   
-
+ELF-contents:
+LMA(load memory address/Load addr) and VMA(Virtual memory address/Exec addr)
 LMA : is the address at which the section will be loaded. (in flash)
 VMA:  is the address the section will have when the output file is run.
 In most cases  : LMA = VMA .
@@ -445,19 +457,31 @@ example of when they might be different is:
 when a data section is loaded into ROM, and then copied into RAM when the program starts up
 (this technique is often used to initialize global variables in a ROM based system). 
 In this case the ROM address would be the LMA, and the RAM address would be the VMA. 
-both LMA and VMA would be calculated by linker script.
 
+both LMA and VMA would be calculated by linker .
+
+After Loading into Flash:
 flash contains all the symbols:
-    i.e   
-         global variables initialised to their values  at
-         details of data and bss sections : offset(from starting of flash),RAM-load adresses,length of section
-         
-         constants 
-         Functons : code manipulating the memory locations(representing variables) in RAM,
-                         fetching data from flash,ram
-         
+    i.e     
+         stack base address
+         Interrupt vectors
+         details of data and bss sections:
+           offset(from starting of flash),RAM-load adresses,length of section
+         ISR code.
+        
+         global variables initialised to their values ( organised in sections)
+         constants / ro-data 
+         code section : 
+            Functons=>code manipulating the memory locations(representing variables) in RAM,
+                      code fetching data from flash,ram. 
+        local variables ??
+        they are managed at run time on the stack and are not of interest to the linker.
+        local variable int local_var1=200; ==> translated as MVI R0,200;MOV(sp--),R0;
+        
 Later when Reset ISR executes: startup code copies global variables (data & bss sections)
-from flash to RAM using the addresses of those sections
+from flash to RAM using the addresses of those sections.
+
+
 Target LPC1768 :  512 kB of flash memory, 32 kB on-chip SRAM,
 
 Memory map of LPC1768:
@@ -522,9 +546,8 @@ SECTIONS
     } >MFlash512
 
 
-based on the Linker script => linker generates the symbol table after linking symbols 
-in various object files.
-Address  of symbol in ELF file : indicating where in memory the  sysmbol should be loaded .
+based on the Linker script => linker generates the symbol table after merging symbols in various object files.
+         
 
 Symbol table '.symtab' contains 416 entries:
    Num:    Value    Size   Type   Bind   Vis    Ndx  Name
@@ -558,16 +581,21 @@ jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/Firmware_project_lpcopen/B
  processor  Fetches  Initial Stack pointer value from location 0x00000000 and loads R13=> SP
             Fetches  Reset vector from 0x0000 0004 and loads pc and jumps to reset-ISR.
 
+
+
+
+
+
+
+
 SECTIONS
 {
-
     /* MAIN TEXT SECTION */    
     .text : ALIGN(4)
     {
         FILL(0xff)
         __vectors_start__ = ABSOLUTE(.) ;   ===> __vectors_start_ = 0x0000 0000 //MFlash512:origin
         KEEP(*(.isr_vector))                ====> load isr_vector section here
-        
         /* Global Section Table */
         . = ALIGN(4) ;
         __section_table_start = .; ==> Table describing various sections(.data ,.bss)
