@@ -582,6 +582,55 @@ jaguar@jaguar-ThinkPad-T540p ~/Documents/FreeRtos/nxp/Firmware_project_lpcopen/B
             Fetches  Reset vector from 0x0000 0004 and loads pc and jumps to reset-ISR.
 
 
+Reset Handler:
+-----------------------
+SectionTable => info about global and bss sections.==> contains below:
+start address of data sec on flash (LMA)
+start address of data sec on ram (VMA)
+lenth of data section 
+
+start address of bss sec on ram (VMA) 
+lenth of data section 
+
+data section on flash:
+   global variables initialized .
+   static variables initialized.
+   
+bss section on flash:
+    length of bss section  ==> we dont need bss variables on flash as they are all initialized to zero.
+                               this saves space on flash.
+                               
+In reset handler :
+   data section is copied from flash to ram. => if 10 variables on flash 10 reads from flash, 10 writes to flash
+   based on bss-length on flash bss section setup in ram 
+       => if 10 variables in bss : 2 reads(start_addr_bss and len_bss) , 10 writes to flash(zero write).
+          aslo place saved on flash.
+   
+sysinit:  
+   Initialise Vector Table Offset Register (VTOR) to the address where vectors are stored in flash.
+   this is just for indicating where in the flash vector table starts .
+   (we can modify VTOR later in code to relocate vector table.)
+   
+   if __FPU_PRESENT ==> fpuInit
+   if NO_BOARD_LIB ===> Chip_SystemInit
+   if BOARD_LIB ======> Board_SystemInit
+   
+Board_SystemInit() ==> Board_SetupMuxing/Chip_IOCON_SetPinMuxing : pin muxing (mode and function select) for IO pins
+                       Board_SetupClocking/Chip_SetupXtalClocking : setup clock by selecting and Enabling clock src,
+                                                                    clock dividervalue and PLL.
+call main or call redlib's __main==> which calls the main().
+
+
+
+   
+   
+          
+   
+
+                               
+    
+
+    
 
 
 
