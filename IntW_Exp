@@ -619,24 +619,6 @@ Board_SystemInit() ==> Board_SetupMuxing/Chip_IOCON_SetPinMuxing : pin muxing (m
                        Board_SetupClocking/Chip_SetupXtalClocking : setup clock by selecting and Enabling clock src,
                                                                     clock dividervalue and PLL.
 call main or call redlib's __main==> which calls the main().
-
-
-
-   
-   
-          
-   
-
-                               
-    
-
-    
-
-
-
-
-
-
 SECTIONS
 {
     /* MAIN TEXT SECTION */    
@@ -671,8 +653,13 @@ SECTIONS
         
     } >MFlash512
 
+######################################################################################################
 
-
+context switching in FreeRTOS:
+--------------------------------
+systick handler:
+portNVIC_PENDSVSET
+vTaskIncrementTick
 
 
 
