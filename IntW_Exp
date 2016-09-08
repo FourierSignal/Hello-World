@@ -111,7 +111,45 @@ keep practicing,c and DS basics...It helps to make impression during intw-for-Pl
 
 
 
+##############################################################################################
+ADC driver : 
+ i2c client driver reads from ADC(mcp 3021) and writes into sysfs.
+                   also provides value to user space through ioctl interface.
 
+mcp3021_adc_drv_init:
+      Allocate device numbers.
+      create class for device.
+      i2c_add_driver: register the i2c client driver( a platform driver) with the i2c subsystem.
+
+
+mcp3021_probe:
+   create ,populate private structure and store it in struct i2c_client.
+   
+   create sysfs files corresponding to attributes of kobjects of device.
+       sysfs_create_file(&client->dev.kobj, &dev_attr_in0_input.attr);
+       sysfs_create_file(&client->dev.kobj, &dev_attr_dig_val.attr);
+
+  init and add cdev
+  create device in class.
+
+
+
+
+static DEVICE_ATTR(in0_input, S_IRUGO, show_in_input, NULL);
+static DEVICE_ATTR(dig_val, S_IRUGO, show_dig_val, NULL);
+
+
+
+show_dig_val : mcp3021_read16 => print reg 
+
+show_in_input : mcp3021_read16 => conv regval to volts : print volts
+
+mcp3021_read16 : i2c_master_recv(client, (char *)&buf, 2);
+
+
+
+
+#####################################################################################################
 
 
 
