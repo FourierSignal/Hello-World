@@ -1,3 +1,4 @@
+###########################################################################################
 July17/2016: For NVIDIA through Aricent: Kiran kumar bobbu(Aricent)
 
 which drivers you worked on?? Have you worked on USB?
@@ -706,5 +707,56 @@ xPortPendSVHandler:
 
                                                     
                                                     
+
+#############################################################################################
+
+
+c99 standard exciting features?
+
+malloc and calloc major difference 
+
+int a[4] = { 1,2,3,4,5}; a[6]=?
+
+varible length arrays
+
+can kernel identify driver with only major number ?
+
+swich case for small no of conditions  to check .
+If large no of conditions what to use ?
+
+difference between .o file and .ko file
+
+IPC s between kernel space user space??
+NETLINK socket using the adress family :AF_NETLINK 
+note AF_INET => tcp/ip socket
+It provides full-duplex communication link
+
+
+
+main(){ int *p ; *p = 100; } where p is allocated ?
+==> undefined : p may contain junk value
+
+how to remove file created by mknod?? 
+==>
+  rm -f  => no API to call from remove.
+Range of minor numbers ? what do when it is exhausted?
+
+major difference between 2.4 and 2.6 
+==>
+
+1) preemptible option (CONFIG_PREEMPT)
+2) unified device model : 
+2) user spcae program insmod would interpret ELF object(.o) file and do all work of linking it
+    to running kernel, generating a finished binary
+    In 2.6 kernel does the linking, insmod will pass the contents of ELF file directly to kernel.
+    .ko file contatins this additional linking info and differs from .o which was linked & loaded earlier by insmod(2.4 case)
+       
+in 2.6 ==> create reguar .o file | run modpost program over .o file => .mod file has additional sections |
+           compile .mod file and link result with original .o file => .ko file.
+
+
+
+
+
 
 
