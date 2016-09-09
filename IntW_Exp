@@ -721,6 +721,8 @@ varible length arrays
 
 can kernel identify driver with only major number ?
 
+scope of variable in switch case ?
+
 swich case ideal for small no of conditions  to check .
 If large no of conditions what to use ?
 
