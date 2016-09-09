@@ -715,13 +715,13 @@ c99 standard exciting features?
 
 malloc and calloc major difference 
 
-int a[4] = { 1,2,3,4,5}; a[6]=?
+int a[14] = { 1,2,3,4,5}; a[6]=?
 
 varible length arrays
 
 can kernel identify driver with only major number ?
 
-swich case for small no of conditions  to check .
+swich case ideal for small no of conditions  to check .
 If large no of conditions what to use ?
 
 difference between .o file and .ko file
