@@ -718,6 +718,7 @@ malloc and calloc major difference
 int a[14] = { 1,2,3,4,5}; a[6]=?
 
 varible length arrays
+what happens when file is included.??
 
 can kernel identify driver with only major number ?
 
@@ -755,6 +756,15 @@ major difference between 2.4 and 2.6
        
 in 2.6 ==> create reguar .o file | run modpost program over .o file => .mod file has additional sections |
            compile .mod file and link result with original .o file => .ko file.
+
+
+L&T face to face:
+linked list reverse traversal
+tree traversal.
+Explain any bug you faced while solving the problem?
+what is re-entrant code?
+can you open file inside a code section which is executed by two threads.?
+
 
 
 
