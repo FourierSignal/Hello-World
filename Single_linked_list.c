@@ -112,8 +112,9 @@ node* delete_node(node **head,int val)
         /*
       	  prev = *head;
       	  for(curr = *head;(curr->next != NULL) &&(curr->data==val); curr=curr->next)
-      	     we need to handle head case
+      	     we need to handle head case.
       	     and also last node case.
+      	     so better is to go for handling head seperately and junking curr->next node.
       	*/
       	
     	  for(curr = *head;(curr->next != NULL); curr=curr->next)
@@ -122,6 +123,9 @@ node* delete_node(node **head,int val)
              {
                 junk_node = curr->next;
                 curr->next = curr->next->next;
+                //here there is no problem with last node case
+                //if junk_node is last node curr->next->next is NULL 
+                //there is not a problem becuse we are dereferencing curr->next but not curr->next->next
                 break;
              }
           }
