@@ -46,6 +46,18 @@ node* addnode_at_head(node **head,int val)
  
 }
 
+/*
+best logic i found till now for delete node is 
+
+1) handle case:  if head is NULL 
+2) handle junking of head node as seperate case
+3) handle junking of nodes other than head node seperately
+     here dont junk:  curr  node.
+     instead junk : curr->next  node
+     this helps in skipping the last node case (deleting last node).
+    
+*/
+
 
 node* delete_node(node **head,int val)
 {
