@@ -31,7 +31,7 @@ node* append_node(node **head,int val)
 
 node* addnode_at_head(node **head,int val)
 {
-  node *temp;
+
   node *first = (node *)malloc(sizeof(struct node_struct));
   first->data = val;
   first->next = NULL;
@@ -40,9 +40,8 @@ node* addnode_at_head(node **head,int val)
      *head = first;
   else
   {
-     temp = (*head);
+     first->next = (*head);
      (*head) = first;
-     first->next = temp;
   }
  
 }
@@ -57,7 +56,8 @@ node* delete_node(node **head,int val)
       if(*head == NULL)
        {
          printf("Head is NULL\n");
-         return *head;
+         //return *head;
+         return NULL;
        }
       else if((*head)->data == val)
       {
@@ -66,6 +66,56 @@ node* delete_node(node **head,int val)
       }
       else
       {
+      	//note : we can't generalize logic for deleting first node and deleting any other node
+      	// or atleast we need to handle or check wether we are deleting first node.
+      	/*
+      	  for(curr = *head;(curr->next != NULL); curr=curr->next)
+          {
+             if(curr->data == val)
+             {
+                 if(*head == curr)
+                 {
+                    junk_node = curr;
+                    *head = curr->next;
+                     break;
+                 }
+                 else
+                 {
+                     junk_node = curr;
+                     ??? here is the problem: how we handle prev pointer
+                     break;
+                 }
+             }
+          }
+      	*/
+      	
+      	/*
+      	  Even with prev we can't generalize logic)
+      	  prev = *head;
+      	  for(curr = *head;(curr->next != NULL); curr=curr->next)
+      	  {
+      	        if(curr->data == val)
+      	        {
+      	           junk_node = curr;
+      	           prev->next = curr-> next; 
+      	           // in head node case: this statement fails: 
+      	           // head node case: (*head)->next = (*head)->next; won't skip the current node 
+      	           // It replaces curr->next with same value => no effect
+      	           break;
+      	        }
+      	        prev=curr;
+      	  }
+      	  free(junk_node);
+      	  
+      	*/
+      	
+        /*
+      	  prev = *head;
+      	  for(curr = *head;(curr->next != NULL) &&(curr->data==val); curr=curr->next)
+      	     we need to handle head case
+      	     and also last node case.
+      	*/
+      	
     	  for(curr = *head;(curr->next != NULL); curr=curr->next)
           {
              if(curr->next->data == val)
