@@ -766,6 +766,67 @@ what is re-entrant code?
 can you open file inside a code section which is executed by two threads.?
 
 
+CISCO-Intw:
+-----------
+How to determine Little endian or big-endian ? (not using pointers) : hint=>use symantics of c language.
+int is_big_endian(void)
+{
+    union {
+        uint32_t i;
+        char c[4];
+    } e = { 0x01000000 };
+
+    return e.c[0];
+}
+
+Based on what parameters of RTOS you select RTOS for your application?
+priority??
+latency??
+based on IPC can an RTOS sceduler schedules high-priority task?
+
+how a systemcall enters kernel space.?
+
+#define secs_per_day  86400  (or) #define secs_per_day (24*60*60) ==> which one you prefer, why ??
+==> if you substitute this expresion million times in code , does that effects performance?
+
+char *ptr = "hello"; vs char arr[5]="hello"; 
+what is the difference? 
+ptr points to code-section  , arr points to data-section.
+what is impact?
+we cant modify the string.
+
+how sizeof()works ? why it is an operetor?
+
+i2c-driver :
+in i2c driver where do you pass i2c-controller Info?
+where do you pass i2c-client Info?
+where do you get client-address from?
+
+PATHPARTNER:
+fn1()
+{
+  int x= 30;
+  pthread_create( &x);
+  pthred_join()
+  return;
+}
+thread_fn( int *p)
+{
+  for(;;)
+    *(++p);
+}
+write a function for finding number of ones in a integer.
+is there any problem if this function is called by several threads.? any race condition?
+
+
+
+
+
+
+
+
+
+
 
 
 
