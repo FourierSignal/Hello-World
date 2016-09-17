@@ -817,6 +817,11 @@ thread_fn( int *p)
 }
 write a function for finding number of ones in a integer.
 is there any problem if this function is called by several threads.? any race condition?
+?
+how to find number of characters in File(optimized logic).?
+which one is better choice i2c or Spi ? why?
+in terms of power consumption, which one is better i2c or spi??
+
 
 
 
