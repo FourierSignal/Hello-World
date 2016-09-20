@@ -828,6 +828,10 @@ how to find number of characters in File(optimized logic).?
 which one is better choice i2c or Spi ? why?
 in terms of power consumption, which one is better i2c or spi??
 
+xoRail:
+explain volatile with examples?
+is volatile applied to variable or pointer ? in the case of register access
+is volatile variable can be on stack? or it should be global?
 
 
 
