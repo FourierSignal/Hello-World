@@ -1,0 +1,77 @@
+
+
+
+
+
+CCLK --> ARM cpu input clock
+osc_clk ---> oscillator clock
+pll_clkin --> i/p to PLL
+
+if pll0 is inactive osc_clk = pll_clkin
+
+======================
+LPC1768 CLOCKING:
+======================
+
+
+
+three independent oscillators:  Main Oscillator,  Internal RC Oscillator, RTC oscillator.
+
+
+Internal RC Oscillator:      The nominal IRC frequency is 4 MHz.
+------------------------
+Reset----> the LPC176x/5x will operate from the Internal RC Oscillator until switched by software.
+
+Internal RC Oscillator (IRC):can be used for the WDT, to drives PLL0 and subsequently the CPU.
+IRC can't be used for USB interface.
+The precision of the IRC <  precise time base in order to comply with the USB specification
+
+
+
+Main oscillator:   operates at frequencies of 1 MHz to 25 MHz.
+---------------- 
+This frequency can be boosted to a higher frequency, up to the maximum CPU operating frequency(120 MHz), by Main PLL (PLL0).
+main oscillator can be used as the clock source for the CPU, with or without using PLL0.
+
+
+RTC oscillator.:
+-----------------
+
+
+PLL0 and PLL1:
+----------------
+
+PLL0 : used by the CPU, peripherals, and optionally the USB subsystem
+PLL1 : dedicated to USB subsystem.
+
+
+PLL0: (turned off by default)
+------
+ PLLclkin range : 32 kHz to 50 MHz
+ Any of the three clock sources can be chosen to drive PLL0 and ultimately the CPU and on-chip peripheral devices.
+
+ Only the main oscillator must be used (via PLL0) as the clock source for the USBsubsystem.
+ The IRC or RTC oscillators do not provide the proper tolerances.
+
+The input frequency is multiplied up to a high frequency, then divided down to provide the actual clock as per pheripheral/cpu.
+
+
+PLLCLKin---> Initially divided by N(1 to 256) ---->Multiplier (by M---> 6 through 512) 
+---> PLL-->stable freq pllclk----> additional dividers as required by pheripheral
+
+
+PLL1:
+-------
+       i/p freq is only from main oscillator (in the range of 10 MHz to 25 MHz only)
+       o/p freq is fixed 48 MHz clock only to the USB subsystem.it is insured that the output of PLL1 has a 50% duty cycle.
+
+
+
+
+
+
+
+
+
+
+
