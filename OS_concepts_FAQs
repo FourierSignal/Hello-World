@@ -1079,7 +1079,22 @@ Contrast this approach with that taken by PowerPC (IBM's modern RISC-based micro
 
 
 
-   
+ LogicalAddress VS LinearAddress VS physicalAddress :
+ ----------------------------------------------------------
+ 
+Logical Address : is the address which is included in the machine language instructions 
+                  to specify the address of an operand or of an instruction.
+                  It is X86 term : X86 Arch forces program to be devided into segments
+		  logical address = Segment Address + offset
+		  
+Linear address : Virtual Address (0 - 4GB)		  
+Physical Address: Address of memory location
+
+MMU H/W : segmentation unit + paging unit 
+logical Address --> segmentation unit --->Linear Adddrees ---> paging Unit ---> physical Address
+
+
+
    
    .
    
