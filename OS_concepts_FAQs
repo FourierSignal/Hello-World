@@ -1103,9 +1103,82 @@ logical address used in Instr = (segBase addr ,offset) ==>segmentation unit ==> 
 Segmentation assigns different linear address space to each process.
 ==> Entire Linear addresss space(4GB) is divided b/w all the processes.
 
+Details About segmentation (Hard ware feature of X86):
+-----------------------------------------------
+logical address = (segBase addr / segment selector ,offset)
+
+segment selector  ==> ( index , TI, RPL)
+index -> segment index
+TI --> Table indicator: wether segment descriptor is in  GDT/LDT ??
+RPL --> Requestor privilege level :
+when accessing code segments ,specifies the Current Privilege Level(CPL) of the CPU when the corresponding Segment selector is loaded into cs reg.
+when accessing data segments , It can be used to selectively weaken processor privelege levels.
+
+how many privilige levels in x86 processor?? how many used in linux ?
+there are 4 privilege levels in x86 -> level 0(high),1,2,3(low).
+linux uses only levels 0 and 3, which are respectively called Kernel Mode and User Mode.
+Note : cs register has 2-bit field that specifies the Current Privilege Level (CPL) of the CPU
+
+
+Each segment is represented by an 8-byte Segment Descriptor that describes the segment characteristics.
+Segment Descriptors are stored either in the Global Descriptor Table (GDT ) or in the Local Descriptor Table(LDT).
+GDT and LDT are in Main Memory.
+Usually only one GDT is defined, while each process is permitted to have its own LDT 
+if it needs to create additional segments besides those stored in the GDT.
+registers gdtr and ldtr holds address and size of GDT and  currently used LDT.
+
+1)when segment selector is stored in segmentation register (cs/ds/ss/es/fs/gs)
+TI field of the Segment Selector to determine wether GDT/LDT stores the Segment Descriptor. 
+2) base address of GDT/LDT is obtained from GDTR/LDTR resp.
+3)compute address of the Segment Descriptor from the index field of the Segment Selector and GDTR/LDTR content
+4)compute : linear address = Base field of the Segment Descriptor + offset of logical address 
+Note : there is a Non-programmable register which holds previous segment descriptor.
+       because of this steps 1,2,3 needs to be performed only when segmentation register is changed.
+
+
+
+
 Paging :
+ maps the same linear address space into different physical address spaces.
+
+does Linux uses Segmentation or Paging ? why ?
+=> Linux prefers paging to Segmentation .
+   It also uses Segmentation in very limited way i.e only when necessary by X86 Arch
+   
+   why linux prefers paging?
+   1)Memory management is simpler when all processes use the same segment register values that is,
+   when they share the same set of linear addresses
+   2) for portability : most of RISC archs doesn't support Segmentation.
+   
+   how linux uses segmentation?
+   In linux All processes running in usermode use same segments for code and data.
+   similarly all processes running  in kernel mode use same segments for code and data.
+   there are only four segment descriptors used in Linux=> for usercode,userdata,kernelcode,kerneldata.
+   where as The maximum number of Segment Descriptors that can be stored in the GDT is 8,191 in X86 processor.
+   
+Segmentation in Linux:
+------------------------
+linear addresses associated with all segments starts at 0 and reach the addressing limit of 232 -1.
+==> all processes, either in User Mode or in Kernel Mode, may use the same logical addresses
+
+all segments start at 0x00000000  in Linux ==> logical addresses coincide with linear addresses;
+that is, Offset field of a logical address always coincides with the value of the corresponding linear address.
+
+Current Privilege Level(CPL) of the CPU indicates whether the processor is in User or Kernel Mode .
+It is specified by the RPL field of the Segment Selector stored in the cs register.
+when CPL is changed ( b/w user and kernel modes)
+ds register must be updated with segment selector of user/kernel data correspondingly.
+ss register must be updated with usermode  stack inside the user data segment or kernel mode stack inside kernel data segment.
 
 
+
+
+
+
+   
+   
+   
+   
    
    .
    
