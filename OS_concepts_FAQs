@@ -1153,7 +1153,8 @@ does Linux uses Segmentation or Paging ? why ?
    how linux uses segmentation?
    In linux All processes running in usermode use same segments for code and data.
    similarly all processes running  in kernel mode use same segments for code and data.
-   there are only four segment descriptors used in Linux=> for usercode,userdata,kernelcode,kerneldata.
+   there are  four main segment descriptors used in Linux=> for usercode,userdata,kernelcode,kerneldata.
+    +  Task State Segment (TSS), different for each processor in the system
    where as The maximum number of Segment Descriptors that can be stored in the GDT is 8,191 in X86 processor.
    
 Segmentation in Linux:
@@ -1169,6 +1170,42 @@ It is specified by the RPL field of the Segment Selector stored in the cs regist
 when CPL is changed ( b/w user and kernel modes)
 ds register must be updated with segment selector of user/kernel data correspondingly.
 ss register must be updated with usermode  stack inside the user data segment or kernel mode stack inside kernel data segment.
+
+GDT and LDT in Linux:
+-----------------------
+ in multiprocessor systems there is one GDT for every CPU in the system.
+  All GDTs are stored in the cpu_gdt_table array in main memory.
+ the addresses and sizes of the GDTs are stored in the cpu_gdt_descr array in main memory.
+ 
+ 
+PAGING in Linux: ( H/W feature):
+------------------
+For the sake of efficiency, linear addresses are grouped in fixed-length intervals called pages ;
+contiguous linear addresses within a page are mapped into contiguous physical addresses
+The paging unit thinks of all RAM as partitioned into fixed-length page frames/physical pages.
+
+"page" to refer both to a set of linear addresses and to the data contained in this group of addresses.
+"page frame" refers to storage area. VS page: just block of data which may be stored in page frame.
+size of page = size of page frame.
+
+The data structures that map linear to physical addresses are called page tables ; 
+they are stored in main memory and must be properly initialized by the kernel before enabling the paging unit.
+paging is enabled by setting the PG flag of a control register named cr0 .
+When PG = 0, linear addresses are interpreted as physical addresses.
+When PG = 1, linear addresses are translated into physical addresses.
+
+paging unit of Intel processors handles 4 KB pages.
+
+32 bit Linear adddress : (Directory-10bits , table-10bits , offset-12bits )
+
+
+
+
+
+
+
+
+
 
 
 
