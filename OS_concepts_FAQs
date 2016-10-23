@@ -1093,6 +1093,17 @@ Physical Address: Address of memory location
 MMU H/W : segmentation unit + paging unit 
 logical Address --> segmentation unit --->Linear Adddrees ---> paging Unit ---> physical Address
 
+Segmentation VS Paging:
+----------------------
+Segmentation : 
+encourages programmers to split their applications into logically related entities,
+such as subroutines or global and local data area. ==> code, local data, global data ...for each process seperately.
+
+logical address used in Instr = (segBase addr ,offset) ==>segmentation unit ==> linear address = segBase + offset
+Segmentation assigns different linear address space to each process.
+==> Entire Linear addresss space(4GB) is divided b/w all the processes.
+
+Paging :
 
 
    
