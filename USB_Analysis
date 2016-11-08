@@ -1074,6 +1074,15 @@ Bus 001 Device 017: ID 1ff9:0520                      ================>
 Bus 001 Device 004: ID 5986:026a Acer, Inc 
 Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 
+ALIGNED(4) const uint8_t USB_DeviceDescriptor[] = {
+	USB_DEVICE_DESC_SIZE,			/* bLength */
+ ......
+	WBVAL(0x1FF9),					/* idVendor */           //
+	WBVAL(0x0520),					/* idProduct */
+	WBVAL(0x0100),					/* bcdDevice */
+ ......
+};
+
 
 jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
 /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
