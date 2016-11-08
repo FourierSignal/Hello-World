@@ -1041,6 +1041,108 @@ enet_lwip  neonVFPBenchmark   usb_device_host_msc
 
 
 
+################################################################################
+Nov8 -2016:
+
+ls -l /sys/kernel/debug/usb/
+jaguar-ThinkPad-T540p usb # ls
+devices  ehci  ohci  uhci uvcvideo
+
+jaguar-ThinkPad-T540p usb # modprobe usbmon
+
+jaguar-ThinkPad-T540p usb # ls
+devices  ehci  ohci  uhci  usbmon  uvcvideo
+jaguar-ThinkPad-T540p usb # cd usbmon
+
+jaguar-ThinkPad-T540p usbmon # ls
+0s  0u  1s  1t  1u  2s  2t  2u  3s  3t  3u  4s  4t  4u
+jaguar-ThinkPad-T540p usbmon # 
+
+
+launch wireshark :
+   select usbmon1 interface to monitor.
+   
+   jaguar@jaguar-ThinkPad-T540p ~ $ lsusb
+Bus 004 Device 002: ID 8087:8000 Intel Corp. 
+Bus 004 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 003 Device 002: ID 8087:8008 Intel Corp. 
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 002: ID 138a:0017 Validity Sensors, Inc. 
+Bus 001 Device 015: ID 1fc9:0009 NXP Semiconductors 
+Bus 001 Device 017: ID 1ff9:0520                      ================>
+Bus 001 Device 004: ID 5986:026a Acer, Inc 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ lsusb -t
+/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/8p, 480M
+/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=ehci-pci/3p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/6p, 480M
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/15p, 480M
+    |__ Port 2: Dev 17, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 3: Dev 15, If 0, Class=Vendor Specific Class, Driver=usbfs, 480M
+    |__ Port 7: Dev 2, If 0, Class=Vendor Specific Class, Driver=, 12M
+    |__ Port 12: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+    |__ Port 12: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+
+
+
+
+
+   jaguar@jaguar-ThinkPad-T540p ~ $ ls /sys/bus/usb/devices/
+1-0:1.0  1-12:1.0  1-2      1-3      1-7      2-0:1.0  3-1      4-0:1.0  4-1:1.0  usb2  usb4
+1-12     1-12:1.1  1-2:1.0  1-3:1.0  1-7:1.0  3-0:1.0  3-1:1.0  4-1      usb1     usb3
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls /sys/bus/usb/drivers
+btusb  hub  usb  usbfs  uvcvideo
+jaguar@jaguar-ThinkPad-T540p ~ $ 
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l /sys/bus/usb/devices/
+total 0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-0:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-12 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-12:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-12:1.1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-12/1-12:1.1
+lrwxrwxrwx 1 root root 0 Nov  8 19:58 1-2 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-2
+lrwxrwxrwx 1 root root 0 Nov  8 19:58 1-2:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-2/1-2:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 19:57 1-3 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-3
+lrwxrwxrwx 1 root root 0 Nov  8 19:57 1-3:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-7 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 1-7:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb1/1-7/1-7:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 2-0:1.0 -> ../../../devices/pci0000:00/0000:00:14.0/usb2/2-0:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 3-0:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-0:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 3-1 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 3-1:1.0 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3/3-1/3-1:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 4-0:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-0:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 4-1 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 4-1:1.0 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4/4-1/4-1:1.0
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 usb1 -> ../../../devices/pci0000:00/0000:00:14.0/usb1
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 usb2 -> ../../../devices/pci0000:00/0000:00:14.0/usb2
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 usb3 -> ../../../devices/pci0000:00/0000:00:1a.0/usb3
+lrwxrwxrwx 1 root root 0 Nov  8 18:56 usb4 -> ../../../devices/pci0000:00/0000:00:1d.0/usb4
+
+
+jaguar@jaguar-ThinkPad-T540p ~ $ ls -l /sys/bus/usb/drivers
+total 0
+drwxr-xr-x 2 root root 0 Nov  8 18:56 btusb
+drwxr-xr-x 2 root root 0 Nov  8 20:02 hub
+drwxr-xr-x 2 root root 0 Nov  8 20:02 usb
+drwxr-xr-x 2 root root 0 Nov  8 20:02 usbfs
+drwxr-xr-x 2 root root 0 Nov  8 18:56 uvcvideo
+
+
+   
+
+
+
+
+
+
+
+
+
 
 
 
