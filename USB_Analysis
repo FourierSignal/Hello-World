@@ -1144,6 +1144,23 @@ drwxr-xr-x 2 root root 0 Nov  8 18:56 uvcvideo
 
    
 
+nxpUSBlib source code Analysis:
+=========================================
+
+Example_GenericHIDDevice/GenericHID.c
+main==>SetupHardware ==>USB_Init
+
+
+
+vi LPCUSBlib/Drivers/USB/Core/LPC/USBController_LPC.c +46
+USB_Init --> USB_Memory_Init,HAL_USBInit,USB_ResetInterface
+USB_ResetInterface ==> USB_Init_Device or USB_Init_Host  (USB_CAN_BE_DEVICE / USB_CAN_BE_HOST)
+USB_Init_Device ==> UsbdRom_Init or Endpoint_ConfigureEndpoint (USB_DEVICE_ROM_DRIVER / no rom driver)
+
+
+
+
+
 
 
 
