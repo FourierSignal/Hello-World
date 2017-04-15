@@ -36,3 +36,21 @@ if __name__ == '__main__':
     print(hash(tup1))
     #print(hash(integer_list))
     
+    
+    
+#print second largest in list    
+    if __name__ == '__main__':
+    n = int(raw_input())
+    arr = map(int, raw_input().split())
+    '''
+    set1=set(arr)
+    #print(set1)
+    arr2=list(set1)
+    arr2.sort()
+    #print(arr2)
+    print(arr2[len(arr2)-2])
+    '''    
+    print  max(list(filter(lambda i: i!=max(arr),arr)))  
+
+    
+    
