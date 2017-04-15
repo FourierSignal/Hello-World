@@ -1,0 +1,13 @@
+
+
+Tuple:
+
+if __name__ == '__main__':
+    n = int(raw_input())
+    integer_list = map(int, raw_input().split())
+    #print(integer_list)
+    tup1=tuple(integer_list)
+    #h=hash(tup1)
+    print(hash(tup1))
+    #print(hash(integer_list))
+    
