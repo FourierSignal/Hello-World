@@ -54,3 +54,27 @@ if __name__ == '__main__':
 
     
     
+#print student name Alphabetically who secured 2nd minimum score
+students_list=[]
+for _ in range(int(raw_input())):
+    name = raw_input()
+    score = float(raw_input())
+    students_list.append([name,score])
+
+#print(students_list)
+score_list=[row[1] for row in students_list]
+#print(score_list)
+min_list=[]
+for i in students_list:
+    if i[1]!=min(score_list):
+        min_list.append([i[0],i[1]])
+#print(min_list)
+min_list.sort(key= lambda x: x[1])
+#print(min_list)
+
+sec_low=min_list[0][1]
+min_list.sort(key= lambda x: x[0])
+#print(min_list)
+for i in min_list:
+    if i[1]==sec_low:
+        print(i[0])
