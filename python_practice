@@ -78,3 +78,54 @@ min_list.sort(key= lambda x: x[0])
 for i in min_list:
     if i[1]==sec_low:
         print(i[0])
+
+
+
+#LEAP YEAR CHECK
+
+def is_leap(year):
+    leap = False
+# Write your logic here
+#A leap year is exactly divisible by 4 except for century years (years ending with 00).
+#But The century year is a leap year only if it is perfectly divisible by 400.
+
+#for Every 4 years --> one leap year
+#century year can not be leap year unleass it it is 400th century year
+
+#most of times century year can not be leap year
+#But For Every four hundred years--> century year is leap year
+
+
+
+#divisible by 4 and also century year ; check if divisible by 400 -->  leap
+#divisible by 4 and also century year ; check if not divisible by 400--> not leap
+#divisible by 4 and also not century year ; no need to check with 400 --> leap
+#not divisible by 4 ; no need to check with 100 and 400 --> not leap
+
+   if year%4==0 :
+        if year%100==0 :
+            if year%400==0 :
+                leap=True
+            else:
+                leap=False
+        else:
+            leap=True
+    else:
+        leap=False
+        
+    return leap
+
+
+
+#print formatting:
+from __future__ import print_function
+#import sys
+if __name__ == '__main__':
+    n = int(raw_input())
+Int_list=[]
+for i in range(1,n+1):
+    Int_list.append(i)
+print(*Int_list,sep='',end='\n');
+#print(*Int_list,sep='',end='\n',file=sys.stdout);
+
+
