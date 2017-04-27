@@ -1,0 +1,168 @@
+
+
+
+
+
+
+
+http://aishack.in/tutorials/tracking-colored-objects-opencv/
+
+Initialise the capturing device
+loop-->
+capture a frame from camera.
+create scribble Image from first Frame
+. Figure out where the yellow ball is in current Frame
+  create Threshold Image for  frame:
+     threshold the Image:
+      HSV colur space 
+      keep all the pixels with hue=yellow
+      and make remaining pixels to black -
+calculate zero order moment(area) and two First order moments(m01,m10) for threshold Image
+calc position of yellow ball <x,y> co-ordinetes :x=m01/area  Y= m10/area
+keep track of current position and previous position
+draw a line from previous position to the current position in scribble Image.
+combine Frame and scribble Image
+Release the memory ocuupied by threshold Image
+Keep doing this till a switch is pressed --->in loop
+
+main()
+{
+
+// Initialize capturing live feed from the camera
+ CvCapture* capture = 0;
+ capture = cvCaptureFromCAM(0); 
+
+// Couldn't get a device? Throw an error and quit
+ if(!capture) 
+{
+ printf("Could not initialize capturing...");
+ return -1; 
+}
+
+cvNamedWindow("video");
+cvNamedWindow("thresh"); 
+
+IplImage* imgScribble = NULL;
+// An infinite loop
+ while(true)
+ { 
+// Will hold a frame captured from the camera 
+IplImage* frame = 0; 
+frame = cvQueryFrame(capture); 
+// If we couldn't grab a frame... quit
+ if(!frame) 
+  break; 
+// If this is the first frame, we need to initialize it
+ if(imgScribble == NULL) 
+  {
+   imgScribble = cvCreateImage(cvGetSize(frame), 8, 3);
+  } 
+// Holds the yellow thresholded image (yellow = white, rest = black) 
+ IplImage* imgYellowThresh = GetThresholdedImage(frame);
+
+// Calculate the moments to estimate the position of the ball
+
+ CvMoments *moments = (CvMoments*)malloc(sizeof(CvMoments)); 
+ cvMoments(imgYellowThresh, moments, 1); 
+// The actual moment values 
+double moment10 = cvGetSpatialMoment(moments, 1, 0); 
+double moment01 = cvGetSpatialMoment(moments, 0, 1); 
+double area = cvGetCentralMoment(moments, 0, 0); 
+
+// Holding the last and current ball positions 
+static int posX = 0;
+static int posY = 0;
+ int lastX = posX; 
+int lastY = posY; 
+posX = moment10/area; 
+posY = moment01/area; 
+
+// Print it out for debugging purposes 
+printf("position (%d,%d)", posX, posY); 
+
+// We want to draw a line only if its a valid position
+ if(lastX>0 && lastY>0 && posX>0 && posY>0) 
+  {
+ // Draw a yellow line from the previous point to the current point 
+ cvLine(imgScribble, cvPoint(posX, posY), cvPoint(lastX, lastY), cvScalar(0,255,255), 5); 
+  } 
+
+// Add the scribbling image and the frame... 
+cvAdd(frame, imgScribble, frame);
+cvShowImage("thresh", imgYellowThresh);
+cvShowImage("video", frame);
+
+// Wait for a keypress
+ int c = cvWaitKey(10);
+ if(c!=-1)
+ {
+ // If pressed, break out of the loop 
+  break; 
+ } 
+
+// Release the thresholded image+moments... we need no memory leaks..
+cvReleaseImage(&imgYellowThresh);
+ delete moments; 
+} 
+
+// We're done using the camera. Other applications can now use it 
+cvReleaseCapture(&capture);
+ return 0; 
+} 
+
+
+IplImage* GetThresholdedImage(IplImage* img)
+{
+ // Convert the image into an HSV image
+    IplImage* imgHSV = cvCreateImage(cvGetSize(img), 8, 3);
+    cvCvtColor(img, imgHSV, CV_BGR2HSV);
+IplImage* imgThreshed = cvCreateImage(cvGetSize(img), 8, 1); 
+cvInRangeS(imgHSV, cvScalar(20, 100, 100), cvScalar(30, 255, 255), imgThreshed);
+cvReleaseImage(&imgHSV);
+ return imgThreshed;
+
+} 
+
+
+
+   
+
+python:
+------------
+
+import numpy as np
+import cv2
+
+
+
+
+cap = cv2.VideoCapture(0)
+
+while(True):
+    # Capture frame-by-frame
+    ret, frame = cap.read()
+
+    # Our operations on the frame come here
+    hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # define range of blue color in HSV
+    lower_blue = np.array([110,50,50])
+    upper_blue = np.array([130,255,255])
+
+  # Threshold the HSV image to get only blue colors
+    mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
+
+   # Bitwise-AND mask and original image
+    thresh_img = cv2.bitwise_and(frame,frame, mask= mask)
+
+    cv2.imshow('image',frame)
+    cv2.imshow('hsv-im',hsv_frame)
+    cv2.imshow('mask',mask)
+    cv2.imshow('res',thresh_img)
+    k = cv2.waitKey(5) & 0xFF
+    if k == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+
