@@ -1,0 +1,111 @@
+
+initcalls are  grouped by functionality into separate  subsections. 
+inside the subsections Ordering is determined by link order.
+
+Early initcalls run before initializing SMP.
+
+/*
+ * A "pure" initcall has no dependencies on anything else, and purely
+ * initializes variables that couldn't be statically initialized.
+ *
+ * This only exists for built-in code, not for modules.
+ */
+#define pure_initcall(fn)		__define_initcall("0",fn,0)
+
+#define core_initcall(fn)		__define_initcall("1",fn,1)
+#define core_initcall_sync(fn)		__define_initcall("1s",fn,1s)
+#define postcore_initcall(fn)		__define_initcall("2",fn,2)
+#define postcore_initcall_sync(fn)	__define_initcall("2s",fn,2s)
+#define arch_initcall(fn)		__define_initcall("3",fn,3)
+#define arch_initcall_sync(fn)		__define_initcall("3s",fn,3s)
+#define subsys_initcall(fn)		__define_initcall("4",fn,4)
+#define subsys_initcall_sync(fn)	__define_initcall("4s",fn,4s)
+#define fs_initcall(fn)			__define_initcall("5",fn,5)
+#define fs_initcall_sync(fn)		__define_initcall("5s",fn,5s)
+#define rootfs_initcall(fn)		__define_initcall("rootfs",fn,rootfs)
+#define device_initcall(fn)		__define_initcall("6",fn,6)
+#define device_initcall_sync(fn)	__define_initcall("6s",fn,6s)
+#define late_initcall(fn)		__define_initcall("7",fn,7)
+#define late_initcall_sync(fn)		__define_initcall("7s",fn,7s)
+
+
+
+####################################################################################
+
+
+module_init():  will either be called during do_initcalls() (if builtin) or at module insertion time (if a module).
+
+/* Don't use these in modules, but some people do... */
+#define early_initcall(fn)		module_init(fn)
+#define core_initcall(fn)		module_init(fn)
+#define postcore_initcall(fn)		module_init(fn)
+#define arch_initcall(fn)		module_init(fn)
+#define subsys_initcall(fn)		module_init(fn)
+#define fs_initcall(fn)			module_init(fn)
+#define device_initcall(fn)		module_init(fn)
+#define late_initcall(fn)		module_init(fn)
+#define security_initcall(fn)		module_init(fn)
+
+
+
+
+
+
+
+
+/include/linux/init.h :
+
+
+/* These are for everybody (although not all archs will actually
+   discard it in modules) */
+#define __init		__section(.init.text) __cold notrace
+#define __initdata	__section(.init.data)
+#define __initconst	__section(.init.rodata)
+#define __exitdata	__section(.exit.data)
+#define __exit_call	__used __section(.exitcall.exit)
++
+a lot of other definitions pertaining to sections 
+
+
+
+
+
+/* Defined in init/main.c */
+extern int do_one_initcall(initcall_t fn);
+extern char __initdata boot_command_line[];
+extern char *saved_command_line;
+extern unsigned int reset_devices;
+
+/* used by init/main.c */
+void setup_arch(char **);
+void prepare_namespace(void);
+
+
+/init/main.c  -- do_initcalls() -->??
+-----------------------------
+
+static int __init kernel_init(void * unused) ---->
+
+
+static void __init do_basic_setup(void)
+{
+	cpuset_init_smp();
+	usermodehelper_init();
+	shmem_init();
+	driver_init();
+	init_irq_proc();
+	do_ctors();
+	usermodehelper_enable();
+	do_initcalls();
+}
+
+
+
+static void __init do_initcalls(void)
+{
+	initcall_t *fn;
+
+	for (fn = __early_initcall_end; fn < __initcall_end; fn++)
+		do_one_initcall(*fn);
+}
+
