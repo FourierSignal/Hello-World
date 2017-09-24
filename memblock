@@ -6,3 +6,16 @@ enabling memblock debug logs :  appending “memblock=debug” at the kernel com
 /sys/kernel/debug/memblock/reserved
 
 
+memblock:
+while adding memory regions
+checks for overlap and merge conditions performed ,with memory regions that have been added before
+
+non-overlapping parts of the new memory area are added as separate regions.
+ all neighboring regions are merged
+ 
+ 
+include/linux/init.h:138:  #define __meminitdata    __section(.meminit.data)   ---> memblocks are in this data sections
+
+
+ 
+
