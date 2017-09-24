@@ -1,0 +1,5 @@
+memblock is a list
+
+enabling memblock debug logs :  appending “memblock=debug” at the kernel command line
+
+/sys/kernel/debug/memblock/memory
