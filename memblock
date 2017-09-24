@@ -2,4 +2,7 @@ memblock is a list
 
 enabling memblock debug logs :  appending “memblock=debug” at the kernel command line
 
-/sys/kernel/debug/memblock/memory
+/sys/kernel/debug/memblock/memory  --- debugfs
+/sys/kernel/debug/memblock/reserved
+
+
