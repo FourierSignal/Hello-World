@@ -1,0 +1,28 @@
+
+arch/x86/kernel/e820.c
+
+passing e820map from bootloader to kernel: 
+only first 128 E820 memory entries via boot_params.e820_map ( due to size limitation of struct boot_params )
+remaining are passed via SETUP_E820_EXT node(linked list of type struct setup_data )
+
+
+
+
+e820 ---> e820_saved
+map from BIOS(e820) ---->gets modified (based on kernel's cmdline)-->e820_saved
+(sanitize_e820_map,append_e820_map,__e820_update_range,e820_remove_range...etc)- modifies map
+/proc/iomem ----------->  e820
+/sys/firmware/memmap -->  e820_saved
+
+memory map is used as base for kexec'ed kernel
+
+
+
+
+
+/arch/x86/kernel/setup.c
+efi-loader 
+the efi memmap, systab, etc.are passed in
+the  initialization code path of booting(in efi case) is determined by the global-->efi_enabled.
+setup_arch ----> architecture-specific boot-time initializations
+
