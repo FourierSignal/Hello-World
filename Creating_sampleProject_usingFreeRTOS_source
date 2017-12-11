@@ -1,0 +1,71 @@
+
+How to create a sample Project Using Demo Project Provided in FreeRTOS source .
+-----------------------------------------------------------------------------------
+ 
+FreeRTOSv10.0.0.zip --->extract FreeRTOSv10.0.0
+It has two directories : FreeRTOS and FreeRTOS-Plus
+FreeRTOS ---> has FreeRTOS kernel source common to all the platforms
+              port files specific to each Platform
+			  and demo - for each of Platform-compiler-combination
+			  
+FreeRTOS-Plus--->
+
+
+Creating a Project using Demo project Available in FreeRTOS source:
+
+create Directory - Project1_cortexM0_LPC11x
+copy contents of FreeRTOS directory contents into Project1_cortexM0_LPC11x
+dir  Project1_cortexM0_LPC11x ---> Demo , License, Source, + other readme files
+
+Demo --> contains demo for each combination of 
+Source -> contains FreeRTOS kernel files and port directories for each platform.
+
+remove License and other readme files (optional)
+In the dir Project1_cortexM0_LPC11x\Demo:
+keep common and CORTEX_M0_LPC1114_LPCXpresso directories - which are the rwquired platform
+remove all other demo directories.
+
+In the Project1_cortexM0_LPC11x\Source :
+keep freertos kernel files 
+In the port layer -Project1_cortexM0_LPC11x\Source\portable:
+keep common , Memmang,required compiler + arch- combination , + any other required directory
+like Tasking which is required for CM4F
+remove all other directories 
+ 
+ - in this case keep GCC, common, MemMang
+ 
+ 
+
+
+
+
+
+								 
+In the 	CORTEX_M0_LPC1114_LPCXpresso -- there are two directories RTOSDemo and CMSISv2p00_LPC11xx
+
+dir  Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo	--->							  
+.cproject , .project , CreateProjectDirectoryStructure
+
+dir Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\CMSISv2p00_LPC11xx --->
+.cproject , .project , src , inc, docs , history
+
+As per history file:
+CMSISv2p00_LPC11xx is a Library project created using 
+files as supplied in ARM's CMSIS 2.0 
++ together with device/board specific files from NXP (which were
+also part of CMSISv1p30_LPC11xx library project )
+
+RTOSDemo is sample Project - which is provided for user.
+It has source files for project and project files , script to create Project directory structure.
+The Source directory   Application files + FreeRTOSConfig.h File + cr_startup_lpc11.c file
+Application files  -->
+FreeRTOSConfig.h File -->
+cr_startup_lpc11.c file --->
+
+CreateProjectDirectoryStructure -->  
+It creates the directory:FreeRTOS_Source under Application Project source:RTOSDemo\Source
+ Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo\Source
+copies FreeRTOS source files from  Project1_cortexM0_LPC11x\Source : which has FreeRTOS kerenel Files and port Files
+
+
+
