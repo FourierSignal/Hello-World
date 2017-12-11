@@ -89,6 +89,9 @@ It has two directories :
 CMSISv2p00_LPC11xx --> this is going to be the Project directory for CIMSIS Library 
 RTOSDemo ---> this is going to be our Application project.
 
+by selecting RTOSDemo as Working
+
+
 Let us rename our Application Project as Webserver.
 Remove all the contents of Dir: Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\Webserver
 Remove all the contents of CMSISv2p00_LPC11xx
@@ -107,6 +110,48 @@ without running scrit-if we Import project It complains Later and asks to run th
 
 if we don't run the script :CreateProjectDirectoryStructure here ?? go ahed and Launch lpcexpresso
 ---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+#######################################################################################################################
+Smart Way:
+----------
+create dir : Creation_of_sample_project
+FreeRTOSv10.0.0.zip ---> extract FreeRTOSv10.0.0
+
+Run cmd from windows:
+cd Creation_of_sample_project\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo
+run the script  CreateProjectDirectoryStructure
+This copies FreeRTOS source into Application .
+
+
+create a directory Webserver_workspace in Creation_of_sample_project.
+Launch LPCexpresso IDE.
+select workspace as : Creation_of_sample_project\Webserver_workspace
+Import Projects ---> project directory
+selct root directory as : Creation_of_sample_project\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M0_LPC1114_LPCXpresso
+and import the projects  CMSISv2p00_LPC11xx and RTOSDemo .
+now rename RTOSDemo  as Webserver.
+
+clean CMSISv2p00_LPC11xx and Build
+clean RTOSDemo and Build.
+
+export project to Archive(zip) ---> Creation_of_sample_project\webserver.zip
+
+
+
+
+
+
+
 
 
 
