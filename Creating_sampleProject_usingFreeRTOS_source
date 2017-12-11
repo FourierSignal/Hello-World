@@ -89,8 +89,14 @@ It has two directories :
 CMSISv2p00_LPC11xx --> this is going to be the Project directory for CIMSIS Library 
 RTOSDemo ---> this is going to be our Application project.
 
+Let us rename our Application Project as Webserver.
+Remove all the contents of Dir: Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\Webserver
+Remove all the contents of CMSISv2p00_LPC11xx
 
+Launch LPCexpresso IDE.
+select the workspace as : Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso
 
+C:\Users\suvelise\Documents\3_Embedded_rel\ARM_cortex_M4\DSP_nxp_projects\FreeRTOS\FreeRTOSv10.0.0.exe
 
 
 
