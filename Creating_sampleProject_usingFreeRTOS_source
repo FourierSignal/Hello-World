@@ -1,7 +1,17 @@
 
 How to create a sample Project Using Demo Project Provided in FreeRTOS source .
 -----------------------------------------------------------------------------------
- 
+ we do it in two ways  one is crude way and smart way.
+ we need to do both the approaches .
+ Crude way : helps to understand the FreeRTOS source structure.
+              and purpose and structure of Demo codes in FreeRTOS source( provided for quick start)
+	      and to get understanding in more generic way : irrespective of IDE, compiler,Platform.
+
+Smart way: Doing the things fast using IDE (here iam using LPCexresso from nxp)
+
+Crude way :
+--------------------------
+  
 FreeRTOSv10.0.0.zip --->extract FreeRTOSv10.0.0
 It has two directories : FreeRTOS and FreeRTOS-Plus
 FreeRTOS ---> has FreeRTOS kernel source common to all the platforms
@@ -61,11 +71,44 @@ The Source directory   Application files + FreeRTOSConfig.h File + cr_startup_lp
 Application files  -->
 FreeRTOSConfig.h File -->
 cr_startup_lpc11.c file --->
-
 CreateProjectDirectoryStructure -->  
 It creates the directory:FreeRTOS_Source under Application Project source:RTOSDemo\Source
  Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso\RTOSDemo\Source
 copies FreeRTOS source files from  Project1_cortexM0_LPC11x\Source : which has FreeRTOS kerenel Files and port Files
+
+# Now we are ready with Minimal FreeRTos Source that is required for our Platform.
+Summary:
+Project1_cortexM0_LPC11x ---> Letus call this project preperation directory. This is not our Project directory.
+
+Here we have two directories Source and Demo
+Source -- has Minimal FreeRTOS source which we want to copy into our Project.
+Demo --- has demo code for our platform code and common demo code for all Platforms.
+
+Now we are going to create a Project under the dir: Project1_cortexM0_LPC11x\Demo\CORTEX_M0_LPC1114_LPCXpresso
+It has two directories :
+CMSISv2p00_LPC11xx --> this is going to be the Project directory for CIMSIS Library 
+RTOSDemo ---> this is going to be our Application project.
+
+
+
+
+
+
+
+
+we need to run the script  CreateProjectDirectoryStructure at this point .
+without running scrit-if we Import project It complains Later and asks to run the script .
+
+if we don't run the script :CreateProjectDirectoryStructure here ?? go ahed and Launch lpcexpresso
+---------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 
