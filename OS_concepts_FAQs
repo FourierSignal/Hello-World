@@ -1201,7 +1201,35 @@ paging unit of Intel processors handles 4 KB pages.
 
 
 
+##################################################################################################################
 
+semaphores :
+
+phrases :named semaphores , unnamed semaphores, synchronisation,sem_init vs sem_open,
+reference: http://www.linuxdevcenter.com/pub/a/linux/2007/05/24/semaphores-in-linux.html
+
+
+semaphore :  counters that indicate the status of a resource. the counter is protected by kernel
+counter > 0 ==> resource is available
+counter <=0 ===> resource is being used by others
+
+the older Unix-based systems uses the System V version and the current Linux-based systems use the POSIX version
+ However, the general behavior and technology of semaphores does not change irrespective of the version used
+ 
+ System V Semaphores:
+The interface and usage of System V semaphores is cluttered with unnecessary complications 
+ 
+ 
+semaphore must be in a region of shared memory, even if you're accessing it from related processes
+such as a parent and its child.
+
+
+############################################################################################################
+
+Problems arising in multithreading :   deadlocks, race conditions, incorrect behavior of threads
+solutions provided by OS to solve them : Mutex, semaphores, signals and barriers
+
+###########################################################################################################
 
 
 
