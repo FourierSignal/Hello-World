@@ -1,5 +1,10 @@
 Volatile Qualifier:
 ########################
+In practice, only three types of variables could change:
+1. Memory-mapped peripheral registers
+2. Global variables modified by an interrupt service routine
+3. Global variables accessed by multiple tasks within a multi-threaded application
+
 
 Register access case:
 ----------------------
@@ -18,9 +23,59 @@ loop:
 This is because  compiler has no way of knowing that pReg is a pheripheral-regiser
 it optimizes while loop as infinite loop --treating pReg as normal pointer.
 
+uint8_t volatile * pReg = (uint8_t *) 0x8000;
+while (*pReg == 0) 
+{
+ // Wait for register to become non-zero 
+}
+===>
+mov ptr, #0x1234
+ 
+loop:
+mov a, @ptr 
+  bz loop
+
+
+ISR case :
+-------------------
+
+
+############################################################
+Mutex vs semaphore :
+can binary semaphore be used as a mutex?? - no . why??
+
+
+https://blog.feabhas.com/2009/09/mutex-vs-semaphores-%E2%80%93-part-1-semaphores/
+https://blog.feabhas.com/2009/09/mutex-vs-semaphores-%E2%80%93-part-2-the-mutex/
+https://blog.feabhas.com/2009/10/mutex-vs-semaphores-%E2%80%93-part-3-final-part-mutual-exclusion-problems/
+##################################################################################
+INLINE function vs MACRO vs Regular Function call:
+
+MACROs --> preprocessing stage
+INLINE fn--> compilation stage , avoids function call.
+why not MACRO but INLINE prefered??
+---
+disadvantages of macros:
+
+a) There is no type checking
+
+b) Difficult to debug as they cause simple replacement.
+
+c) Macro don’t have namespace, so a macro in one section of code can affect other section.
+
+d) Macros can cause side effects as shown below:
+   
+   #define CUBE(b) b*b*b   printf("%d", CUBE(1+2)); ==> 1+2*1+2*1+2 = 7
+   inline int cube(int a) { return a*a*a; }  --->   compiler can choose to substitute or not
+   printf("%d", cube(1+2));===> 27
+   
+   
+    
 
 
 
-  
+
+
+
 
 
