@@ -1,0 +1,26 @@
+Volatile Qualifier:
+########################
+
+Register access case:
+----------------------
+uint8_t * pReg = (uint8_t *) 0x8000;
+while (*pReg == 0) 
+{
+ // Wait for register to become non-zero 
+}
+
+if compiler optimization is on,
+the compiler will generate assembly language that looks something like this:
+mov ptr, #0x1234
+mov a, @ptr  
+loop:
+  bz loop
+This is because  compiler has no way of knowing that pReg is a pheripheral-regiser
+it optimizes while loop as infinite loop --treating pReg as normal pointer.
+
+
+
+
+  
+
+
