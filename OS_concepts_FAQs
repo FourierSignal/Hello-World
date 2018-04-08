@@ -1,10 +1,38 @@
 
 HOW DETERMINISM ACHIEVED IN RTOS...??
 
+RTOS is designed for determinism(how quickly it can respond to events) vs GPOS for High performance( how much amount of work done/time)
+minimum Interrupt Latency
+minimum thread switching Latency
 
 
+pre-emptible kernel vs non-pre emptible kernel:
+in non-preemtive kernel - a high-priority user thread can never preempt a kernel call, but must instead wait for the entire call to
+complete – even if the call was invoked by the lowest-priority process
+==> unpredictable delays and prevents critical activities from completing on time.
+
+In an RTOS, on the other hand, kernel operations are preemptible. There are stil windows of time in which preemption may
+not occur, but in a well-designed RTOS,those intervals are extremely brief. 
+Moreover RTOS will impose an upper bound on how long preemption is held off and interrupts disabled; this
+allows developers to ascertain worst-case latencies.
+
+Only services with a short execution path should be included in the kernel itself. Any operations that require significant work
+(for instance, process loading) must be assigned to external processes or threads. 
+
+In an RTOS the kernel is kept very simple and only very important service requests are kept within the kernel call.
+All other service requests are treated as external.All service requests from kernel are associated with a bounded latency
+in an RTOS. This ensures highly predictable and quick response from an RTOS.
+
+unbounded dispach latencies...more number of threads to schedule, latencies will get added up!
+An RTOS has no such issues because all the process and threads in it has got bounded latencies.
 
 
+RTOS is mostly a "time triggerred". where as GPOS "event triggerred"
+scheduling policy : priority based(to achieve determinism) vs round-robin( to achieve high performance)
+Ability to scale up / scale down as per application requirement    
+Less memory Management- a simple list based allocator
+(no memory fragmentation solutions and virtual memomry ... like slab, slub allocator)
+Generally RTOSes are meant for Low-end-Hardware configurations vs GPOS-Highend HW configurations
 =======================================================================================================================
 
 MUTEX vs SPINLOCK:
