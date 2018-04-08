@@ -8,7 +8,7 @@ In practice, only three types of variables could change:
 
 Register access case:
 ----------------------
-uint8_t * pReg = (uint8_t *) 0x8000;
+uint8_t * pReg = (uint8_t *) 0x1234;
 while (*pReg == 0) 
 {
  // Wait for register to become non-zero 
@@ -51,9 +51,9 @@ https://blog.feabhas.com/2009/10/mutex-vs-semaphores-%E2%80%93-part-3-final-part
 ##################################################################################
 INLINE function vs MACRO vs Regular Function call:
 
-MACROs --> preprocessing stage
+MACROs --> preprocessing stage, no compilation error checks.
 INLINE fn--> compilation stage , avoids function call.
-why not MACRO but INLINE prefered??
+why not MACRO but INLINE prefered?? 
 ---
 disadvantages of macros:
 
@@ -68,14 +68,41 @@ d) Macros can cause side effects as shown below:
    #define CUBE(b) b*b*b   printf("%d", CUBE(1+2)); ==> 1+2*1+2*1+2 = 7
    inline int cube(int a) { return a*a*a; }  --->   compiler can choose to substitute or not
    printf("%d", cube(1+2));===> 27
-   
-   
+################################################################################################
+
+const volatile  -- can they be used together?   yes
+const volatile or volatile const ?? --- both
+const(never change) and volatile(even changing) : 
+Typical use scenarios for both the keywords:
+  either pointers to memory-mapped hardware registers or variables located in shared memory areas. 
+
+int volatile g_shared_with_isr; ---> flag shared b/w ISR and task
+uint16_t const max_temp_in_c = 1000; ---> the variable is located in non-volatile mem like ROM/flash
+          Any attempt the code makes to write to a const variable  will result in a compile-time error    
+
+uint8_t volatile * p_led_reg = (uint8_t *) 0x80000; ---> Hw register at a known physical address
+uint8_t const * p_latch_reg = 0x10000000; ---> to mark Hw-reg as readonly
+                     any attempt to write to that physical memory address will result in a compile-time error               
+                
+ ---------------------------------------------------------------------------------------------------------
+ 
+uint8_t volatile * const p_led_reg = (uint8_t *) 0x80000; ---> constant pointer to a volatile hardware register.
+any attempt to modify pointer leads to error and optimisation avoided while dealing with value of register.
+
+---------------------------------------------------------------------------------------
+TO enforce --software doesn't try to overwrite the memory location,
+uint8_t const volatile comm_buffer[BUFFER_SIZE]; -->  Read-only shared-memory buffer
+
+----------------------------------------------------------------------------------------------------
+ TO enforce --software doesn't try to overwrite the memory location,
+            you also need to be sure that each and every requested read actually occurs.        
+ By declaring your variable is a  (constant) pointer TO a constant and volatile memory location 
+ uint8_t const volatile * const p_latch_reg = (uint8_t *) 0x10000000; --->  to mark Hw-reg as readonly
+----------------------------------------------------------------------------------------------------    
     
-
-
-
-
-
+    
+    
+    
 
 
 
