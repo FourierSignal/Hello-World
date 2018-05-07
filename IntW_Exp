@@ -819,6 +819,43 @@ explain volatile with examples?
 is volatile applied to variable or pointer ? in the case of register access
 is volatile variable can be on stack? or it should be global?
 
+--------------------------------------------------------------------
+C-Questions Frequently asked :
+
+DELL--
+---------
+Linked list - delete node 
+does static variable be accessed from some other Function?
+what is scope of Static variable ? how can you access it in other Fn?
+Implement SizeOf-operator.
+
+program to swap even and odd bits of an integer?
+int swap_bits(int number)
+{
+   int  i=0,p=0,q=1;
+   for(i=0;i<32;i=i+2)
+   {
+      if(  ((num & 1<<p)>>p) ^ ((num & 1<<q)>>q) )   //if bits at position p,q are different
+      {
+          num = num ^ 1<<p;
+	  num = num ^ 1<<q;
+	  p = p+2;
+	  q = q+2;
+      }
+   }
+   return num;
+   
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
