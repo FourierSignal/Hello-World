@@ -6,7 +6,7 @@ BitBake: is make-like build tool, with special focus of distributions and packag
 
 BitBake recipes:  specify how a particular package is built. 
                   During the build process, recipes are used to track dependencies, performing native or cross-compilation of the package
-                  and package it so that it is suitable for installation on the local or a target device.
+                  and package it (ipk, deb, rpm), so that it is suitable for installation on the local or a target device.
                   complete images: kernel+rootfs(with pkgs) can also be created
 
 Recipes--have -> source URL (http, https, ftp, cvs, svn, git, local file system) of the package
@@ -18,6 +18,44 @@ Recipes--have -> source URL (http, https, ftp, cvs, svn, git, local file system)
 BitBake existed for some time in the OpenEmbedded project .  it was separated out into a standalone, maintained, distribution-independent
 tool. BitBake is co-maintained by the Yocto Project and the OpenEmbedded project.  
 
+
+OPEN EMBEDDED :
+OpenEmbedded is a build automation framework and cross-compile environment used to create Linux distributions for embedded devices.
+The OpenEmbedded framework is developed by the OpenEmbedded community, which was formally established in 2003.
+OpenEmbedded is the recommended build system of the Yocto Project, which is a Linux Foundation workgroup.
+
+
+
+YOCTO:
+The Yocto Project is Linux Foundation collaborative open source project 
+whose goal is to produce tools and processes that enable the creation of Linux distributions for embedded and IoT software
+that are independent of the underlying architecture of the embedded hardware.
+The project was announced by the Linux Foundation in 2010 in collaboration with 22 organizations, including OpenEmbedded.
+
+
+
+ A key part of YOCTO is the OpenEmbedded build system: which enables developers to create their own Linux distribution
+ specific to their environment.
+ 
+ The Yocto Project and OpenEmbedded Project share maintainership of 
+ the main parts of the OpenEmbedded build system: the build engine, BitBake, and the core metadata, OpenEmbedded-Core.
+ 
+ POKY:
+  The Yocto Project provides a reference implementation called Poky, 
+  which contains the OpenEmbedded build system  + a large set of recipes, arranged in a hierarchical system of layers,
+  that can be used as a fully functional template for a customized embedded operating system.
+  
+  
+ Sub-projects under YOCTO project: (Apart from OpenEmbedded build system)
+   CROPS, pseudo, cross-prelink, Eclipse integration, the matchbox suite of applications, and many others. 
+   One of the central goals of the project is interoperability among these tools.
+   
+   
+  short Note:
+  
+  OpenEmbedded build system: (the build engine, BitBake ) + (core metadata,OpenEmbedded-Core)
+  
+ 
 
 
                  
