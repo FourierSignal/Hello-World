@@ -1,0 +1,23 @@
+
+BITBAKE:
+-----------------
+
+BitBake: is make-like build tool, with special focus of distributions and packages for embedded Linux cross compilation.
+
+BitBake recipes:  specify how a particular package is built. 
+                  During the build process, recipes are used to track dependencies, performing native or cross-compilation of the package
+                  and package it so that it is suitable for installation on the local or a target device.
+                  complete images: kernel+rootfs(with pkgs) can also be created
+
+Recipes--have -> source URL (http, https, ftp, cvs, svn, git, local file system) of the package
+                 dependencies and compile or install options.
+                 metadata for the package in standard variables.
+                 setup cross compile toolchain
+                 and crossbuild.
+                 
+BitBake existed for some time in the OpenEmbedded project .  it was separated out into a standalone, maintained, distribution-independent
+tool. BitBake is co-maintained by the Yocto Project and the OpenEmbedded project.  
+
+
+
+                 
