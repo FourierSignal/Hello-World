@@ -1,0 +1,38 @@
+
+With the release of the 2.6 kernel in December of 2003, 
+the kernel developer community switched from the previous model of having a separate development and stable kernel branch,
+and moved to a “stable only” branch model
+
+
+The numbering of the kernel releases started out being 2.6.x,
+where x was an incrementing number that changed on every release The value of the number has no meaning,
+other than it is newer than the previous kernel release.
+
+In July 2011, Linus Torvalds changed the version number to 3.x after the 2.6.39 kernel was released. 
+This was done because the higher numbers were starting to cause confusion among users
+
+The change to the 3.x numbering series did not mean anything other than a change of the major release number, 
+again in April 2015 with the movement from the 3.19 release to the 4.0 release number
+
+
+Stable kernel releases:
+For example, the 4.9 kernel is released by Linus,
+and then the stable kernel releases based on this kernel are numbered 4.9.1, 4.9.2, 4.9.3, and so on.
+This sequence is usually shortened with the number “4.9.y” when referring to a stable kernel release tree. 
+Each stable kernel release tree is maintained by a single kernel developer, 
+who is responsible for picking the needed patches for the release, and doing the review/release process. 
+
+Stable kernels are maintained for as long as the current development cycle is happening.
+After Linus releases a new kernel, the previous stable kernel release tree is stopped and users must move to the newer released kernel.
+
+
+Long-Term Stable kernels
+After a year of this new stable release process, 
+it was determined that many different users of Linux wanted a kernel to be supported for longer than just a few months.
+Because of this, the Long Term Supported (LTS) kernel release came about. 
+
+The first LTS kernel was 2.6.16, released in 2006. Since then, a new LTS kernel has been picked once a year.
+That kernel will be maintained by the kernel community for at least 2 years.
+
+Currently the LTS kernels are the 4.4.y, 4.9.y, and 4.14.y releases, and a new kernel is released on average, once a week
+
