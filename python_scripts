@@ -1,0 +1,192 @@
+
+
+
+
+cat  copy_terminal_devicename.py
+import serial
+import time
+import pexpect
+import os
+import sys
+
+def target_log_write(log_string):
+    with open('devicenamelogfile','a') as log_file:
+        log_file.write(log_string)
+        #log_file.write(log_string + '\n')
+
+def host_log_write(log_string):
+    with open('Hostlogfile','a') as log_file:
+        log_file.write(log_string)
+        #log_file.write(log_string + '\n')
+
+def calc_read_timeout(file_size):
+    file_size_KB= file_size / 1024.0
+    #print("file_size=%f file_size_KB=%f\n",file_size,file_size_KB)
+    if file_size_KB <= 8:
+            return 1
+    if (( file_size_KB > 8 ) and (file_size_KB <= 16)):
+            return 2
+    if (( file_size_KB > 16 ) and (file_size_KB <= 32)):
+            return 4
+    if (( file_size_KB > 32 ) and (file_size_KB <= 64)):
+            return 8
+    if (( file_size_KB > 64 ) and (file_size_KB <= 128)):
+            return 16
+    if (( file_size_KB > 128 ) and (file_size_KB <= 256)):
+            return 32
+    if (( file_size_KB > 256 ) and (file_size_KB <= 512)):
+            return 64
+    if ( file_size_KB > 512 ):
+            return 128
+
+BAUDRATE = 115200
+SERIALPORT = "/dev/ttyUSB1"
+debug_uart_port = serial.Serial(SERIALPORT, BAUDRATE);
+#debug_uart_port = serial.Serial(SERIALPORT, BAUDRATE,timeout=10);
+#debug_uart_port.timeout = 2
+debug_uart_port.bytesize = serial.EIGHTBITS
+debug_uart_port.parity = serial.PARITY_NONE
+debug_uart_port.stopbits = serial.STOPBITS_ONE
+
+child=pexpect.spawn('/bin/sh',env={"TERM":"vt100"},timeout=2)
+#child=pexpect.spawn('/bin/sh',env={"TERM":"vt100"})
+child.send("pwd\r")
+child.send("cd /tftpboot/username\r")
+child.send("rm -f test1\r")
+child.send("rm -f recv_file1\r")
+child.send("rm -f devicenamelogfile\r")
+child.send("rm -f Hostlogfile\r")
+child.send("rm -f log_file\r")
+child.send("rm -f log_file_err\r")
+child.send("rm -f /tmp/size\r")
+child.send("touch /tmp/size\r")
+child.send("rm -f test1\r")
+child.send("rm -f recv_file1\r")
+#child.send("echo 0  >  /tmp/size\r")
+child.send("echo 100  >  /tmp/size\r")
+#child.send("echo 65475  >  /tmp/size\r")
+#child.send("echo 1048500  >  /tmp/size\r")
+child.send("ls -ltr | tail\r")
+while 1:
+        try:
+                serial_line = child.readline()
+                host_log_write(serial_line)
+        except pexpect.TIMEOUT:
+                break;
+
+
+
+debug_uart_port.write("stty -F  /dev/ttyDMA0 115200 -onlcr -echo\n");
+child.send("stty -F /dev/ttyUSB0 115200 -onlcr -echo\r")
+
+#file_size=0
+file_size=100
+#file_size=65475
+#file_size=1048500
+#for iter_val in range(100):
+for iter_val in range(10485):
+#for iter_val in range(131472):
+#for iter_val in range(100):
+
+        debug_uart_port.timeout=calc_read_timeout(file_size)
+        print("timeout=%f file_size=%d\n",debug_uart_port.timeout,file_size)
+
+        child.send("dd if=op of=test1 bs=1 count=`cat /tmp/size`\r")
+        child.send("echo  >> test1\r")
+        while 1:
+                try:
+                        serial_line = child.readline()
+                        host_log_write(serial_line)
+                except pexpect.TIMEOUT:
+                        break;
+
+
+        debug_uart_port.write("cd /devicename\n")
+        debug_uart_port.write("ls -ltr\n");
+        debug_uart_port.write("rm -f recv_file1\n");
+        debug_uart_port.write("ls -ltr\n");
+        debug_uart_port.write("killall cat \n");
+        debug_uart_port.timeout = 1
+        while 1:
+                serial_line = debug_uart_port.readline()
+                #print serial_line
+                target_log_write(serial_line);
+                if len(serial_line)==0 :
+                        break
+
+
+        debug_uart_port.write("cat /dev/ttyDMA0 > recv_file1\n");
+        debug_uart_port.timeout = 1
+        while 1:
+                serial_line = debug_uart_port.readline()
+                #print serial_line
+                target_log_write(serial_line)
+                if len(serial_line)==0 :
+                        break
+
+
+        debug_uart_port.timeout=calc_read_timeout(file_size)
+        #print ("timeout %d\n",debug_uart_port.timeout)
+        child.send("cat test1 > /dev/ttyUSB0\r")
+        serial_line = child.readline()
+        host_log_write(serial_line)
+        while 1:
+                serial_line = debug_uart_port.readline()
+                #print serial_line
+                target_log_write(serial_line)
+                if len(serial_line)==0 :
+                        break
+        debug_uart_port.write("\x03\r");
+
+        debug_uart_port.write("ls -ltr\n");
+        debug_uart_port.timeout = 1
+        while 1:
+                serial_line = debug_uart_port.readline()
+                #print serial_line
+                target_log_write(serial_line);
+                if len(serial_line)==0 :
+                        break
+
+        child.send("cat /dev/ttyUSB0 > recv_file1\r")
+        serial_line = child.readline()
+        host_log_write(serial_line)
+
+        debug_uart_port.write("cat recv_file1 > /dev/ttyDMA0\n");
+        debug_uart_port.timeout=calc_read_timeout(file_size)
+        while 1:
+                serial_line = debug_uart_port.readline()
+                #print serial_line
+                target_log_write(serial_line)
+                if len(serial_line)==0 :
+                        break
+        child.sendcontrol('c')
+
+        print  "comparing Files:"
+        try:
+                child.send("diff -s test1 recv_file1\r")
+                index=child.expect(["identical"],timeout=5)
+                #host_log_write("index=%d\n",index)
+                if index==0:
+                        print "Identical Files"
+                        child.send("ls -ltr test1 >> log_file\r")
+                        child.send("ls -ltr recv_file1 >> log_file\r")
+        except pexpect.TIMEOUT:
+                print("Err in Txn")
+                child.send("ls -ltr test1 >> log_file_err\r")
+                child.send("ls -ltr recv_file1 >> log_file_err\r")
+
+        #file_size = file_size + 1
+        file_size = file_size + 100
+        child.send("val=$(cat /tmp/size)\r");
+        child.send("val=$(expr $val + 100 )\r")
+        child.send("echo $val > /tmp/size\r")
+        child.send("ls -ltr test1\r");
+        child.send("ls -ltr recv_file1\r");
+        while 1:
+                try:
+                        serial_line = child.readline()
+                        host_log_write(serial_line)
+                except pexpect.TIMEOUT:
+                        break;
+
+debug_uart_port.close()
