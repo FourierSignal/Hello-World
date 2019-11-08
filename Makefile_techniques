@@ -1,0 +1,19 @@
+sample make file
+##############################################################################
+SDK_DIR = /home/<username>/chip_sdk.v00.05.03/
+CROSS=$(SDK_DIR)/toolchains/chipST2000-linux-5.1-gnueabihf/bin/arm-aspeed-linux-gnueabihf-
+GCC=$(CROSS)gcc
+
+
+INCLUDE_DIR=-I ../common/include
+CFLAGS=-Wall
+
+adcapp: adcapp.c
+                $(GCC) $(INCLUDE_DIR) $(CFLAGS) -o adcapp-p4 adcapp.c parser.c
+
+testapp: testapp.c
+                $(GCC) $(INCLUDE_DIR) $(CFLAGS) -o testapp-p4 testapp.c parser.c
+
+clean:
+        rm -f testapp-p4 adcapp-p4
+################################################################################################################
