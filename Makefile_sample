@@ -1,0 +1,522 @@
+# target
+# prerequisites/dependencies
+# recipe
+
+# Rule : (target,prerquisites,recipe)
+
+concept1
+---------
+# syntax of a typical rule:
+target: prerequisites
+<TAB> recipe
+
+
+concept2
+---------
+#target might be a binary file that depends on prerequisites (source files/other binaries).
+#On the other hand, a prerequisite can also be a target that depends on other dependencies:
+final_target: sub_target final_target.c
+        Recipe_to_create_final_target
+sub_target: sub_target.c
+        Recipe_to_create_sub_target
+
+
+concept3
+---------
+
+#phony targets:
+#It is not necessary for the target to be a file; it could be just a name for the recipe. We call these "phony targets."
+
+say_hello:
+        echo "Hello World"
+# above phony target's output is ; echo Hello World
+#To suppress echoing the actual command @ is used
+
+Example1:
+-----------
+say_hello:
+        @echo "Hello World"
+
+generate:
+        @echo "Creating empty text files..."
+        touch file-{1..10}.txt
+
+clean:
+        @echo "Cleaning up..."
+        rm *.txt
+
+#if you run make , only the target say_hello will be executed. That's because only the first target in the makefile is the default target. Often called the default goal.
+#We can override this behavior using a special phony target called .DEFAULT_GOAL.
+Example2:
+-----------
+.DEFAULT_GOAL := generate
+say_hello:
+        @echo "Hello World"
+
+generate:
+        @echo "Creating empty text files..."
+        touch file-{1..10}.txt
+
+clean:
+        @echo "Cleaning up..."
+        rm *.txt
+#this runs only the target generate
+#This is why most makefiles include all as a target that can call as many targets as needeid
+
+Example3:
+----------
+all: say_hello generate
+
+say_hello:
+        @echo "Hello World"
+
+generate:
+        @echo "Creating empty text files..."
+        touch file-{1..10}.txt
+
+clean:
+        @echo "Cleaning up..."
+        rm *.txt
+
+
+concept4
+---------
+another special phony target, .PHONY : where we define all the targets that are not files.
+make will run its recipe regardless of whether a file with that name exists or what its last modification time is.
+
+.PHONY: all say_hello generate clean
+
+all: file1 file2
+
+file1: file1.c
+	$(CC) file1.c -o file1
+
+file2: file2.c
+	$(CC) file2.c -o file2
+
+say_hello:
+        @echo "Hello World"
+
+generate:
+        @echo "Creating empty text files..."
+        touch file-{1..10}.txt
+
+clean:
+        @echo "Cleaning up..."
+        rm *.txt
+
+
+
+concept5 -  recursive expanded variable vs simply expanded variable
+
+CC = gcc  :  recursive expanded variable, Both ${CC} and $(CC) are valid references to call gcc
+
+reassigning  a variable to itself, will cause an infinite loop. Let's verify this:
+CC = gcc
+CC = ${CC}
+all:
+    @echo ${CC}
+
+Running make will result in:
+$ make
+Makefile:8: *** Recursive variable 'CC' references itself (eventually).  Stop.
+
+
+To avoid this scenario, we can use the := operator (this is also called the simply expanded variable).
+CC := gcc
+CC := ${CC}
+all:
+    @echo ${CC}
+now We should have no problem running the make
+
+
+
+concept6  Variables,Patterns and functions
+--------------------------------------------
+
+by using variables, patterns, and functions The following makefile can compile all C programs
+
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
+
+.PHONY = all clean
+
+CC = gcc                        # compiler to use
+
+LINKERFLAG = -lm
+
+SRCS := $(wildcard *.c)
+BINS := $(SRCS:%.c=%)
+
+all: ${BINS}
+
+%: %.o
+        @echo "Checking.."
+        ${CC} ${LINKERFLAG} $< -o $@
+
+%.o: %.c
+        @echo "Creating object.."
+        ${CC} -c $<
+
+clean:
+        @echo "Cleaning up..."
+        rm -rvf *.o ${BINS}
+
+Explaination of above make file;
+--------------------------------
+
+
+Lines starting with # are comments.
+
+Line .PHONY = all clean defines phony targets all and clean.
+
+Variable LINKERFLAG defines flags to be used with gcc in a recipe.
+
+SRCS := $(wildcard *.c): $(wildcard pattern) is one of the functions for filenames. In this case, all files with the .c extension will be stored in a variable SRCS.
+
+BINS := $(SRCS:%.c=%): This is called as substitution reference. In this case, if SRCS has values 'foo.c bar.c', BINS will have 'foo bar'.
+
+Line all: ${BINS}: The phony target all calls values in${BINS} as individual targets.
+
+
+
+Rule:
+%: %.o
+  @echo "Checking.."
+  ${CC} ${LINKERFLAG} $&lt; -o $@
+
+Let's look at an example to understand this rule. Suppose foo is one of the values in ${BINS}. Then % will match foo(% can match any target name). Below is the rule in its expanded form:
+
+foo: foo.o
+  @echo "Checking.."
+  gcc -lm foo.o -o foo
+
+As shown,
+% is replaced by foo.
+$< is patterned to match prerequisites :  $< is replaced by foo.o
+$@ matches the target. 
+This rule will be called for every value in ${BINS}
+
+
+
+Rule:
+%.o: %.c
+  @echo "Creating object.."
+  ${CC} -c $&lt;
+
+Exvery prerequisite in the previous rule is considered a target for this rule. Below is the rule in its expanded form:
+
+foo.o: foo.c
+  @echo "Creating object.."
+  gcc -c foo.c
+
+
+Explaination2 for same make file:
+-----------------------------------
+Below is the rewrite of the above makefile, assuming it is placed in the directory having a single file foo.c:
+
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
+
+.PHONY = all clean
+
+CC = gcc                        # compiler to use
+
+LINKERFLAG = -lm
+
+SRCS := foo.c
+BINS := foo
+
+all: foo
+
+foo: foo.o
+        @echo "Checking.."
+        gcc -lm foo.o -o foo
+
+foo.o: foo.c
+        @echo "Creating object.."
+        gcc -c foo.c
+
+clean:
+        @echo "Cleaning up..."
+        rm -rvf foo.o foo
+
+
+
+
+
+
+Explaination3 for same make file:
+-----------------------------------
+Below is the rewrite of the above makefile, assuming it is placed in the directory having a two  files foo.c,bar.c:
+
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
+
+.PHONY = all clean
+
+CC = gcc                        # compiler to use
+
+LINKERFLAG = -lm
+
+SRCS := foo.c bar.c
+BINS := foo bar
+
+all: foo bar
+
+foo: foo.o
+        @echo "Checking.."
+        gcc -lm foo.o -o foo
+
+foo.o: foo.c
+        @echo "Creating object.."
+        gcc -c foo.c
+
+bar: bar.o
+        @echo "Checking.."
+        gcc -lm bar.o -o bar
+
+bar.o: bar.c
+        @echo "Creating object.."
+        gcc -c bar.c
+
+
+clean:
+        @echo "Cleaning up..."
+        rm -rvf foo.o foo
+        rm -rvf bar.o bar
+
+
+
+Example make file 1
+------------------
+CC=gcc
+CFLAGS=-I.
+DEPS = hellomake.h
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+hellomake: hellomake.o hellofunc.o
+	$(CC) -o hellomake hellomake.o hellofunc.o
+
+
+
+Example make file 2
+--------------------
+CC=gcc
+CFLAGS=-I.
+DEPS = hellomake.h
+OBJ = hellomake.o hellofunc.o 
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+hellomake: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+
+Example make file 3
+--------------------
+IDIR =../include
+CC=gcc
+CFLAGS=-I$(IDIR)
+
+ODIR=obj
+LDIR =../lib
+
+LIBS=-lm
+
+_DEPS = hellomake.h
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+
+_OBJ = hellomake.o hellofunc.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+
+$(ODIR)/%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+hellomake: $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+.PHONY: clean
+
+clean:
+	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+
+
+
+
+configure, make, make install 
+------------------------------
+installiation of software from source with this :
+
+./configure
+make
+make install
+
+configure script:
+It makes sure all of the dependencies for the rest of the build and install process are available, and finds out whatever it needs to know to use those dependencies.
+it will establish that your system does indeed have a C compiler, and find out what it’s called and where to find it.
+
+Build:
+	The tarball you download usually doesn’t include a finished Makefile. Instead it comes with a template called Makefile.in and the configure script produces a customised Makefile specific to your system.
+
+install:
+The make install command will copy the built program, and its libraries and documentation, to the correct locations.
+
+
+
+
+ Where do these scripts come from
+-----------------------------------
+All of this works because a configure script examines your system, and uses the information it finds to convert a Makefile.in template into a Makefile, but where do the configure script and the Makefile.in template come from?
+
+If you’ve ever opened up a configure script, or associated Makefile.in, you will have seen that they are thousands of lines of dense shell script. Sometimes these supporting scripts are longer than the source code of the program they install.
+
+Even starting from an existing configure script, it would be very daunting to manually construct one. Don’t worry, though: these scripts aren’t built by hand.
+
+Programs that are built in this way have usually been packaged using a suite of programs collectively referred to as autotools. This suite includes autoconf, automake, and many other programs, all of which work together to make the life of a software maintainer significantly easier. The end user doesn’t see these tools, but they take the pain out of setting up an install process that will run consistently on many different flavours of Unix.
+
+
+Distributing a sample program 
+---------------------------
+
+ Hello world
+
+Let’s take a simple “Hello world” C program, and see what it would take to package it with autotools.
+
+Here’s the source of the program, in a file called main.c:
+
+#include <stdio.h>
+
+int
+main(int argc, char* argv[])
+{
+    printf("Hello world\n");
+    return 0;
+}
+
+Creating the configure script
+
+Instead of writing the configure script by hand, we need to create a configure.ac file written in m4sh—a combination of m4 macros and POSIX shell script—to describe what the configure script needs to do.
+
+The first m4 macro we need to call is AC_INIT, which will initialise autoconf and set up some basic information about the program we’re packaging. The program is called helloworld, the version is 0.1, and the maintainer is george@thoughtbot.com:
+
+AC_INIT([helloworld], [0.1], [george@thoughtbot.com])
+
+We’re going to use automake for this project, so we need to initialise that with the AM_INIT_AUTOMAKE macro:
+
+AM_INIT_AUTOMAKE
+
+Next, we need to tell autoconf about the dependencies our configure script needs to look for. In this case, the configure script only needs to look for a C compiler. We can set this up using the AC_PROG_CC macro:
+
+AC_PROG_CC
+
+If there were other dependencies, then we’d use other m4 macros here to discover them; for example the AC_PATH_PROG macro looks for a given program on the user’s PATH.
+
+Now that we’ve listed our dependencies, we can use them. We saw earlier that a typical configure script will use the information it has about the user’s system to build a Makefile from a Makefile.in template.
+
+The next line used the AC_CONFIG_FILES macro to tell autoconf that the configure script should do just that: it should find a file called Makefile.in, substitute placeholders like @PACKAGE_VERSION@ with values like 0.1, and write the results to Makefile.
+
+AC_CONFIG_FILES([Makefile])
+
+Finally, having told autoconf everything our configure script needs to do, we can call the AC_OUTPUT macro to output the script:
+
+AC_OUTPUT
+
+Here’s the whole thing. Not bad, compared to the 4,737 line configure script it’s going to produce!
+
+AC_INIT([helloworld], [0.1], [george@thoughtbot.com])
+AM_INIT_AUTOMAKE
+AC_PROG_CC
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
+We’re almost ready to package up and distribute our program, but we’re still missing something. Our configure script will expect a Makefile.in file that it can substitute all of those system-specific variables into, but so far, we’ve not created that file.
+Creating the Makefile
+
+As with the configure script, the Makefile.in template is very long and complex. So instead of writing it by hand, we write a shorter Makefile.am file, which automake will use to generated the Makefile.in for us.
+
+First, we need to set some options to tell automake about the layout of the project. Since we’re not following the standard layout of a GNU project, we warn automake that this is a foreign project:
+
+AUTOMAKE_OPTIONS = foreign
+
+Next, we tell automake that we want the Makefile to build a program called helloworld:
+
+bin_PROGRAMS = helloworld
+
+There’s a lot of information packed into this line, thanks to automake’s uniform naming scheme.
+
+The PROGRAMS suffix is called a primary. It tells automake what properties the helloworld file has. For example, PROGRAMS need to be built, whereas SCRIPTS and DATA files don’t need to be built.
+
+The bin prefix tells automake that the file listed here should be installed to the directory defined by the variable bindir. There are various directories defined for us by autotools—including bindir, libdir, and pkglibdir—but we can also define our own.
+
+If we wanted to install some Ruby scripts as part of our program, we could define a rubydir variable and tell automake to install our Ruby files there:
+
+rubydir = $(datadir)/ruby
+ruby_DATA = my_script.rb my_other_script.rb
+
+Additional prefixes can be added before the install directory to further nuance automake’s behaviour.
+
+Since we’ve defined a PROGRAM, we need to tell automake where to find its source files. In this case, the prefix is the name of the program these source files build, rather than the place where they will be installed:
+
+helloworld_SOURCES = main.c
+
+Here’s the whole Makefile.am file for our helloworld program. As with the configure.ac and the configure script, it’s a lot shorter than the Makefile.in that it generates:
+
+AUTOMAKE_OPTIONS = foreign
+bin_PROGRAMS = helloworld
+helloworld_SOURCES = main.c
+
+Putting it all together
+
+Now we’ve written our config files, we can run autotools and generate the finished configure script and Makefile.in template.
+
+First, we need to generate an m4 environment for autotools to use:
+
+aclocal
+
+Now we can run autoconf to turn our configure.ac into a configure script, and automake to turn our Makefile.am into a Makefile.in:
+
+autoconf
+automake --add-missing
+
+Distributing the program
+
+The end user doesn’t need to see our autotools setup, so we can distribute the configure script and Makefile.in without all of the files we used to generate them.
+
+Fortunately, autotools will help us with distribution too. The Makefile contains all kinds of interesting targets, including one to build a tarball of the project containing all of the files we need to distribute:
+
+./configure
+make dist
+
+You can even test that the distribution tarball can be installed under a variety of conditions:
+
+make distcheck
+
+
+ Overview
+---------------
+Now we know where this incantation comes from and how it works!
+
+On the maintainer’s system:
+
+aclocal # Set up an m4 environment
+autoconf # Generate configure from configure.ac
+automake --add-missing # Generate Makefile.in from Makefile.am
+./configure # Generate Makefile from Makefile.in
+make distcheck # Use Makefile to build and test a tarball to distribute
+
+On the end-user’s system:
+
+./configure # Generate Makefile from Makefile.in
+make # Use Makefile to build the program
+make install # Use Makefile to install the program
+
+
+
