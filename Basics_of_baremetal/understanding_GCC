@@ -46,9 +46,44 @@ as hello.s -o hello.o
 file hello.o
 hello.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
 
+Object files comes in three forms:
+Relocatable object file, which contains binary code and data in a form that can be combined with
+                         other relocatable object files at compile time to create an executable object file.
+Shared object file,  which is a special type of relocatable object file that can be loaded into memory 
+                         and linked dynamically, either at load time or at run time.
+Executable object file, which contains binary code and data in a form that can be directly loaded into memory and executed.
+
+Compilers and assemblers generate relocatable object files (also shared object files).
+Linkers combine these object files together to generate executable object files.
+Linking :
+-----------
+ld hello.o libc.a -o hello
+Loader:
+------------
 
 
 
+Linkers vs. Loaders: Linkers and loaders perform various related but conceptually different tasks:
+--------------------------------------
+Program Loading: copying a program image from hard disk to the main memory in order to put the program in a ready-to-run state.
+                 In some cases, program loading also might involve allocating storage space or mapping virtual addresses to disk pages.
+
+Relocation: Compilers and assemblers generate the object code for each input module with a starting address of zero. 
+             Relocation is the process of assigning load addresses to different parts of the program 
+             by merging all sections of the same type into one section.
+             The code and data section also are adjusted so they point to the correct runtime addresses.
+
+Symbol Resolution. A program is made up of multiple subprograms; 
+                   reference of one subprogram to another is made through symbols. 
+                   A linker's job is to resolve the reference by noting the symbol's location and patching the caller's object code.
+
+considerable overlap exists between the functions of linkers and loaders.
+the loader does the program loading; the linker does the symbol resolution; and either of them can do the relocation.
+
+
+
+Example:
+---------------
 cpp  foo.c  -o foo.i
 cc1 foo.i -o foo.s
 as foo.s -o foo.o
@@ -62,7 +97,195 @@ ld: warning: cannot find entry symbol _start; defaulting to 00000000004000b0
 bar.o: In function `printfn':
 bar.i:(.text+0x11): undefined reference to `printf'
 
+gcc foo.o bar.o /usr/lib/libc.a /usr/lib/libm.a
 
+Collect2 is a wrapper over linker ld that is called by GCC.
+
+
+---------------------------------------------------------------
+
+ELF - Object file 
+
+ELF Header
+
+.text
+
+.rodata    :   read-only data, such as the format strings
+
+.data      :     initialized global variables.
+
+.bss       :     uninitialized global variables.(BSS stands for block storage start)
+                 and this section actually occupies no space in the object file; it is merely a placer holder.
+
+.symtab    :    symbol table : functions and global variables
+
+.rel.text  :    a list of locations in the .text section that need to be modified
+                  when the linker combines this object file with other object files.
+
+.rel.data  :   relocation information for global variables referenced but not defined in the current module
+
+.debug     :   debugging symbol table ( needs -g option with gcc)
+
+.line      : mapping between line numbers in the original C source program and machine code instructions in the .text section
+
+.strtab    : string table for the symbol tables in the .symtab and .debug sections
+
+Symbol Resolution:
+----------------------
+ At compile time, the compiler exports each global symbol as either strong or weak.
+ Functions and initialized global variables get strong weight, while global uninitialized variables are weak.
+ Now, the linker resolves the symbols using the following rules:
+1. Multiple strong symbols are not allowed.
+2. Given a single strong symbol and multiple weak symbols, choose the strong symbol.
+3. Given multiple weak symbols, choose any of the weak symbols.
+
+
+Linking with Static Libraries
+A static library is a collection of concatenated object files of similar type. 
+These libraries are stored on disk in an archive.
+An archive also contains some directory information that makes it faster to search for something. 
+Each ELF archive starts with the magic eight character string !<arch>\n, where \n is a newline.
+
+ symbol resolution with static libraries:
+ ---------------------------------------
+ linker scans the relocatable object files and archives (from left to right as input on the command line)
+linker maintains a set-O: relocatable object files that go into the executable;
+                 a set U: unresolved symbols;
+                 a set D: symbols defined in previous input modules
+                 
+For each input argument on the command line, linker determines if input is an object file or an archive.
+
+1)If input is a relocatable object file, linker adds it to set O, updates U and D and proceeds to next input file.                 
+2)If input is an archive, it scans through the list of member modules that constitute the archive
+to match any unresolved symbols present in U.
+If some archive member defines any unresolved symbol that archive member is added to the list O,
+and U and D are updated per symbols found in the archive member. 
+This process is iterated for all member object files/member modules.
+3)After all the input arguments are processed through the above two steps, 
+   if U is found to be not empty, linker prints an error report and terminates. 
+   Otherwise, it merges and relocates the object files in O to build the output executable file.
+ 
+symbol Relocation:
+Once the linker has resolved all the symbols, each symbol reference has exactly one definition. 
+At this point, linker starts the process of relocation, which involves the following two steps:
+
+1)Relocating sections and symbol definitions:
+   Linker merges all the sections of the same type into a new single section.
+   For example, linker merges all the .data sections of all the input relocatable object files into a single .data section for the final executable.
+   The linker then assigns runtime memory addresses to new aggregate sections, 
+                                                    to each section defined by the input module 
+                                                    and also to each symbol.
+   After the completion of this step, every instruction and global variable in the program has a unique loadtime address.
+ 2)Relocating symbol reference within sections. 
+  In this step, linker modifies every symbol reference in the code and data sections so they point to the correct loadtime addresses.
+ 
+ Whenever assembler encounters an unresolved symbol, 
+ it generates a relocation entry for that object and places it in the .relo.text/.relo.data sections.
+ A relocation entry contains information about how to resolve the reference.
+ A typical ELF relocation entry contains the following members:
+Offset, a section offset of the reference that needs to be relocated.
+For a relocatable file, this value is the byte offset from the beginning of the section to the storage unit affected by relocation.
+Symbol, a symbol the modified reference should point to. It is the symbol table index with respect to which the relocation must be made.
+Type, the relocation type, normally R_386_PC32, that signifies PC-relative addressing. R_386_32 signifies absolute addressing.
+  
+The linker iterates over all the relocation entries present in the relocatable object modules 
+and relocates the unresolved symbols depending on the type. 
+For R_386_PC32, the relocating address is calculated as S + A - P; 
+for R_386_32 type, the address is calculated as S + A. 
+In these calculations, 
+S denotes the value of the symbol from the relocation entry,
+P denotes the section offset or address of the storage unit being relocated (computed using the value of offset from relocation entry) 
+A is the address needed to compute the value of the relocatable field.
+
+
+Dynamic Linking: Shared Libraries
+Static libraries above have some significant disadvantages; for example, consider standard functions such as printf and scanf. They are used almost by every application. Now, if a system is running 50-100 processes, each process has its own copy of executable code for printf and scanf. This takes up significant space in the memory. Shared libraries, on the other hand, address the disadvantages of static libraries. A shared library is an object module that can be loaded at run time at an arbitrary memory address, and it can be linked to by a program in memory. Shared libraries often are called as shared objects. On most UNIX systems they are denoted with a .so suffix; HP-UX uses a .sl suffix and Microsoft refer to them as DLLs (dynamic link libraries).
+
+
+   
+   
+
+vsudheer@aspeed-fw:/tftpboot/assem/gcc_lrn$
+vsudheer@aspeed-fw:/tftpboot/assem/gcc_lrn$ readelf -s  a.out
+
+Symbol table '.dynsym' contains 7 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND printf@GLIBC_2.2.5 (2)
+     3: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.2.5 (2)
+     4: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+     5: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable
+     6: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@GLIBC_2.2.5 (2)
+
+Symbol table '.symtab' contains 65 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 0000000000000238     0 SECTION LOCAL  DEFAULT    1
+     2: 0000000000000254     0 SECTION LOCAL  DEFAULT    2
+     3: 0000000000000274     0 SECTION LOCAL  DEFAULT    3
+     4: 0000000000000298     0 SECTION LOCAL  DEFAULT    4
+     5: 00000000000002b8     0 SECTION LOCAL  DEFAULT    5
+     6: 0000000000000360     0 SECTION LOCAL  DEFAULT    6
+     7: 00000000000003e4     0 SECTION LOCAL  DEFAULT    7
+     8: 00000000000003f8     0 SECTION LOCAL  DEFAULT    8
+     9: 0000000000000418     0 SECTION LOCAL  DEFAULT    9
+    10: 00000000000004d8     0 SECTION LOCAL  DEFAULT   10
+    11: 00000000000004f0     0 SECTION LOCAL  DEFAULT   11
+    12: 0000000000000510     0 SECTION LOCAL  DEFAULT   12
+    13: 0000000000000530     0 SECTION LOCAL  DEFAULT   13
+    14: 0000000000000540     0 SECTION LOCAL  DEFAULT   14
+    15: 00000000000006f4     0 SECTION LOCAL  DEFAULT   15
+    16: 0000000000000700     0 SECTION LOCAL  DEFAULT   16
+    17: 0000000000000708     0 SECTION LOCAL  DEFAULT   17
+    18: 0000000000000750     0 SECTION LOCAL  DEFAULT   18
+    19: 0000000000200db8     0 SECTION LOCAL  DEFAULT   19
+    20: 0000000000200dc0     0 SECTION LOCAL  DEFAULT   20
+    21: 0000000000200dc8     0 SECTION LOCAL  DEFAULT   21
+    22: 0000000000200fb8     0 SECTION LOCAL  DEFAULT   22
+    23: 0000000000201000     0 SECTION LOCAL  DEFAULT   23
+    24: 0000000000201010     0 SECTION LOCAL  DEFAULT   24
+    25: 0000000000000000     0 SECTION LOCAL  DEFAULT   25
+    26: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+    27: 0000000000000570     0 FUNC    LOCAL  DEFAULT   14 deregister_tm_clones
+    28: 00000000000005b0     0 FUNC    LOCAL  DEFAULT   14 register_tm_clones
+    29: 0000000000000600     0 FUNC    LOCAL  DEFAULT   14 __do_global_dtors_aux
+    30: 0000000000201010     1 OBJECT  LOCAL  DEFAULT   24 completed.7697
+    31: 0000000000200dc0     0 OBJECT  LOCAL  DEFAULT   20 __do_global_dtors_aux_fin
+    32: 0000000000000640     0 FUNC    LOCAL  DEFAULT   14 frame_dummy
+    33: 0000000000200db8     0 OBJECT  LOCAL  DEFAULT   19 __frame_dummy_init_array_
+    34: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS foo.c
+    35: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS bar.c
+    36: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS crtstuff.c
+    37: 0000000000000874     0 OBJECT  LOCAL  DEFAULT   18 __FRAME_END__
+    38: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS
+    39: 0000000000200dc0     0 NOTYPE  LOCAL  DEFAULT   19 __init_array_end
+    40: 0000000000200dc8     0 OBJECT  LOCAL  DEFAULT   21 _DYNAMIC
+    41: 0000000000200db8     0 NOTYPE  LOCAL  DEFAULT   19 __init_array_start
+    42: 0000000000000708     0 NOTYPE  LOCAL  DEFAULT   17 __GNU_EH_FRAME_HDR
+    43: 0000000000200fb8     0 OBJECT  LOCAL  DEFAULT   22 _GLOBAL_OFFSET_TABLE_
+    44: 00000000000006f0     2 FUNC    GLOBAL DEFAULT   14 __libc_csu_fini
+    45: 000000000000065a    24 FUNC    GLOBAL DEFAULT   14 printfn
+    46: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_deregisterTMCloneTab
+    47: 0000000000201000     0 NOTYPE  WEAK   DEFAULT   23 data_start
+    48: 0000000000201010     0 NOTYPE  GLOBAL DEFAULT   23 _edata
+    49: 00000000000006f4     0 FUNC    GLOBAL DEFAULT   15 _fini
+    50: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND printf@@GLIBC_2.2.5
+    51: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@@GLIBC_
+    52: 0000000000201000     0 NOTYPE  GLOBAL DEFAULT   23 __data_start
+    53: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+    54: 0000000000201008     0 OBJECT  GLOBAL HIDDEN    23 __dso_handle
+    55: 0000000000000700     4 OBJECT  GLOBAL DEFAULT   16 _IO_stdin_used
+    56: 0000000000000680   101 FUNC    GLOBAL DEFAULT   14 __libc_csu_init
+    57: 0000000000201018     0 NOTYPE  GLOBAL DEFAULT   24 _end
+    58: 0000000000000540    43 FUNC    GLOBAL DEFAULT   14 _start
+    59: 0000000000201010     0 NOTYPE  GLOBAL DEFAULT   24 __bss_start
+    60: 000000000000064a    16 FUNC    GLOBAL DEFAULT   14 main
+    61: 0000000000201010     0 OBJECT  GLOBAL HIDDEN    23 __TMC_END__
+    62: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND _ITM_registerTMCloneTable
+    63: 0000000000000000     0 FUNC    WEAK   DEFAULT  UND __cxa_finalize@@GLIBC_2.2
+    64: 00000000000004f0     0 FUNC    GLOBAL DEFAULT   11 _init
+vsudheer@aspeed-fw:/tftpboot/assem/gcc_lrn$
 
 
 
