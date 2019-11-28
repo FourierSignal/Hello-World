@@ -1,0 +1,14 @@
+problem1 :  stdio.h not found
+------------------------------
+hello_world.c:1:11: fatal error: stdio.h: No such file or directory
+ # include <stdio.h>
+           ^~~~~~~~~
+sol: 
+find /usr/include/ -name "stdio.h"
+sudo apt install --reinstall build-essential ^C
+
+find /usr/include/ -name "stdio.h"
+/usr/include/c++/7/tr1/stdio.h
+/usr/include/x86_64-linux-gnu/bits/stdio.h
+/usr/include/stdio.h
+
