@@ -201,7 +201,40 @@ A is the address needed to compute the value of the relocatable field.
 Dynamic Linking: Shared Libraries
 Static libraries above have some significant disadvantages; for example, consider standard functions such as printf and scanf. They are used almost by every application. Now, if a system is running 50-100 processes, each process has its own copy of executable code for printf and scanf. This takes up significant space in the memory. Shared libraries, on the other hand, address the disadvantages of static libraries. A shared library is an object module that can be loaded at run time at an arbitrary memory address, and it can be linked to by a program in memory. Shared libraries often are called as shared objects. On most UNIX systems they are denoted with a .so suffix; HP-UX uses a .sl suffix and Microsoft refer to them as DLLs (dynamic link libraries).
 
+gcc -shared -fPIC -o libfoo.so a.o b.o
+The above command tells the compiler driver to generate a shared library, libfoo.so, comprised of the object modules a.o and b.o. The -fPIC option tells the compiler to generate position independent code (PIC).
 
+Now, suppose the main object module is bar.o, which has dependencies on a.o and b.o. In this case, the linker is invoked with:
+
+gcc bar.o ./libfoo.so
+This command creates an executable file, a.out, in a form that can be linked to libfoo.so at load time. Here a.out does not contain the object modules a.o and b.o, which would have been included had we created a static library instead of a shared library. The executable simply contains some relocation and symbol table information that allow references to code and data in libfoo.so to be resolved at run time. Thus, a.out here is a partially executable file that still has its dependency in libfoo.so. The executable also contains a .interp section that contains the name of the dynamic linker, which itself is a shared object on Linux systems (ld-linux.so). So, when the executable is loaded into memory, the loader passes control to the dynamic linker. The dynamic linker contains some start-up code that maps the shared libraries to the program's address space. It then does the following:
+
+relocates the text and data of libfoo.so into memory segment; and
+
+relocates any references in a.out to symbols defined by libfoo.so.
+
+Finally, the dynamic linker passes control to the application. From this point on, location of shared object is fixed in the memory.
+
+
+Loading Shared Libraries from Applications
+------------------------------------------------
+Shared libraries can be loaded from applications even in the middle of their executions.
+An application can request a dynamic linker to load and link shared libraries, 
+even without linking those shared libraries to the executable.
+Linux, Solaris and other systems provides a series of function calls that can be used to dynamically load a shared object.
+Linux provides system calls, such as dlopen, dlsym and dlclose, that can be used to load a shared object,
+to look up a symbol in that shared object and to close the shared object, respectively.
+On Windows, LoadLibrary and GetProcAddress functions replace dlopen and dlsym, respectively.
+
+Tools for Manipulating Object Files:
+-----------------------------------------
+Here's a list of Linux tools that can be used to explore object/executable files.
+ar: creates static libraries.
+objdump: this is the most important binary tool; it can be used to display all the information in an object binary file.
+strings: list all the printable strings in a binary file.
+nm: lists the symbols defined in the symbol table of an object file.
+ldd: lists the shared libraries on which the object binary is dependent.
+strip: deletes the symbol table information.
    
    
 
