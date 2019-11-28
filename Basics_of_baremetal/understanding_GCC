@@ -1,5 +1,75 @@
+
 preprocessor : cpp
 compiler     : cc1
 assember     : as
 linker       : ld
 loader       : execve
+
+
+cpp,cc1,as  are part of gcc-distribution
+
+gcc a.c b.c
+==
+cpp <other-command-line-options>  a.c               -o  /tmp/a.i
+cc1 <other-command-line-options> /tmp/a.i           -o  /tmp/a.s
+as  <other-command-line-options> /tmp/a.s           -o  /tmp/a.o
+ld  <other-command-line-options> /tmp/a.o /tmp/b.o  -o  a.out
+(a.out was first coined as the Assembler OUTput in a.out object files.
+ Since then, object formats have changed variedly, but the name continues to be used.)
+ 
+ 
+gcc -v  hello.c -o hello : verbose option tells what hapens when gcc command is invoked.
+
+pre-processing:
+------------------------
+cpp hello.c / cpp hello.c -o hello.i => pre processed file
+
+file hello.c
+hello.c: C source, ASCII text
+
+file hello.i
+hello.i: C source, ASCII text
+
+
+compiling:
+---------
+cc1  hello.i / cc1 hello.i  -o  hello.s
+if cc1 not working use --> /usr/lib/gcc/x86_64-linux-gnu/7/cc1 
+
+file hello.s
+hello.s: assembler source, ASCII text
+
+assembling:
+---------------
+as hello.s -o hello.o
+
+file hello.o
+hello.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+
+
+
+
+cpp  foo.c  -o foo.i
+cc1 foo.i -o foo.s
+as foo.s -o foo.o
+
+cpp  bar.c -o bar.i
+cc1 bar.i -o bar.s
+as bar.s -o bar.o
+
+ld foo.o bar.o -o  foobar
+ld: warning: cannot find entry symbol _start; defaulting to 00000000004000b0
+bar.o: In function `printfn':
+bar.i:(.text+0x11): undefined reference to `printf'
+
+
+
+
+
+
+
+
+
+
+
+
