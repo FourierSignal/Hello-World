@@ -1,0 +1,5 @@
+preprocessor : cpp
+compiler     : cc1
+assember     : as
+linker       : ld
+loader       : execve
