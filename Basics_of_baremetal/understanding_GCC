@@ -1,3 +1,41 @@
+Important to know:
+--------------------
+
+
+Stopping gcc at various stages :
+----------------------------------
+This is w.r.t Linux Machine for building executable
+
+gcc -E hello.c -o hello.i (or)  gcc -E hello.c -- will generate preprocessed file to stdout
+gcc -S hello.c  --> hello.s :  will stop at assembler stage and generates Assembly file  hello.s
+gcc -c hello.c --> hello.o : will stop at compiler stage and generates relocatable object file(machine specific format)  hello.o
+gcc  hello.c -->  a.out  : will generate Executable object file a.out, after linking with libraries
+                          crt1.o/crt2.o/ctrln.o/crti.o/crtbegin.o/crtend.o  which are in toolchain
+                          (eg:arm-linaro-linux-gnueabihf/sysroot/usr/lib/crti.o)
+                          It uses wrapper fn around linker called collect2  which is in toolchain
+                          ( libexec/gcc/arm-aspeed-linux-gnueabihf/8.3.0/collect2)
+if we execute ./a.out in linux shell --> shell execution wrapper--> calls systemcall execve : which does the stripping
+of ELF sections from a.out and generates binary and copies the binary in RAM.
+if we are in a baremetal environment:
+we have to ways to generate final binary file.
+1) generate executable objectfile a.out and create binary file using objcopy  
+   objcopy  --gap-fill=0xff -O binary a.out hello.binary 
+2) we can stop at compiler statge to get relocatable object file hello.o
+   objcopy  --gap-fill=0xff -O binary hello.o hello.binary 
+   
+compiling an executable without using gcc:
+--------------------------------------------
+
+as hello.s -o hello.o
+
+                       
+     
+                
+
+
+
+
+libexec/gcc/arm-aspeed-linux-gnueabihf/8.3.0/cc1
 
 preprocessor : cpp
 compiler     : cc1
@@ -100,6 +138,8 @@ bar.i:(.text+0x11): undefined reference to `printf'
 gcc foo.o bar.o /usr/lib/libc.a /usr/lib/libm.a
 
 Collect2 is a wrapper over linker ld that is called by GCC.
+
+
 
 
 ---------------------------------------------------------------
