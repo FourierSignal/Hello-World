@@ -1,6 +1,9 @@
 Important to know:
 --------------------
 
+compiling an executable with using GNU toolchain:
+------------------------------------------
+gcc is compiler in GNU toolchain
 
 Stopping gcc at various stages :
 ----------------------------------
@@ -13,11 +16,11 @@ gcc  hello.c -->  a.out  : will generate Executable object file a.out, after lin
                           crt1.o/crt2.o/ctrln.o/crti.o/crtbegin.o/crtend.o  which are in toolchain
                           (eg:arm-linaro-linux-gnueabihf/sysroot/usr/lib/crti.o)
                           It uses wrapper fn around linker called collect2  which is in toolchain
-                          ( libexec/gcc/arm-aspeed-linux-gnueabihf/8.3.0/collect2)
+                          ( libexec/gcc/arm-linaro-linux-gnueabihf/8.3.0/collect2)
 if we execute ./a.out in linux shell --> shell execution wrapper--> calls systemcall execve : which does the stripping
 of ELF sections from a.out and generates binary and copies the binary in RAM.
-if we are in a baremetal environment:
-we have to ways to generate final binary file.
+
+if we are compiling on linux for a baremetal environment, we have to ways to generate final binary file.
 1) generate executable objectfile a.out and create binary file using objcopy  
    objcopy  --gap-fill=0xff -O binary a.out hello.binary 
 2) we can stop at compiler statge to get relocatable object file hello.o
