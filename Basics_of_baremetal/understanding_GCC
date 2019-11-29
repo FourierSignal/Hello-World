@@ -5,6 +5,8 @@ compiling an executable with using GNU toolchain:
 ------------------------------------------
 gcc is compiler in GNU toolchain
 
+compiling with gcc
+---------------------------------
 Stopping gcc at various stages :
 ----------------------------------
 This is w.r.t Linux Machine for building executable
@@ -25,8 +27,10 @@ if we are compiling on linux for a baremetal environment, we have to ways to gen
    objcopy  --gap-fill=0xff -O binary a.out hello.binary 
 2) we can stop at compiler statge to get relocatable object file hello.o
    objcopy  --gap-fill=0xff -O binary hello.o hello.binary 
-   
-compiling an executable without using gcc:
+
+to understand the steps we can use teh command :   gcc --verbose hello.c
+
+compiling without using gcc:
 --------------------------------------------
 
 as hello.s -o hello.o
