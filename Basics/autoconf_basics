@@ -1,0 +1,37 @@
+build: which is the system where the build takes place
+host:  which is the system where the execution of the compiled code will take place
+target: which is the system for which the program will generate code. 
+This is onlyused for compilers, assemblers, linkers, etc.
+
+Corresponding--build,--hostand--targetconfigureoptions.
+They are all automatically guessed to the current machine by default
+--build, generally does not need to be changed
+--host, must be overridden to do cross-compilation
+--target, needs to be overridden if needed 
+(to generate a cross-compiler, forexample
+
+--prefix and DESTDIR : are often misunderstood
+--prefixis the location where the programs/libraries will be placed 
+when executed on thehost machine
+DESTDIR-is a way of temporarily diverting the installation to a different location.
+For example, if you use--prefix=/home/<foo>/sys/usr, 
+then binaries/libraries will look for icons in/home/<foo>/sys/usr/share/icons
+Good for native installation in/home/<foo>/sys
+Badfor cross-compilation where the binaries will ultimately be in/usr
+
+for Native compilation: install system-wide in /usr
+$./configure --prefix=/usr
+$ make
+$ sudo make install
+
+Native compilation, install in a user-specific directory
+$./configure --prefix=/home/<foo>/sys/
+$ make
+$ make install
+
+In Cross-compilation, install in/usr, divert to a temporary directory where the system
+for the target is built
+$ ./configure --prefix=/usr
+$ make
+$ make DESTDIR=/home/<foo>/target-rootfs/ install
+
