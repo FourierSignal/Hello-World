@@ -1,0 +1,59 @@
+GDB and GDBserver are separate programs.
+GDB runs on your host system, the x86_64 GNU/Linux machine,
+while GDBserver runs on the target, the ARM GNU/Linux board/machine. 
+
+they are built separately,
+so we get to apply the build/host/target distinction for each separate build 
+
+As most GNU programs, GDB uses autoconf as part of its build system. 
+When using autoconf, there are three system definitions (or machine definitions)
+ that are used to identify the “actors” in the build process; (...) These three definitions are:
+
+host
+
+    The system that is going to run the software once it is built. Once the software
+    has been built, it will execute on this particular system.
+
+build
+
+    The system where the build process is being executed. For most uses this
+    would be the same as the host system, but in case of cross-compilation
+    the two obviously differ.
+
+target
+
+    The system against which the software being built will run on. This only exists, or rather
+    has a meaning, when the software being built may interact specifically with a
+    system that differs from the one it's being executed on (our host). This is the case
+    for compilers, debuggers, profilers and analyzers and other tools in general.
+    
+   
+Building a GDB that runs on x86:
+---------------------------------
+use --host : to specify where gdb runs - 
+in our case --host=x86_64-unknown-linux-gnu.
+if the program is meant to be run on the same system you are building from,then you don't need to specify that, as configure will pick your system as default for --host automatically.
+
+use --target : to make built GDB understands how to debug ARM GNU/Linux programs.
+go to cross toolchain available on your x86_64 development host, which is used for building programs that run on your ARM board
+type arm-linux-gnueabi-gcc -v (look for the "Target:" line in the output), this is --target option
+
+/path/to/gdb-src/configure --target=arm-linux-gnueabi
+
+Building GDBserver that runs on "target"ARM-GNU/Linux machine.
+--------------------------------------------------------------
+Since GDBserver will run on ARM, --host=arm-linux-gnueabi
+--target doesn't really make sense for GDBserver,because it not a "cross" tool
+
+path/to/gdb/gdbserver/configure --host=arm-linux-gnueabi && make && make install 
+
+Example:
+export PATH=$PATH:/home/jaguar/Embedded_Rel/Beaglebone_black/toolchain/Linux_targeted_toolchains/32-bit_Armv8Cortex-A_hard-float_little-endian/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
+cd /home/jaguar/Embedded_Rel/GNU/GDB/gdb_build_dir/
+/home/jaguar/Embedded_Rel/GNU/GDB/gdb-8.3/configure  --target=armv8l-linux-gnueabihf   --prefix=/home/jaguar/Embedded_Rel/GNU/GDB/gdb_install_dir
+make all install
+
+
+
+
+
