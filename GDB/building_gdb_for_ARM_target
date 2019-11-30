@@ -56,7 +56,7 @@ make all install
 
 export PATH=$PATH:/home/jaguar/Embedded_Rel/Beaglebone_black/toolchain/Linux_targeted_toolchains/32-bit_Armv8Cortex-A_hard-float_little-endian/gcc-linaro-7.4.1-2019.02-x86_64_armv8l-linux-gnueabihf/bin
 cd /home/jaguar/Embedded_Rel/GNU/GDB/gdb_server_build_dir/
-/home/jaguar/Embedded_Rel/GNU/GDB/gdb-8.3/gdb/gdbserver/configure --host=armv8l-linux-gnueabihf
+/home/jaguar/Embedded_Rel/GNU/GDB/gdb-8.3/gdb/gdbserver/configure --host=armv8l-linux-gnueabihf  --prefix=/home/jaguar/Embedded_Rel/GNU/GDB/gdb_server_install_dir
 make 
 make install
 
