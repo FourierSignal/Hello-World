@@ -1,0 +1,23 @@
+assembly file : gcc -S foo.c  > foo.s
+list file: gcc -Wa,-adhln -g foo.c > foo.list
+elf file : gcc foo.c -o foo.elf  (or) gcc foo.c -o foo (or) gcc foo.c generates elf a.out
+
+
+
+List file:  is source/assembly mix file used for debugging and optimizing programs
+------------
+generating a mixed source and assembly listing using gcc 
+
+$ gcc -Wa,-adhln -g source_code.c > assembly_list.s
+
+The options:
+
+-g: Produce debugging information
+-Wa,option: Pass option as an option to the assembler
+-adhln:
+a: turn on listings
+d: omit debugging directives; n: omit forms processing
+h: include high-level source
+l: include assembly
+
+
