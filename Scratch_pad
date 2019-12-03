@@ -1,5 +1,15 @@
+ERESI project :elf reverse engineering system interface 
+www.phrack.org/archive/issues/61/8.txt
+                              63/9.txt
+Learning Linux binary Analysis: Ryan "elfmaster" O'nill
+https://cirosantilli.com/elf-hello-world
+
 assembly file : gcc -S foo.c  > foo.s
 list file: gcc -Wa,-adhln -g foo.c > foo.list
+
+map file: gcc -Wl,-Map=output.map  foo.c 
+         (or) @linker level: ld -Map output.map -T linker_script.ld -N -o output.elf sourcefile1.o sourcefile2.o  
+
 elf file : gcc foo.c -o foo.elf  (or) gcc foo.c -o foo (or) gcc foo.c generates elf a.out
 
 
