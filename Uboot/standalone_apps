@@ -111,8 +111,56 @@ It Just a function call jump to addr/function-ptr
 So Ensure function at right place using linker script 
 and ensure return from function using blx or reti
 ------------------------------------------------------------------------------------------------------------------
+c file compilation:
+ cat hello_world.c
+#include<stdio.h>
+int  hello_world(void)
+//void main()
+{
+        int a ,b;
+        b = 25;
+        a = b + a ;
+        printf("hello...\n");
+        return 0;
+}
+
+
+SDK_DIR = /tftpboot/device_sdk.v00.00.01
+COMPILER_PATH = $(SDK_DIR)/toolchains/device-linux-5.1-gnueabihf
+CROSS_COMPILE = $(SDK_DIR)/toolchains/device-linux-5.1-gnueabihf/bin/arm-org-linux-gnueabihf-
+COMPILER_SYSROOT = $(COMPILER_PATH)/arm-org-linux-gnueabihf/sysroot
+COMPILER_LIB_PATH = $(COMPILER_SYSROOT)/lib
+
+LIBC_PATH = $(COMPILER_SYSROOT)/usr/lib
 
 
 
+CC=${CROSS_COMPILE}cc
+CA=${CROSS_COMPILE}as
+CL=${CROSS_COMPILE}ld
+COBJCP=${CROSS_COMPILE}objcopy
+COBJD=${CROSS_COMPILE}objdump
 
+LDFLAGS =  --verbose -T hello_world.ld -L $(LIBC_PATH)
+
+all: clean hello_world.c
+        #$(CC) hello_world.c  -o hello_world
+        $(CC) hello_world.c -c  -o hello_world.o
+        $(CL) $(LDFLAGS)   hello_world.o -lc  -o  hello_world
+        $(COBJCP) --gap-fill=0xff -O binary hello_world  hello_world.bin
+        $(COBJD) -S hello_world.o >  hello_world.s
+        $(COBJD) -S hello_world >  hello_world.D
+clean:
+        rm -f hello_world hello_world.o hello_world.bin hello_world.D hello_world.s
+
+rebuild: clean all
+
+say_hello:
+        @echo $(CC)
+        @echo $(CA)
+        @echo $(CL) $(LDFLAGS)
+        @echo $(COBJCP)
+
+
+---------------------------------------------------------------------------------------------
  
