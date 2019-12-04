@@ -1,0 +1,118 @@
+simple uboot app:
+--------------------
+vsk1/uboot_stdalone/hello_world_simple$ cat hello_world.s
+mov r1,#20
+mov r2,#40
+bx LR
+
+ vsk1/uboot_stdalone/hello_world_simple$ cat Makefile
+SDK_DIR = /tftpboot/dev_sdk.v00.00.01
+CROSS_COMPILE = $(SDK_DIR)/toolchains/device_name-linux-5.1-gnueabihf/bin/arm-org-linux-gnueabihf-
+CC=${CROSS_COMPILE}gcc
+CA=${CROSS_COMPILE}as
+CL=${CROSS_COMPILE}ld
+COBJCP=${CROSS_COMPILE}objcopy
+COBJD=${CROSS_COMPILE}objdump
+
+LDFLAGS =  --verbose -T hello_world.ld
+say_hello:
+        @echo $(CC)
+        @echo $(CA)
+        @echo $(CL) $(LDFLAGS)
+        @echo $(COBJCP)
+all: clean hello_world.s
+        #$(CC) $(LDFLAGS)  hello_world.s
+        $(CA) hello_world.s -o hello_world.o
+        $(CL) $(LDFLAGS)  hello_world.o -o  hello_world
+        $(COBJCP) --gap-fill=0xff -O binary hello_world  hello_world.bin
+        $(COBJD) -S hello_world >  hello_world.D
+clean:
+        rm -f hello_world hello_world.o hello_world.bin
+
+rebuild: clean all
+
+ vsk1/uboot_stdalone/hello_world_simple$
+ we need to avoid gcc startup routines , so don't use gcc , instead compile stage by statge: as,ld,create image,dump-debug-info
+use linker script to place application at right location in ddr.
+
+cat hello_world.ld
+MEMORY
+        {
+        ram     : ORIGIN = 0x80800000, LENGTH = 0x00031ff
+        }
+
+
+SECTIONS
+{
+        .text :
+        {
+        *(.text)
+        } > ram
+
+        .data :
+        {
+        *(.data)
+        } > ram
+
+        .bss :
+        {
+        *(.bss)
+        } > ram
+                __bss_end = .;
+
+        .stack :
+        {
+        *(.stack)
+        _src_addr = .;
+        } > ram
+}
+
+
+loadb 
+through terminal program teraterm --kermit transfer file
+go 0x80800000
+
+ How it works:
+ ---------------
+ u-boot$ ls cmd/boot.c
+ 
+ /* Allow ports to override the default behavior */
+__attribute__((weak))
+unsigned long do_go_exec(ulong (*entry)(int, char * const []), int argc,
+                                 char * const argv[])
+{
+        return entry (argc, argv);
+}
+
+static int do_go(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+        ulong   addr, rc;
+        int     rcode = 0;
+
+        if (argc < 2)
+                return CMD_RET_USAGE;
+
+        addr = simple_strtoul(argv[1], NULL, 16);
+
+        printf ("## Starting application at 0x%08lX ...\n", addr);
+
+        /*
+         * pass address parameter as argv[0] (aka command name),
+         * and all remaining args
+         */
+        rc = do_go_exec ((void *)addr, argc - 1, argv + 1);
+        if (rc != 0) rcode = 1;
+
+        printf ("## Application terminated, rc = 0x%lX\n", rc);
+        return rcode;
+}
+
+It Just a function call jump to addr/function-ptr
+So Ensure function at right place using linker script 
+and ensure return from function using blx or reti
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+ 
