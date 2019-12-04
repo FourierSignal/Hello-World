@@ -1,0 +1,25 @@
+// main.c
+#include <stdio.h>
+
+int main(void)
+{
+        printf("Hello World !\n");
+        return 0;
+}
+
+
+gcc -E main.c -o main.i
+gcc -S main.i -o main.s
+gcc -c main.s -o main.o  (or) as main.s -o main.o 
+ld /usr/lib/arm-linux-gnueabihf/crti.o /usr/lib/arm-linux-gnueabihf/crtn.o /usr/lib/arm-linux-gnueabihf/crt1.o -lc main.o -dynamic-linker /lib/ld-linux.so.3 -o main_ELF_executable
+
+Link main.o with other necessary object files namely,
+crti.o & crtn.o (they define function prologs & epilogs, respectively),
+crt1.o (contains _start symbol for bootstrapping the initial execution of the program),
+libc.so path or -lc flag for libc
+set the name of the dynamic linker, to generate a dynamically linked ELF executable:
+
+
+./main_ELF_executable  ---> Run
+
+
