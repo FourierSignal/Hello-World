@@ -109,7 +109,7 @@ static int do_go(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 It Just a function call jump to addr/function-ptr
 So Ensure function at right place using linker script 
-and ensure return from function using blx or reti
+and ensure return from function( with blx or return instructions)
 ------------------------------------------------------------------------------------------------------------------
 c file compilation:
  cat hello_world.c
