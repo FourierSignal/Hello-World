@@ -1,0 +1,27 @@
+CMSIS-DAP: Cortex microcontroller software interface standard specification and a implementation of a Firmware
+           that supports access to DAP(Debug Access Port):
+
+Target device: ARM processors(CM3/CM4): has CoreSight IP: that provides Debug and Trace.
+this ARM Device provides a Debug Access Port (DAP) :
+ typically either with a 5-pin JTAG(joint Test Action Group)
+               or with a 2-pin Serial Wired Debug(SWD)-interface
+
+CMSIS-DAP is is generally implemented as an on-board interface chip
+provides usb connection from host to coresight DAP over JTAG/SWD wire interface.
+
+
+
+the CMSIS-DAP Firmware is provided as source code:
+The CMSIS-DAP Software Stack is composed of the following components:
+CMSIS-DAP Firmware that interfaces to JTAG or SWD Debug pins using standard I/O pins of the Cortex-M device.
+CMSIS-Driver USART that connects the UART of the Cortex-M device to the SWO output from the target.
+USB Communication Stack that interfaces to the USB Port of the Host Computer using the HID or custom class.
+The USB Device middleware may require CMSIS-RTOS and a CMSIS-Driver USB.
+
+
+C:\Downloads\CMSIS_5-5.6.0\CMSIS\DAP\Firmware\
+Source
+
+You can debug with any IDE that supports the CMSIS-DAP protocol.
+
+or you can use openOCD for interacting with DAP-port.
