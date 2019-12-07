@@ -1,0 +1,77 @@
+
+----------------------------------------------------------------------------------------------
+Simple Make file:
+------------------
+edit : main.o kbd.o command.o display.o \
+       insert.o search.o files.o utils.o
+       cc main.o kbd.o command.o display.o insert.o search.o files.o utils.o  -o  edit
+
+main.o: main.c defs.h
+         cc -c main.c
+kbd.o: kbd.c defs.h command.h
+        cc -c kbd.c 
+command.o: command.c defs.h command.h
+        cc -c command.c
+display.o: display.c defs.h buffer.h
+        cc -c display.c
+insert.o: insert.c defs.h buffer.h
+        cc -c insert.c
+search.o: search.c defs.h buffer.h
+        cc -c search.c
+files.o: files.c defs.h buffer.h command.h
+        cc -c files.c
+utils.o: utils.c defs.h
+        cc -c utils.c
+clean :
+        rm edit main.o kbd.o command.o display.o \
+         insert.o search.o files.o utils.o
+----------------------------------------------------------------------------------------------
+*variables reduce the repetition
+
+objects = main.o kbd.o command.o display.o \
+          insert.o search.o files.o utils.o       
+edit: $(objects)
+      cc $(objects) -o  edit
+
+main.o: main.c defs.h
+         cc -c main.c
+kbd.o: kbd.c defs.h command.h
+        cc -c kbd.c 
+command.o: command.c defs.h command.h
+        cc -c command.c
+display.o: display.c defs.h buffer.h
+        cc -c display.c
+insert.o: insert.c defs.h buffer.h
+        cc -c insert.c
+search.o: search.c defs.h buffer.h
+        cc -c search.c
+files.o: files.c defs.h buffer.h command.h
+        cc -c files.c
+utils.o: utils.c defs.h
+        cc -c utils.c
+clean:
+    rm edit $(objects)
+----------------------------------------------------------------------------------------------
+* implicit rules of make --> helps us to avoid writing rules and make deduce the recipes.
+
+objects = main.o kbd.o command.o display.o \
+          insert.o search.o files.o utils.o       
+edit: $(objects)
+      cc $(objects) -o  edit
+
+main.o: main.c defs.h
+kbd.o: kbd.c defs.h command.h
+command.o: command.c defs.h command.h
+display.o: display.c defs.h buffer.h
+insert.o: insert.c defs.h buffer.h
+search.o: search.c defs.h buffer.h
+files.o: files.c defs.h buffer.h command.h
+utils.o: utils.c defs.h
+.PHONY : clean
+clean:
+    rm edit $(objects
+----------------------------------------------------------------------------------------------
+
+
+      
+      
