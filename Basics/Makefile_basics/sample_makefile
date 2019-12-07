@@ -348,5 +348,15 @@ hellomake: $(OBJ)
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
 
+#############################################################################################
+Letting makeDeduce the Recipe:    make has implicit rules
+------------------------------  
+we can omit recipe, make can deduce them.
 
+
+#############################################################################
+https://opensource.com/article/18/8/what-how-makefile
+---------------------------------------------------------
+https://www.gnu.org/software/make/manual/make.pdf
+------------------------------------------------------
 
