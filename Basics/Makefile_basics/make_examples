@@ -71,7 +71,33 @@ utils.o: utils.c defs.h
 clean:
     rm edit $(objects
 ----------------------------------------------------------------------------------------------
+* wild card expansion
 
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:%.c=%.o)
+BINS := $(OBJS:%.o=%)
 
+all: $(BINS)
+%: %.o
+       ${CC}  $< -o $@
+%.o: %.c
+        ${CC} -c $< -o $@
+clean:
+       rm -f  ${OBJS} ${BINS}
+        
+-------------------------------------------------------------------------------------------------        
+* wild card expansion + implicit rules
+
+SRCS := $(wildcard *.c)
+OBJS := $(SRCS:%.c=%.o)
+BINS := $(OBJS:%.o=%)
+
+all: $(BINS)
+%: %.o
+%.o: %.c
+clean:
+       rm -f  ${OBJS} ${BINS}
+        
+--------------------------------------------------------------
       
       
