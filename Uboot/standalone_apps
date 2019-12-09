@@ -163,4 +163,64 @@ say_hello:
 
 
 ---------------------------------------------------------------------------------------------
- 
+ sysroot/usr/lib/
+audit   gcrt1.o             libc.a            libdl.a      libm.so           libnss_hesiod.so  librpcsvc.a   libstdc++.so.6              libutil.so
+crt1.o  libanl.a            libc_nonshared.a  libdl.so     libnss_compat.so  libpthread.a      librt.a       libstdc++.so.6.0.25         Mcrt1.o
+crti.o  libanl.so           libcrypt.a        libg.a       libnss_db.so      libpthread.so     librt.so      libstdc++.so.6.0.25-gdb.py  Scrt1.o
+crtn.o  libBrokenLocale.a   libcrypt.so       libm.a       libnss_dns.so     libresolv.a       libstdc++.a   libthread_db.so
+gconv   libBrokenLocale.so  libc.so           libmcheck.a  libnss_files.so   libresolv.so      libstdc++.so  libutil.a
+
+example for linking a library:
+$(CL) $(LDFLAGS)   hello_world.o -lpthread  -o  hello_world
+$ CL) $(LDFLAGS)   hello_world.o -lc  -o  hello_world
+----------------------------------------------------------------------------------------------------------------------------
+
+org# loadb 0x80800000
+## Ready for binary (kermit) download to 0x80800000 at 115200 bps...
+## Total Size      = 0x000001d0 = 464 Bytes
+## Start Addr      = 0x80800000
+ast# go 0x80800000
+## Starting application at 0x80800000 ...
+
+
+U-Boot sdk-v00.00.01 (Dec 05 2019 - 12:55:56 +0800)
+
+SOC : SOC2000-A0
+PCI RST : #1 #2
+eSPI Mode : SIO:Enable : SuperIO-2e
+Eth :    MAC0: RMII/NCSI ,MAC1: RGMII ,MAC2: RGMII ,MAC3: RGMII
+Model: ORG SOCname
+DRAM:  already initialized, 1016 MiB
+WARNING: Caches not enabled
+MMC:   emmc_slot0@100: 0
+Loading Environment from SPI Flash... SF: Detected w25q256 with page size 256 Bytes, erase size 4 KiB, total 32 MiB
+*** Warning - bad CRC, using default environment
+
+In:    serial@1e784000
+Out:   serial@1e784000
+Err:   serial@1e784000
+Model: ORG soc
+Net:
+Warning: ftgmac@1e680000 (eth1) using random MAC address - e2:e8:cc:34:0d:4b
+eth1: ftgmac@1e680000
+Warning: ftgmac@1e670000 (eth2) using random MAC address - 9e:2c:c2:a3:03:47
+, eth2: ftgmac@1e670000
+Warning: ftgmac@1e690000 (eth3) using random MAC address - 4e:a9:19:29:d5:e7
+, eth3: ftgmac@1e690000
+Hit any key to stop autoboot:  0
+
+Here application crashed, because regular printf is linked.
+we need a printf file written using UART as stdout.
+so write printflibary and link with application.
+
+creating a static Library (or) archive file:
+
+
+
+
+
+https://developer.arm.com/tools-and-software/embedded/legacy-tools/ds-5-development-studio/downloads
+
+
+
+
