@@ -68,7 +68,7 @@ SECTIONS
 }
 
 
-loadb 
+loadb 0x80800000
 through terminal program teraterm --kermit transfer file
 go 0x80800000
 
