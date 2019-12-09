@@ -213,6 +213,314 @@ Here application crashed, because regular printf is linked.
 we need a printf file written using UART as stdout.
 so write printflibary and link with application.
 
+
+------------------------------------------------------------------------------------
+print.c  -- write own / modify sample code from arm 
+
+
+#include <defines.h>
+//#include <MP_Mutexes.h>
+//mutex_t *primeLock = (mutex_t *)0x84003000;
+/*
+void init_print_mutex(void){
+        init_mutex(primeLock);
+}
+*/
+void writeuartchar(char c)
+{
+        volatile unsigned int status=0;
+printagain:
+        /* Wait for Ready */
+        do {
+                status = *(volatile unsigned int*)(UART_BASE+SERIAL_LSR);
+        } while (!((status & SERIAL_LSR_THRE)==SERIAL_LSR_THRE) );
+
+        /* Write Character */
+        *(volatile unsigned int*)(UART_BASE+SERIAL_THR) = c;
+        if(c == '\n') {
+                c = '\r';
+                goto printagain;
+        }
+
+        return;
+}
+
+static void nc_printchar(char c)
+{
+        volatile unsigned int status=0;
+printagain:
+        /* Wait for Ready */
+        do {
+                status = *(volatile unsigned int*)(UART_BASE+SERIAL_LSR);
+        } while (!((status & SERIAL_LSR_THRE)==SERIAL_LSR_THRE) );
+
+        /* Write Character */
+        *(volatile unsigned int*)(UART_BASE+SERIAL_THR) = c;
+        if(c == '\n') {
+                c = '\r';
+                goto printagain;
+        }
+
+        return;
+}
+
+static void printchar(char **str, int c)
+{
+        if (str) {
+                **str = c;
+                ++(*str);
+        }
+        else nc_printchar(c);
+}
+
+#define PAD_RIGHT 1
+#define PAD_ZERO 2
+
+static int prints(char **out, const char *string, int width, int pad)
+{
+        register int pc = 0, padchar = ' ';
+
+        if (width > 0) {
+                register int len = 0;
+                register const char *ptr;
+                for (ptr = string; *ptr; ++ptr) ++len;
+                if (len >= width) width = 0;
+                else width -= len;
+                if (pad & PAD_ZERO) padchar = '0';
+        }
+        if (!(pad & PAD_RIGHT)) {
+                for ( ; width > 0; --width) {
+                        printchar (out, padchar);
+                        ++pc;
+                }
+        }
+        for ( ; *string ; ++string) {
+                printchar (out, *string);
+                ++pc;
+        }
+        for ( ; width > 0; --width) {
+                printchar (out, padchar);
+                ++pc;
+        }
+
+        return pc;
+}
+
+/* the following should be enough for 32 bit int */
+#define PRINT_BUF_LEN 12
+
+static int printi(char **out, int i, int b, int sg, int width, int pad, int letbase)
+{
+        char print_buf[PRINT_BUF_LEN];
+        register char *s;
+        register int t, neg = 0, pc = 0;
+        register unsigned int u = i;
+
+        if (i == 0) {
+                print_buf[0] = '0';
+                print_buf[1] = '\0';
+                return prints (out, print_buf, width, pad);
+        }
+
+        if (sg && b == 10 && i < 0) {
+                neg = 1;
+                u = -i;
+        }
+
+        s = print_buf + PRINT_BUF_LEN-1;
+        *s = '\0';
+
+        while (u) {
+                t = u % b;
+                if( t >= 10 )
+                        t += letbase - '0' - 10;
+                *--s = t + '0';
+                u /= b;
+        }
+
+        if (neg) {
+                if( width && (pad & PAD_ZERO) ) {
+                        printchar (out, '-');
+                        ++pc;
+                        --width;
+                }
+                else {
+                        *--s = '-';
+                }
+        }
+
+        return pc + prints (out, s, width, pad);
+}
+
+static int print(char **out, int *varg)
+{
+        register int width, pad;
+        register int pc = 0;
+        register char *format = (char *)(*varg++);
+        char scr[2];
+
+        for (; *format != 0; ++format) {
+                if (*format == '%') {
+                        ++format;
+                        width = pad = 0;
+                        if (*format == '\0') break;
+                        if (*format == '%') goto out;
+                        if (*format == '-') {
+                                ++format;
+                                pad = PAD_RIGHT;
+                        }
+                        while (*format == '0') {
+                                ++format;
+                                pad |= PAD_ZERO;
+                        }
+                        for ( ; *format >= '0' && *format <= '9'; ++format) {
+                                width *= 10;
+                                width += *format - '0';
+                        }
+                        if( *format == 's' ) {
+                                register char *s = *((char **)varg++);
+                                pc += prints (out, s?s:"(null)", width, pad);
+                                continue;
+                        }
+                        if( *format == 'd' ) {
+                                pc += printi (out, *varg++, 10, 1, width, pad, 'a');
+                                continue;
+                        }
+                        if( *format == 'x' ) {
+                                pc += printi (out, *varg++, 16, 0, width, pad, 'a');
+                                continue;
+                        }
+                        if( *format == 'X' ) {
+                                pc += printi (out, *varg++, 16, 0, width, pad, 'A');
+                                continue;
+                        }
+                        if( *format == 'u' ) {
+                                pc += printi (out, *varg++, 10, 0, width, pad, 'a');
+                                continue;
+                        }
+                        if( *format == 'c' ) {
+                                /* char are converted to int then pushed on the stack */
+                                scr[0] = *varg++;
+                                scr[1] = '\0';
+                                pc += prints (out, scr, width, pad);
+                                continue;
+                        }
+                }
+                else {
+                out:
+                        printchar (out, *format);
+                        ++pc;
+                }
+        }
+        if (out) **out = '\0';
+        return pc;
+}
+int should_i_print_this = 1;
+/* assuming sizeof(void *) == sizeof(int) */
+
+int printf(const char *format, ...)
+{
+//      lock_mutex(primeLock);
+        register int *varg = (int *)(&format);
+//      return 0;
+        if(1 && !should_i_print_this)
+                return 0;
+        print(0, varg);
+//      unlock_mutex(primeLock);
+        return 0;
+}
+
+int err_printf(const char *format, ...)
+{
+        register int *varg = (int *)(&format);
+        return print(0, varg);
+}
+
+int nc_sprintf(char *out, const char *format, ...)
+{
+        register int *varg = (int *)(&format);
+        return print(&out, varg);
+}
+
+
+cat hello_world.c
+extern int printf(const char *format, ...);
+
+//int  main(void)
+int  hello_world(void)
+{
+        int a ,b;
+        b = 25;
+        a = b + a ;
+        printf("hello...\n");
+        return 0;
+}
+
+
+(CC) -fno-builtin  -c --static  hello_world.c  ---- will generate hello_world.o
+-fno-builtin option is crucial , without this puts symbol replaces printf and it links with glibc, evenif --sysroot option is given
+
+cat Makefile
+SDK_DIR = /tftpboot/sdk.v00.00.01
+COMPILER_PATH = $(SDK_DIR)/toolchains/org2000-linux-5.1-gnueabihf
+CROSS_COMPILE = $(SDK_DIR)/toolchains/org2000-linux-5.1-gnueabihf/bin/arm-org-linux-gnueabihf-
+COMPILER_SYSROOT = $(COMPILER_PATH)/arm-org-linux-gnueabihf/sysroot
+COMPILER_LIB_PATH = $(COMPILER_SYSROOT)/lib
+
+CC=${CROSS_COMPILE}cc
+CA=${CROSS_COMPILE}as
+CL=${CROSS_COMPILE}ld
+COBJCP=${CROSS_COMPILE}objcopy
+COBJD=${CROSS_COMPILE}objdump
+NM = ${CROSS_COMPILE}nm
+RDELF = ${CROSS_COMPILE}readelf
+
+
+INCL_PATH = $(PWD)/include/
+LDFLAGS =  --verbose -T hello_world.ld
+
+all: clean simple_stand_alone
+
+simple_stand_alone:
+        $(CC) -fno-builtin  -c --static  hello_world.c
+        $(CC) -I $(INCL_PATH) -c print.c
+        $(CL)  hello_world.o  print.o $(LDFLAGS) -o simple_stand_alone
+        $(COBJCP) --gap-fill=0xff -O binary simple_stand_alone simple_stand_alone.bin
+        $(COBJD) -S simple_stand_alone  >  simple_stand_alone.list
+        $(COBJD) -t simple_stand_alone  >  simple_stand_alone.objd_sym
+        $(NM) simple_stand_alone   >  simple_stand_alone.nm_sym
+        $(RDELF) -a simple_stand_alone >  simple_stand_alone.rdelf
+clean:
+        rm -f  hello_world.o  print.o  simple_stand_alone*
+
+rebuild: clean all
+
+say_hello:
+        @echo $(CC)
+        @echo $(CA)
+        @echo $(CL) $(LDFLAGS)
+        @echo $(COBJCP)
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 creating a static Library (or) archive file:
 
 
