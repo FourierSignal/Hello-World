@@ -1,0 +1,1 @@
+objdump -s  <elf_file>   >  <list_file>
