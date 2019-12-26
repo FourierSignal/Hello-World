@@ -1,0 +1,11 @@
+openocd -f interface/stlink-v2.cfg -f board/stm32f4discovery.cfg
+
+openocd -f /usr/share/openocd/scripts/board/stm32f3discovery.cfg -f /usr/share/openocd/scripts/interface/stlink-v2.cfg
+
+telnet localhost 4444 
+​reset halt
+flash write_image erase blink.elf
+​reset
+
+
+https://stackoverflow.com/questions/38033130/how-to-use-the-gdb-gnu-debugger-and-openocd-for-microcontroller-debugging-fr
