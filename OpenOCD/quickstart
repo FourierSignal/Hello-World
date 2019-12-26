@@ -9,3 +9,155 @@ flash write_image erase blink.elf
 
 
 https://stackoverflow.com/questions/38033130/how-to-use-the-gdb-gnu-debugger-and-openocd-for-microcontroller-debugging-fr
+
+OpenOCD starts two servers.
+The first one is a Telnet server on TCP port 4444. It gives access to the OpenOCD CLI (Command Line Interface).
+A Telnet client can connect and send commands (like 'stop', 'run', 'set breakpoint')to OpenOCD.
+Such commands could be sufficient for debugging your microcontroller.
+
+OpenOCD also starts a GDB server on TCP port 3333.
+A GDB client can connect to that port, and start debugging the microcontroller!
+
+compile GDB client for ARM / use arm-none-eabi-gdb.exe  and start it.
+
+target remote localhost:3333
+
+Now you're connected to OpenOCD!
+if you want to use a native OpenOCD command (just like you would do in a Telnet session),
+just precede the command with the keyword monitor. 
+This way the GDB server inside OpenOCD will not handle the command himself, but pass it on to the native OpenOCD deamon.
+    (gdb) monitor reset halt
+       target state: halted
+       target halted due to debug-request, current mode: Thread
+       xPSR: 0x01000000 pc: 0xfffffffe msp: 0xfffffffc
+    (gdb) monitor halt
+
+    (gdb) monitor flash erase_address 0x08000000 0x00100000
+       erased address 0x08000000 (length 1048576) in 8.899024s (115.069 KiB/s)
+    (gdb) monitor reset halt
+       target state: halted
+       target halted due to debug-request, current mode: Thread
+       xPSR: 0x01000000 pc: 0xfffffffe msp: 0xfffffffc
+    (gdb) monitor halt
+    
+    
+    
+   First we will tell the chip that its flash sections 0 to 7 (that's all the flash sections in my 1Mb chip) should not be protected:
+
+    (gdb) monitor flash protect 0 0 7 off
+
+    (gdb) monitor flash info 0
+       #0 : stm32f7x at 0x08000000, size 0x00100000, buswidth 0, chipwidth 0
+            #  0: 0x00000000 (0x8000 32kB) not protected
+            #  1: 0x00008000 (0x8000 32kB) not protected
+            #  2: 0x00010000 (0x8000 32kB) not protected
+            #  3: 0x00018000 (0x8000 32kB) not protected
+            #  4: 0x00020000 (0x20000 128kB) not protected
+            #  5: 0x00040000 (0x40000 256kB) not protected
+            #  6: 0x00080000 (0x40000 256kB) not protected
+            #  7: 0x000c0000 (0x40000 256kB) not protected
+
+Next I halt the chip again. Just to be sure..
+
+    (gdb) monitor halt
+
+Finally I hand over the binary .elf file to GDB:
+
+    (gdb) file C:\\..\\myProgram.elf
+       A program is being debugged already.
+       Are you sure you want to change the file? (y or n) y
+       Reading symbols from C:\..\myProgram.elf ...done.
+
+Now is the moment of truth. I ask GDB to load this binary into the chip. Fingers crossed:
+
+    (gdb) load
+       Loading section .isr_vector, size 0x1c8 lma 0x8000000
+       Loading section .text, size 0x39e0 lma 0x80001c8
+       Loading section .rodata, size 0x34 lma 0x8003ba8
+       Loading section .init_array, size 0x4 lma 0x8003bdc
+       Loading section .fini_array, size 0x4 lma 0x8003be0
+       Loading section .data, size 0x38 lma 0x8003be4
+       Error finishing flash operation
+
+Sadly it was not successful. I get the following message in OpenOCD:
+
+http://openocd.org/doc/html/Flash-Commands.html  --- use flash write_image
+efore you run the above command you will need to run "stm32f1x unlock 0" to ensure the chip is unlocked and your allowed to wire to the flash ... See The datasheet about this
+
+
+
+https://github.com/othane/mos/blob/master/hal/stm32f4/stm32f4.mk
+
+
+
+
+
+# openocd variables and targets
+OPENOCD_PATH ?= /usr/local/share/openocd/
+export OPENOCD_BIN = openocd
+export OPENOCD_INTERFACE ?= $(OPENOCD_PATH)/scripts/interface/stlink-v2-1.cfg
+export OPENOCD_TARGET = $(OPENOCD_PATH)/scripts/target/stm32f4x.cfg
+
+OPENOCD_FLASH_CMDS = ''
+OPENOCD_FLASH_CMDS += -c 'reset halt'
+OPENOCD_FLASH_CMDS += -c 'sleep 10'
+OPENOCD_FLASH_CMDS += -c 'stm32f4x unlock 0'
+OPENOCD_FLASH_CMDS += -c 'flash write_image erase $(PRJ_FULL) 0 ihex'
+OPENOCD_FLASH_CMDS += -c shutdown
+export OPENOCD_FLASH_CMDS
+
+OPENOCD_ERASE_CMDS = ''
+OPENOCD_ERASE_CMDS += -c 'reset halt'
+OPENOCD_ERASE_CMDS += -c 'sleep 10'
+OPENOCD_ERASE_CMDS += -c 'sleep 10'
+OPENOCD_ERASE_CMDS += -c 'stm32f4x unlock 0'
+OPENOCD_ERASE_CMDS += -c 'stm32f4x mass_erase 0'
+OPENOCD_ERASE_CMDS += -c shutdown
+export OPENOCD_ERASE_CMDS
+
+OPENOCD_RUN_CMDS = ''
+OPENOCD_RUN_CMDS += -c 'reset halt'
+OPENOCD_RUN_CMDS += -c 'sleep 10'
+OPENOCD_RUN_CMDS += -c 'reset run'
+OPENOCD_RUN_CMDS += -c 'sleep 10' 
+OPENOCD_RUN_CMDS += -c shutdown
+export OPENOCD_RUN_CMDS
+
+OPENOCD_DEBUG_CMDS = ''
+OPENOCD_DEBUG_CMDS += -c 'halt'
+OPENOCD_DEBUG_CMDS += -c 'sleep 10'
+
+OPENOCD_VERIFY_CMDS = ''
+OPENOCD_VERIFY_CMDS += -c 'reset halt'
+OPENOCD_VERIFY_CMDS += -c 'sleep 10'
+OPENOCD_VERIFY_CMDS += -c 'verify_image $(PRJ_FULL) 0 ihex'
+OPENOCD_VERIFY_CMDS += -c shutdown
+
+OPENOCD_DUMP_CMDS = ''
+OPENOCD_DUMP_CMDS += -c 'reset halt'
+OPENOCD_DUMP_CMDS += -c 'sleep 10'
+OPENOCD_DUMP_CMDS += -c 'dump_image dump.bin 0 0x40000'
+OPENOCD_DUMP_CMDS += -c shutdown
+
+.flash:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_FLASH_CMDS)
+
+.erase:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_ERASE_CMDS)
+
+.run:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_RUN_CMDS)
+
+.debug:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_DEBUG_CMDS)
+
+.verify:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_VERIFY_CMDS)
+
+.dump:
+	$(OPENOCD_BIN) -f $(OPENOCD_INTERFACE) -f $(OPENOCD_TARGET) -c init $(OPENOCD_DUMP_CMDS)
+	$(BIN) -I binary dump.bin dump.hex
+
+
+
+
