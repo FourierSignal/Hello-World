@@ -1,0 +1,10 @@
+Task1: newlib vs glibc
+-------------------------------
+use Newlib as a glibc runtime library replacement in embedded Linux systems.
+verify "Hello, world!" test application occupies less than 30k in a newlib-based Linux runtime environment;
+        the equivalent glibc-based application is more than 380k in size.
+ (http://www.billgatliff.com/newlib.html)
+ 
+ Task2:
+ -----------------------
+
