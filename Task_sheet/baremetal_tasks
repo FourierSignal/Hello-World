@@ -7,3 +7,8 @@ Task1: Retargeting: Build an Application with standardIO retarget to UART on Emb
    
 Task2: Semihosting: Build an Application with standardIO redirected Host Machine 
 -------------------------------------------------------------------------------  
+
+
+
+Task : glibc vs newlib
+----------------------------------
