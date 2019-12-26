@@ -7,4 +7,10 @@ verify "Hello, world!" test application occupies less than 30k in a newlib-based
  
  Task2:
  -----------------------
-
+Newlib supports more than a dozen target CPU architectures, but it doesn't come with code to connect to very many operating systems 
+or target hardware platforms
+port newlib to get newlib running in your system. 
+All of newlib's functionality builds on an integration layer of seventeen stubs of code that supply capabilities that newlib cannot provide itself: low-level filesystem access, requests to enlarge the memory heap, getting the time of day, and various types of context management like process forking and killing. Newlib's source code supplies templates for each of these stubs, which either return "not implemented", or fail silently.
+The requirements for each stub are fully documented in newlib's libc.info file, in the section called Syscalls. 
+The key to a successfully ported newlib is providing stubs that bridge the gap between the functionality newlib needs, and what your target system can provide
+(http://www.billgatliff.com/newlib.html)
