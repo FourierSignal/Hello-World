@@ -7,7 +7,10 @@ Task1: Retargeting: Build an Application with standardIO retarget to UART on Emb
    
 Task2: Semihosting: Build an Application with standardIO redirected Host Machine 
 -------------------------------------------------------------------------------  
-
+(Hint: rdimon : remote debug interface monitor
+rdimon library (librdimon.a) is actually built from newlib(libgloss), you can find it in directory "newlib/libgloss/arm/" in newlib package after extracting "gcc-arm-none-eabi-4_6-2012q2-20120614-src.tar.bz2".
+ documents on newlib/semihosting)
+ 
 
 
 Task : glibc vs newlib
