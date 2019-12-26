@@ -1,0 +1,9 @@
+Task1: Retargeting: Build an Application with standardIO retarget to UART on Embedded board.
+---------------------------------------------------------------------------------
+1. compile libc source. 
+2. compile a small baremetal Application which uses libc : test standardIO on host.
+3. retatget standardIO to UART by overloading libc interfaces  to redirect file IO to onboard UART on target Embedded board.
+   (Hint: STM32CubeIDE toolchain:  tools/share/gcc-arm-none-eabi/samples/readme.txt)
+   
+Task2: Semihosting: Build an Application with standardIO redirected Host Machine 
+-------------------------------------------------------------------------------  
