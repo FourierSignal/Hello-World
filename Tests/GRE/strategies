@@ -10,6 +10,11 @@ list of strategies: word-contrast, time-contrast, previously-referenced, block-o
 TEXT COMPLETION:
 ----------------
 1.ignore the choices.
+2.simplify the statement
+3. Analyse statement to get answer.
+4. if could not solve, try solving through applying strategy.
+5. comeup with possible word
+6. check the choices and elminate wrong.
 
 
 Math-problem:
@@ -38,6 +43,30 @@ Analysis:  insular = 'gnorant of or uninterested in cultures, ideas, or peoples 
             having good  vocabulary helps to solve this problem.
             
  
-=============================================================================================================================================
-              
+=============================================================================================================================================              
+
+It is his dubious distinction to have proved what nobody would think of denying, that Romero at the age of sixty-four 
+writes with all of the characteristics of ____________.
+A. maturity B. fiction C. inventiveness D. art E. brilliance
+
+simplify:  he prooved - what everybody agrees without any doubt. having prooved that is his questionable distinction.
+           that romero at the age of 64 writes with all the characterestics of _______.
            
+analyse:  he prooved most obious thing. 
+          having prooved that thing is his dubious distinction, that romero at 64 writes with all of the characterestics of ____
+          A,B,C,D,E - not support anything in first clause or second clause.
+          choose A which supports his Age.
+           
+strategy:  
+============================================================================================================================================= 
+
+Given how (i) ____________ the shortcomings of the standard economic model are in its portrayals of human behavior,
+the failure of many economists to respond to them is astonishing. 
+They continue to fill the journals with yet more proofs of yet more (ii) ___________ theorems.
+Others, by contrast, accept the criticisms as a challenge, seeking to expand the basic model to embrace a wider range of things people do.
+Blank (i)
+A. overlooked B. occasional C. patent
+Blank (ii)
+D. comprehensive E. improbable F. pervasive
+
+simplify :  
