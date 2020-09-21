@@ -7,4 +7,37 @@ list of strategies: word-contrast, time-contrast, previously-referenced, block-o
 4. divide statement into clauses and  cross-check the result of strategy
 
 
+TEXT COMPLETION:
+----------------
+1.ignore the choices.
 
+
+Math-problem:
+-------------
+identified by colon. balance the equation
+
+
+=============================================================================================================================================
+In the 1950s, the country’s inhabitants were _____________ : most of them knew very little about foreign countries.
+A. partisan F. erudite G. insular H. cosmopolitan I. imperturbable
+
+simplify:  country’s inhabitants are ____  ==  they know liitle about foreign countries
+
+strategy:     treat colon as ==('equal to')
+              they know little about foreign countries  is -ve 
+              countries inhabitants were __  should be -ve
+              Here  sentences are pretty simple so math-analysis wont help that much.
+              but if sentence is confusing with words like not,few,relely etc...it comes handy.
+              
+              comeup with word describing --- know little of other countries.
+              check answer choices.
+              partisan, insular are negative ---> mostly one of them.
+              partisan = biased so elminate
+              insular  is correct answer.
+Analysis:  insular = 'gnorant of or uninterested in cultures, ideas, or peoples outside one's own experience' .
+            having good  vocabulary helps to solve this problem.
+            
+ 
+=============================================================================================================================================
+              
+           
