@@ -94,7 +94,18 @@ eg:
 
 Math-problem:
 -------------
-identified by colon. balance the equation
+indentify the punctuation/functional grammatical word that indicates the relationship between two parts of sentence.
+balance the equation by assigning -ve/+ve to grammatical words( do not assign values to nouns).
+
+we are basically evaluating sentence structure and the direction of flow of logic.
+Since sentence may be confusing some times, assigning signs to grammatical entities and balancing parts of sentence
+will help in guessing the word, atleast the kind of word(+ve/-ve),especially when lot of lot of nots and other -ve entities are cconfusing.
+
+eg:
+
+
+
+identified by colon,comma
 
 
 
