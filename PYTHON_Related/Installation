@@ -138,3 +138,20 @@ $ pyenv shell 3.8-dev
 Virtual Environments and pyenv
 ------------------------------------
 Virtual environments are a big part of managing Python installations and applications
+Here’s what you need to know:
+
+pyenv manages multiple versions of Python itself.
+virtualenv/venv manages virtual environments for a specific Python version.
+pyenv-virtualenv manages virtual environments for across varying versions of Python.
+
+
+Creating a virtual environment is a single command:
+
+$ pyenv virtualenv <python_version> <environment_name>
+pyenv virtualenv 3.6.8 myproject
+pyenv local myproject
+$ pyenv activate <environment_name>
+$ pyenv deactivate
+
+
+
