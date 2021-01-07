@@ -1,0 +1,17 @@
+https://github.com/mickael-guene
+https://github.com/mickael-guene/fdpic_manifest
+
+
+  Linux uses disjoint (virtual) address spaces for its processes •  
+  For all processes, the text and data segments can be grouped in a way that they can always be loaded with a fixed relative position to each other. • 
+  In all load modules, the offset from the start of the text segment to the start of the data segment is the same (constant). • 
+  This property greatly simplifies the design of shared library machinery and is a foundation of the ARM PIC ABI for Linux shared libraries. •  
+  
+  
+  W/o MMU, all processes share the same (physical) address space •  
+  To benefit from share-able text among multiple processes, text and data segments are placed at arbitrary locations relative to each other. • 
+  There is a need for a mechanism whereby executable code will always be able to find its corresponding data. •  
+  This fairly complicates the design of shared library machinery and leads to the definition of the ARM FDPIC ABI for MMU-less Linux shared libraries. 
+  
+  
+  FDPIC ABI
