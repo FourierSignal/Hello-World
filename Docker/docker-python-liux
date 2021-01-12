@@ -1,0 +1,20 @@
+docker ps -a
+docker images 
+
+
+docker run -it --privileged=true   --name  python_fdip  d2427b259d5c bash
+
+
+docker run --rm -ti tongueroo/apache:tutorial bash.  
+   -rm : Once you exit from the container the docker container will automatically be removed.
+   Without this option, what ends up happening after playing with a few containers is that you’ll end up with a bunch of “Exited” containers
+   that show up with docker ps -a. It’s easy to remove the Exited containers but the --rm will automatically clean house for you.
+
+docker run --privileged ubuntu:yakkety dmesg
+
+
+remove container:
+------------------
+docker rm -f <container-id>  
+eg:docker rm -f 3df3aba74b2c
+
