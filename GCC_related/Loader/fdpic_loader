@@ -27,20 +27,19 @@ Position Independent Code (PIC) executes regardless of its load address in memor
 • PIE is more costly than non-PIE
 • PIC differs from relocatable : it requires NO processing of the text segment to make it suitable for running at any location
 
+Requirements / restrictions of PIC:
+-------------------------------------------
 • Position-independence imposes the following requirements on code:
 • All branches must be PC-relative
 • Function calls are done through entries in the Procedure Linkage Table (PLT)
 • Note : mandatory for extern or pre-emptible functions
-• Code that forms an absolute address referring to any address in a DSO text
-segment is forbidden : it would have to be relocated at load-time, making it nonsharable
-• All references to the data segment and to constants and literals in the text
-segment must be PC-relative
+• Code that forms an absolute address referring to any address in a DSO text segment is forbidden : 
+      it would have to be relocated at load-time, making it nonsharable
+• All references to the data segment and to constants and literals in the text segment must be PC-relative
 • Distance between text and data segments in a module can be constant
-• Code that references symbols that are or may be imported from other load modules
-must use indirect addressing through a table, the Global Offset Table (GOT)
-• Indirect load and stores must be used for items that may be dynamically bound. In
-both cases the indirection is done through the GOT allocated by the linker and
-initialized by the dynamic loader 
+• Code that references symbols that are or may be imported from other load modules must use indirect addressing through a table, the Global Offset Table (GOT)
+• Indirect load and stores must be used for items that may be dynamically bound. 
+  In both cases the indirection is done through the GOT allocated by the linker and initialized by the dynamic loader 
 
 
 
