@@ -1,6 +1,8 @@
 https://github.com/cutty/uld-fdpic.git
 A bare-metal dynamic linker/loader/relocator for the ARM Cortex-M3 and M4 cores using the FDPIC (function descriptor position independent code) ABI.
 
+PIC: position independent code
+PIE: position independent executable
 FDPIC ABI, which uses function descriptors to represent pointers to functions
 FDPIC ELF is the ELF PIE format used on NOMMU systems so that both the > text and data regions may be located anywhere.
 
@@ -43,8 +45,68 @@ Requirements / restrictions of PIC:
 
 
 
+FDPIC ABI: MMU-less environment PIC constraints
+---------------------------------------------------
+• Absence of MMU means:
+• Processes share a common address space : ‘text’ and ‘data’ relative positions are arbitrary. 
+   Data segment address cannot be rematerialized with a PC-relative offset.
+• Need a mechanism for executable code to find its matching data:
+• A dedicated register, the FDPIC register, always holds the start address of the data segment of the current load module.
+• Non-constant offset between code and data also complicates function pointer representation
+• A function pointer is represented as the address of a Function Descriptor composed of two words:
+   • The address of the actual code to execute
+   • The corresponding data segment address (to be loaded into the FDPIC register)
+• As both code and data must be relocatable, executable code shall not contain any instruction containing a pointer value
+• Pointers to global data are indirectly referenced by the Global Offset Table (GOT)
+• At load-time, pointers contained in the GOT are relocated by the dynamic linker to point to their actual location 
+
+
+• The FDPIC register :
+• is used as a base register for accessing the Global Offset Table (GOT) and the
+Function Descriptor Table (FUNCDESC) of a given load module. The GOT and
+FUNCDESC tables are usually mapped at the start of the data segment
+• is defined to be R9
+• is treated as caller-saved register (as opposed to callee-saved)
+• R9 is considered to be platform-specific in the ARM ABI
+• A caller function must save R9 before doing the actual call either on
+the stack or in one of the callee-saved registers: R4-R8, R10, R11,
+R13
+• A caller must restore R9 after the call,
+• R9 in == R9 out 
+
+
+
+
+
 Linux conference : "RISC-V FDPIC/NOMMU toolchain/runtime support" - Maciej W. Rozycki: https://www.youtube.com/watch?v=GydyykyNjxs
 to support linux programs on nonMMU while conserving memory
+
+The RISC-V ISA provides PC-relative addressing, which means that with hardware equipped with an MMU 
+that supports virtual memory addressing the ELF PIC psABI is straightforward and does not require the use of a dedicated GOT
+or global data pointer (GP) register in code intended for PIE executables or DSOs, b
+ecause all static addresses can be worked out from the PC with the aid of a couple instructions. 
+
+This is in particular because at load time virtual addresses of all loadable segments in an ELF PIC image 
+are relocated by adding the same value (the base address in ELF-speak) to all of them, according to how the image 
+has been mapped in virtual memory, which is the difference between the virtual addresses recorded in the file loaded
+and the corresponding actual addresses in memory, which in turn implies that the distance between the text segment and any other segment remains fixed.
+
+This approach does not work for NOMMU systems if we want to keep read-only text/rodata segments shared among processes, 
+because there is no virtual addressing available to remap physical addresses such that for all the processes involved 
+the text and other read-only segments occupy the same addresses while the corresponding read/write data segments are within a fixed distance 
+from the text segment and do not clash with read/write data segments of another process both at a time.
+
+The problem can be solved, however it requires that read-only text/rodata segments and read/write data segments 
+are mapped in memory independently of each other, and that in turn precludes the use of PC-relative addressing to reach data. 
+Instead a register has to be set aside to hold the GP, unique to each of all the ELF images/modules (both the main executable and all the DSOs) loaded.
+This in turn not only requires extending the RISC-V psABI with GP-relative addressing, 
+but defining a new convention for making function calls, such that if a call reaches into another ELF module the value of the GP is updated accordingly.
+
+This is handled by creating a data structure, called a function descriptor (the first letters of which contribute to the FD letters in the FDPIC acronym), that associates a value of the GP with each external (preemptible) function symbol. The function descriptor is then used in the code sequence used to make a function call modified such as to load both the GP and the PC with the addresses intended. The use of a GP register, the modified function calling convention, and the new data structures and definitions all comprise the FDPIC psABI.
+
+In this talk I am going to discuss a proposed design for the FDPIC psABI for RISC-V systems,
+and the changes required for the toolchain and the runtime to support it with the Linux/GNU system.
+
 
 currently: programs can be run in flatformat: allocate same amount of memory as the program has
 
