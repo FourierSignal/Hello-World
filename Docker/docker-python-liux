@@ -18,3 +18,4 @@ remove container:
 docker rm -f <container-id>  
 eg:docker rm -f 3df3aba74b2c
 
+
