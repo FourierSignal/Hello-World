@@ -1,0 +1,56 @@
+https://github.com/cutty/uld-fdpic.git
+A bare-metal dynamic linker/loader/relocator for the ARM Cortex-M3 and M4 cores using the FDPIC (function descriptor position independent code) ABI.
+
+FDPIC ABI, which uses function descriptors to represent pointers to functions
+FDPIC ELF is the ELF PIE format used on NOMMU systems so that both the > text and data regions may be located anywhere.
+
+
+
+Linux uses disjoint (virtual) address spaces for its processes:
+   For all processes, the text and data segments can be grouped in a way that they can always be loaded with a fixed relative position to each other. 
+   In all load modules, the offset from the start of the text segment to the start of the data segment is the same (constant).
+   This property greatly simplifies the design of shared library machinery and is a foundation of the ARM PIC ABI for Linux shared libraries.
+
+W/o MMU, all processes share the same (physical) address space:
+  To benefit from share-able text among multiple processes, text and data segments are placed at arbitrary locations relative to each other. 
+  There is a need for a mechanism whereby executable code will always be able to find its corresponding data
+  This fairly complicates the design of shared library machinery and leads to the definition of the ARM FDPIC ABI for MMU-less Linux shared libraries
+
+What is Position independent code ??
+----------------------------------------
+Definitions:
+Position Independent Code (PIC) executes regardless of its load address in memory, without modification by the loader
+• Commonly used for shared libraries (Dynamic Shared Objects : DSOs)
+• Enable code sharing
+• Executables in general are not entirely PIC
+• But sometimes they are Position Independent Executable (PIE), i.e. binaries entirely made from PIC code (Security PaX or ExecShield)
+• PIE is more costly than non-PIE
+• PIC differs from relocatable : it requires NO processing of the text segment to make it suitable for running at any location
+
+• Position-independence imposes the following requirements on code:
+• All branches must be PC-relative
+• Function calls are done through entries in the Procedure Linkage Table (PLT)
+• Note : mandatory for extern or pre-emptible functions
+• Code that forms an absolute address referring to any address in a DSO text
+segment is forbidden : it would have to be relocated at load-time, making it nonsharable
+• All references to the data segment and to constants and literals in the text
+segment must be PC-relative
+• Distance between text and data segments in a module can be constant
+• Code that references symbols that are or may be imported from other load modules
+must use indirect addressing through a table, the Global Offset Table (GOT)
+• Indirect load and stores must be used for items that may be dynamically bound. In
+both cases the indirection is done through the GOT allocated by the linker and
+initialized by the dynamic loader 
+
+
+
+Linux conference : "RISC-V FDPIC/NOMMU toolchain/runtime support" - Maciej W. Rozycki: https://www.youtube.com/watch?v=GydyykyNjxs
+to support linux programs on nonMMU while conserving memory
+
+currently: programs can be run in flatformat: allocate same amount of memory as the program has
+
+ELF specifications are made with virtual memory systems in mind. they do not support what we require here : seperating data from text.
+because There is only a single fixed value that any elf image can be relocated by.
+Dynamic shared objects(DSOs) which are special case of positioning independent executables.
+
+ELF gabi 
