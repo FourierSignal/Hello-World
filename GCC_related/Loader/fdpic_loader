@@ -102,7 +102,11 @@ Instead a register has to be set aside to hold the GP, unique to each of all the
 This in turn not only requires extending the RISC-V psABI with GP-relative addressing, 
 but defining a new convention for making function calls, such that if a call reaches into another ELF module the value of the GP is updated accordingly.
 
-This is handled by creating a data structure, called a function descriptor (the first letters of which contribute to the FD letters in the FDPIC acronym), that associates a value of the GP with each external (preemptible) function symbol. The function descriptor is then used in the code sequence used to make a function call modified such as to load both the GP and the PC with the addresses intended. The use of a GP register, the modified function calling convention, and the new data structures and definitions all comprise the FDPIC psABI.
+This is handled by creating a data structure, called a function descriptor (the first letters of which contribute to the FD letters in the FDPIC acronym),
+that associates a value of the GP with each external (preemptible) function symbol. 
+The function descriptor is then used in the code sequence used to make a function call modified such as to load both the GP and the PC with the addresses intended.
+
+((The use of a GP register, the modified function calling convention, and the new data structures and definitions all comprise)---> the FDPIC psABI.
 
 In this talk I am going to discuss a proposed design for the FDPIC psABI for RISC-V systems,
 and the changes required for the toolchain and the runtime to support it with the Linux/GNU system.
