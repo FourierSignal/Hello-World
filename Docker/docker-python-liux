@@ -1,8 +1,19 @@
 docker ps -a
 docker images 
 
-
+docker run -it --privileged=true   --name  python_fdip  <imageid> bash
 docker run -it --privileged=true   --name  python_fdip  d2427b259d5c bash
+
+docker start  <conatinerID>
+docker start  c5bd55bc3509
+
+docker exec  -it --privileged=true  <containerID>  bash
+docker exec  -it --privileged=true  c5bd55bc3509  bash
+
+
+docker run -t -i --device=/dev/ttyUSB0 ubuntu bash
+docker run -t -i --privileged -v /dev/bus/usb:/dev/bus/usb ubuntu bash
+
 
 
 docker run --rm -ti tongueroo/apache:tutorial bash.  
@@ -17,5 +28,23 @@ remove container:
 ------------------
 docker rm -f <container-id>  
 eg:docker rm -f 3df3aba74b2c
+
+
+exporting mounted device from host-mac into docker linux:
+---------------------------------------------------------
+mount  --- > identify disk (eg : /dev/disk2s1)
+diskutil unmount /dev/disk2s1
+
+mkdir -p /mnt/sdcard
+diskutil  mount -mountPoint /mnt/sdcard /dev/disk2s1
+ls /mnt/sdcard
+
+exit docker 
+remove container
+
+docker tool box --> preferences--> filesharing--> add /mnt --> apply & restart
+
+docker run   -it --privileged=true  -v /mnt/sdcard:/mnt/sdcard  d2427b259d5c  bash
+
 
 
