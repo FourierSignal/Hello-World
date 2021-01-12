@@ -1,0 +1,15 @@
+STM32 with no MMU (meaning STM32F/H with around 2 MB flash and 0.5 MB RAM).
+
+our own OS, It should behave like a very small linux.
+No, we don't wanna run linux on the MCU as linux is huge,
+
+The OS should run directly from flash and the user programs should be able to run from flash and ram.
+We created loader for relocatable runtime using standard gcc-none-eabi, but it doesn't do everything we need.
+it would be nice to change gcc's behavior regarding register R9 - then it could be running smoothly.
+
+
+
+ucLinux was a project forked from the Linux kernel long back with the aim to develop Kernel for MMU less systems. 
+However, after a certain while, it was merged to the parent Linux branch. So, today there doesn't exist any active ucLinux distribution.
+So, if you disable MMU from the mainline kernel configuration, you'll get an MMU-less version. 
+In fact, now there are configuration options provided in the kernel itself whereby a user can specify the memory layout and the access permissions.
