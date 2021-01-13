@@ -27,3 +27,24 @@ VFPv4 floating point
 Hardware virtualization support
 ############################################################################################
 
+Building Bare-Metal ARM Systems with GNU
+------------------------------------------
+
+ Bare-Metal Targeted Binary Toolchain 
+arm-eabi	  32-bit Armv7 Cortex-A, soft-float, little-endian	
+aarch64-elf	64-bit Armv8 Cortex-A, little-endian	
+
+The Linaro Toolchain Working Group (TCWG) --- announced stable Release of the Linaro GCC 7 source package.
+The GCC 7 series introduced an ABI change for ARM targets by fixing a bug (present since GCC 5, see link below) that affects conformance to the procedure call standard (AAPCS). The bug affects some C++ code where class objects are passed by value to functions and could result in incorrect or inconsistent code being generated. If the option -Wpsabi is enabled (on by default) the compiler will emit a diagnostic note for code that might be affected by this ABI change.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=77728
+For an explanation of the changes please see the following website:
+https://gcc.gnu.org/gcc-7/changes.html
+
+Startup code??
+-------------------
+initial code references in the DS example, you can get DS from https://developer.arm.com/tools-and-software/embedded/arm-development-studio/downloads, 
+install it on windows, and import the example code, 
+File->Import->File System->From Directory(C:\Program Files\ARM\Development Studio 2019.0-1\examples\Bare-metal_examples_Armv8.zip). 
+
+
+
