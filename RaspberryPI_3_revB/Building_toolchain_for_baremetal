@@ -1,11 +1,29 @@
 Raspberry PI-3:
 Broadcom BCM2387 chipset. -> vendor:Brodcom. 
 
-1.2GHz Quad-Core ARM Cortex-A53
-(Aarch-64)
-
-1GB LPDDR2
+CPU: 1.2GHz Quad-Core ARM Cortex-A53(Aarch-64)
+Memory: 1GB LPDDR2
 
 CPU : Broadcom BCM2387 chipset. 1.2GHz Quad-Core ARM Cortex-A53. 802.11 b/g/n Wireless LAN and Bluetooth 4.1 (Bluetooth Classic and LE)
-
 GPU : Dual Core VideoCore IV® Multimedia Co-Processor. Provides Open GL ES 2.0, hardware-accelerated OpenVG, and 1080p30 H.264 high-profile decode.
+
+
+
+----------------------------
+ARM Cortex-A53 is one of the first two microarchitectures implementing the ARMv8-A 64-bit instruction set.
+Cortex-A53 is a 2-wide decode superscalar processor, 
+
+Architecture:	Armv8-A
+Multicore:  	1-4x Symmetrical Multiprocessing (SMP) within a single processor cluster, and multiple coherent SMP processor clusters through AMBA 4 technology
+
+instruction set architecture (ISA) Support:
+-----------------------------------------------
+AArch32 for full backward compatibility with Armv7
+AArch64 for 64-bit support and new architectural features
+TrustZone security technology
+Neon advanced SIMD
+DSP & SIMD extensions
+VFPv4 floating point
+Hardware virtualization support
+############################################################################################
+
