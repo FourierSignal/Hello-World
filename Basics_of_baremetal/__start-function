@@ -1,0 +1,305 @@
+https://embeddedartistry.com/blog/2019/04/08/a-general-overview-of-what-happens-before-main/
+------------------------------------------------------------------------------------------------
+
+Program startup code behavior is not specified by the C and C++ standards. 
+Instead, the standards describe the conditions that must be true when the main function is called.
+However, there are many steps that are commonly performed across the majority of _start implementations.
+
+At a high level, the _start function handles:
+
+    Early low-level initialization, such as:
+        Configuring processor registers
+        Initializing external memory
+        Enabling caches
+        Configuring the MMU
+    Stack initialization, making sure that the stack is properly aligned per the ABI requirements
+    Frame pointer initialization
+    C/C++ runtime setup
+    Initializing other scaffolding required by the system
+    Jumping to main
+    Exiting the program with the return code from main
+
+While the _start routine typically encompasses these activities, the specific order and implementation varies from system to system.
+For example, early low-level initialization code is commonly found with bare-metal embedded systems, but rarely on host machines with an OS
+
+
+
+
+
+
+How Do We Get to _start?
+
+Now that we know how our program gets to main by way of the _start function, you may wonder how the program gets to _start.
+
+There are three common paths:
+
+    Baremetal: reset vector
+    Bootloader launches application
+    OS Calls an exec function
+
+Baremetal: Reset Vector
+
+A baremetal embedded application represents the simplest path to _start.
+
+Consider a baremetal platform with a binary stored in flash memory. When power is applied to the processor, the processor will copy the program from flash and store it in RAM1. Once the program is loaded into memory, the processor jumps to the reset interrupt vector address.
+
+The embedded program’s reset interrupt handler initializes the system after power-on or reset. The reset handler typically performs an initial configuration of the processor registers and critical hardware components (such as external RAM, caches, or MMU). Once this initial configuration is complete, the reset handler jumps to _start.
+
+Some systems do not utilize the C standard library, and in that case _start will not be called. Instead, the reset handler will invoke other setup functions or will directly execute necessary program setup steps.
+
+1: If the chip supports execute-in-place (XIP), the processor will skip the copy step and run the program directly from flash memory.
+
+
+
+
+Bootloader Launches Application
+
+Many embedded applications are composed of multiple distinct images which run sequentially during the boot process.
+
+Many systems use a bootloader or hypervisor, which runs before loading and executing the main application. Bootloaders perform a wide range of activities, including initializing system hardware, decryption, decompression, checking that a firmware image is valid before loading it, selecting a firmware image to boot, or determining whether to enter firmware update mode. Bootloader complexity depends on the system’s requirements; not of the listed tasks will be performed.
+
+Other systems require an incremental boot process, especially when the main application is larger than the processor’s internal RAM capacity. The first boot stage is typically a small image which fits into the processor’s internal memory. This image will initialize external RAM and load the main application from flash into the external RAM. The first stage boot may perform additional steps, such as processor vector remapping or MMU configuration. Once the main application is loaded, the first stage boot invokes the reset vector of the main application.
+
+Multi-stage boot scenarios complicate the program startup model. Each boot stage is technically a standalone program. However, not every stage will run through the full program startup process. Simple boot stages may only need to clear the .bss section to perform their duties, while complex bootloaders need a fully initialized C/C++ runtime. Program startup activities may be distributed across the boot process, with each stage handling specific tasks.
+
+
+
+
+
+Posted on 8 April 2019 by Phillip Johnston
+A General Overview of What Happens Before main()
+
+Updated: 20200929
+
+For most programmers, a C or C++ program’s life begins at the main function. They are blissfully unaware of the hidden steps that happen between invoking a program and executing main. Depending on the program and the compiler, there are all kinds of interesting functions that get run before main, automatically inserted by the compiler and linker and invisible to casual observers.
+
+Unfortunately for programmers who are curious about the program startup process, the literature on what happens before main is quite sparse.
+
+Embedded Artistry has been hard at working creating a C++ embedded framework. The final piece of the puzzle was implementing program startup code. To aid in the design of our framework’s boot process, I performed an exploratory survey of existing program startup implementations. My goal was to identify a general program startup model. I also want to provide a more comprehensive look into how our programs get to main.
+
+In this six-part series, we will be investigating what it takes to get to main:
+
+    What Happens Before main()?
+    Exploring Startup Implementations: Newlib (ARM)
+    Exploring Startup Implementations: OS X
+    Exploring Startup Implementations: Custom Embedded System with ThreadX
+    Abstracting a Generic Flow for Getting to main
+    Implementing our Generic Startup Flow
+
+To begin our investigation into how programs start, we will provide a summary of what happens in a program before main. The steps and responsibilities we describe are generalized so that they apply to most systems. We will supplement the general theory in the following articles with an analysis of real-world implementations.
+
+Table of Contents:
+
+    Getting to Main: A General Overview
+        The _start Function
+        Runtime Setup
+        Other Scaffolding
+        Jumping to main
+        Returning from main
+    How Do We Get to _start?
+        Baremetal: reset vector
+        Bootloader launches application
+        OS Calls an exec function
+    Exploring On Your Own
+    Further Reading
+
+Getting to Main: A General Overview
+
+Before we dive into our exploration of how existing systems get to main, we should develop a hypothesis about what generally happens. Since others have already explored program startup, we can start with a clear idea of what happens before main.
+The _start Function
+
+For most C and C++ programs, the true entry point is not main, it’s the _start function. This function initializes the program runtime and invokes the program’s main function.
+
+The use of _start is merely a general convention. The entry function can vary depending on the system, compiler, and standard libraries. For example, OS X only has dynamically linked applications; the loader takes care of setup, and the entry point to the program is actually main.
+
+The linker controls the program’s entry point. The default entry point can be overridden by clang and GCC linkers using the -e flag, although this is rarely done for most programs.
+
+The implementation of the _start function is usually supplied by libc. The _start function is often written in assembly. Many implementations store the _start function in a file called crt0.s. Compilers typically ship with pre-compiled crt0.o object files for each supported architecture.
+
+Program startup code behavior is not specified by the C and C++ standards. Instead, the standards describe the conditions that must be true when the main function is called. However, there are many steps that are commonly performed across the majority of _start implementations.
+
+At a high level, the _start function handles:
+
+    Early low-level initialization, such as:
+        Configuring processor registers
+        Initializing external memory
+        Enabling caches
+        Configuring the MMU
+    Stack initialization, making sure that the stack is properly aligned per the ABI requirements
+    Frame pointer initialization
+    C/C++ runtime setup
+    Initializing other scaffolding required by the system
+    Jumping to main
+    Exiting the program with the return code from main
+
+While the _start routine typically encompasses these activities, the specific order and implementation varies from system to system. For example, early low-level initialization code is commonly found with bare-metal embedded systems, but rarely on host machines with an OS. Your Linux or OS X program startup code will have multiple scaffolding functions which you will not find in embedded startup code.
+
+Let’s take a look at a simple implementation of an x86_64 _start function taken from the OS Dev wiki. This example provides us with a preview of the basic skeleton for program startup. The implementations we will review later in this series are much more complex.
+
+The startup code below assumes that the program loader put:
+
+    *argv and *envp variables on the stack
+    argc in register %rdi
+    argv in register %rsi
+    envc in register %rdx
+    envp in register %rcx
+
+Here’s the implementation of _start:
+
+.section .text
+
+.global _start
+_start:
+    # Set up end of the stack frame linked list
+    movq $0, %rbp
+    pushq %rbp # rip=0
+    pushq %rbp # rbp=0
+    movq %rsp, %rbp
+
+    # Save argc and argv on the stack
+    # We need those in a moment when we call main
+    pushq %rsi
+    pushq %rdi
+
+    # Prepare signals, memory allocation, stdio, etc.
+    call initialize_standard_library
+
+    # Run the global constructors.
+    call _init
+
+    # Restore argc and argv before calling main
+    popq %rdi
+    popq %rsi
+
+    # Run main
+    call main
+
+    # Terminate the process with the exit code 
+    # that was returned from main
+    movl %eax, %edi
+    call exit
+
+Let’s dive in and see what happens during the runtime setup process (initialize_standard_library above).
+Runtime Setup
+
+C/C++ runtime setup is a universal requirement for program startup. At a high level, our runtime setup must accomplish the following:
+
+    Relocate any relocatable sections (if not handled by the loader or linker)
+    Initializing global and static memory
+    Prepare the argc and argv variables for invoking main (even if it’s just setting these to 0/NULL)
+
+Initializing global and static memory is broken down into two distinct steps that deserve additional details.
+
+First, the runtime initializes a subset of uninitialized memory (no = in the declaration) to 0. This includes global and static variables, but not stack variables. All uninitialized data that needs to be set to 0 is placed into the .bss section of the compiled program image by the linker. The location of the .bss section is identified during initialization, and the memory is typically set to 0 with memset.
+
+Second, C++ global objects must be properly constructed before calling main. The linker places these constructors into the .init, .init_array, or .ctors section of the image. Some compilers also allow C and C++ functions to be marked as a constructor using a compiler attribute (e.g., __attribute__((constuctor))). The constructors are stored in a list by the linker. The runtime initialization process iterates through the list and calls each constructor.
+
+These additional runtime initialization steps are run for most programs (but not all):
+
+    Heap initialization
+    Initialize stdio (i.e., stdin, stdout, stderr)
+    Initialize exception support
+    Register destructors and other cleanup functions that will run when exiting the program (using atexit and __cxa_atexit)
+    Prepare environment variables
+
+In practice, the line between the responsibilities of _start and the C runtime initialization can be fuzzy. Some implementations of _start handle pieces of the runtime setup directly, such as setting the .bss section contents to 0 and calling global constructors. Other implementations implement those tasks in the runtime setup routines.
+
+Assembly files commonly found during this portion of the startup process are crtbegin.s, crtend.s, crti.s, and crtn.s. Compilers often ship pre-compiled object files for supported architectures. These files are related to calling global constructors and destructors. When the files are not used, equivalent functionality is often implemented in C and invoked during runtime initialization.
+Other Scaffolding
+
+The setup process may invoke other functions to set up program scaffolding that the system requires. Program scaffolding setup before main might include:
+
+    Threading support and thread local storage
+    Buffer overrun detection
+    Stack logging
+    Run-time error checks
+    Locale settings
+    Math error handling
+    Default math library precision
+
+The specific scaffolding functions invoked vary across standard library implementations and operating systems.
+Jumping to main
+
+Once we have a fully initialized system, we can safely jump to main and execute the programmer’s portion of the application.
+
+The most important aspect: once the program reaches main, it must be in a standards-conforming state. Otherwise, the program’s assumptions will be invalidated.
+Returning From main
+
+While we were primarily interested in how we get to main, we should finish our explanation of the _start function’s responsibilities.
+
+Because _start invokes main, it also handles its return. When control returns from main to _start, the next function to run is exit. The exit function calls all functions registered with atexitand __cxa_atexit during the startup process. Then exit calls the global destructors (those placed in the .fini, .fini_array, or .dtors sections). Finally, exit terminates the program with the return value provided by main.
+
+The exit function is primarily used for hosted programs. Bare metal programs rarely have use for the exit function or global destructors.
+How Do We Get to _start?
+
+Now that we know how our program gets to main by way of the _start function, you may wonder how the program gets to _start.
+
+There are three common paths:
+
+    Baremetal: reset vector
+    Bootloader launches application
+    OS Calls an exec function
+
+Baremetal: Reset Vector
+
+A baremetal embedded application represents the simplest path to _start.
+
+Consider a baremetal platform with a binary stored in flash memory. When power is applied to the processor, the processor will copy the program from flash and store it in RAM1. Once the program is loaded into memory, the processor jumps to the reset interrupt vector address.
+
+The embedded program’s reset interrupt handler initializes the system after power-on or reset. The reset handler typically performs an initial configuration of the processor registers and critical hardware components (such as external RAM, caches, or MMU). Once this initial configuration is complete, the reset handler jumps to _start.
+
+Some systems do not utilize the C standard library, and in that case _start will not be called. Instead, the reset handler will invoke other setup functions or will directly execute necessary program setup steps.
+
+1: If the chip supports execute-in-place (XIP), the processor will skip the copy step and run the program directly from flash memory.
+Bootloader Launches Application
+
+Many embedded applications are composed of multiple distinct images which run sequentially during the boot process.
+
+Many systems use a bootloader or hypervisor, which runs before loading and executing the main application. Bootloaders perform a wide range of activities, including initializing system hardware, decryption, decompression, checking that a firmware image is valid before loading it, selecting a firmware image to boot, or determining whether to enter firmware update mode. Bootloader complexity depends on the system’s requirements; not of the listed tasks will be performed.
+
+Other systems require an incremental boot process, especially when the main application is larger than the processor’s internal RAM capacity. The first boot stage is typically a small image which fits into the processor’s internal memory. This image will initialize external RAM and load the main application from flash into the external RAM. The first stage boot may perform additional steps, such as processor vector remapping or MMU configuration. Once the main application is loaded, the first stage boot invokes the reset vector of the main application.
+
+Multi-stage boot scenarios complicate the program startup model. Each boot stage is technically a standalone program. However, not every stage will run through the full program startup process. Simple boot stages may only need to clear the .bss section to perform their duties, while complex bootloaders need a fully initialized C/C++ runtime. Program startup activities may be distributed across the boot process, with each stage handling specific tasks.
+OS Calls an exec function
+
+The most complex scenario is running a program on a host machine with a fully-fledged OS.
+
+When you launch a program, your shell or GUI invokes a program loader. The loader is responsible for copying the application image from the hard drive into memory and configuring the environment that the program will run in. On Linux or OS X, the loader is a function in the exec() family, typically execve() or execvp(). For Windows, the loader is the LdrInitializeThunkfunction in ntdll.dll.
+
+Loaders will often perform the following actions:
+
+    Check permissions
+    Allocate space for the program’s stack
+    Allocate space for the program’s heap
+    Initialize registers (e.g., stack pointer)
+    Push argc, argv, and envp onto the program stack
+    Map virtual address spaces
+    Dynamic linking
+    Relocations
+    Call pre-initialization functions
+
+Once the loader has configured the program environment, it calls the program’s _start function.
+
+
+
+
+
+
+Exploring On Your Own
+
+In the coming, we will review a selection of startup procedures which differ greatly in terms of process and style.
+
+We won’t be reviewing Linux program startup, because there are already high-quality articles on that topic. For detailed descriptions about how Linux programs start, we recommend these articles:
+
+    How Programs Get Run
+    How Programs Get Run: ELF Binaries
+    Linux x86 Program Start Up or – How the heck do we get to main()?
+
+The startup code that your system runs is supplied by your libc implementation and system libraries, and the implementations will also vary depending on the target architecture. Don’t be surprised if you find a different startup process than those described in this series and in other articles around the web.
+
+You can explore your own program’s startup behavior using objdump or a debugger (I.e. gdb, lldb). You can use debugging tools to tackle the problem from a variety of directions:
+
+    Set a breakpoint at main() and run a backtrace to see the function call stack
+    Set a breakpoint at _start() (or whatever entry point your backtrace shows) and step through the execution
+    Dump the assembly output for the program using objdump
+
