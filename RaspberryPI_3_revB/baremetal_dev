@@ -5,7 +5,17 @@ compiling, linking, running a Simple cprogram
 aarch64-elf-gcc main.c -o main.elf
 ctr0.o which is libc object file is linked by the default linker script of gcc
 aarch64-elf/libc/usr/lib/crt0.o (libc is part of toolchain)
-crt0.o (C Run-Time zero) --> references the symbols `_start',`initialise_monitor_handles',`_exit' which are external.
+crt0.o (C Run-Time zero) --> references the symbols `_start',`initialise_monitor_handles',`_exit' which are external
+
+__start:
+-----------
+ for most C and C++ programs, the true entry point is not main, it’s the _start function.
+ The use of _start is merely a general convention. The entry function can vary depending on the system, compiler, and standard libraries.
+ The linker controls the program’s entry point. 
+ The default entry point can be overridden by clang and GCC linkers using the -e flag, although this is rarely done for most programs..
+ _start function. This function initializes the program runtime and invokes the program’s main function.
+ The implementation of the _start function is usually supplied by libc.
+ 
 arm-gcc toolchain’s crt0 initialization function calls initialise_monitor_handles : initialises semihosting feature of ARM cortex MCU.
 
 
