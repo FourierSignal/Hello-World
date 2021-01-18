@@ -7,6 +7,10 @@ ctr0.o which is libc object file is linked by the default linker script of gcc
 aarch64-elf/libc/usr/lib/crt0.o (libc is part of toolchain)
 crt0.o (C Run-Time zero) --> references the symbols `_start',`initialise_monitor_handles',`_exit' which are external
 
+
+
+
+
 __start:
 -----------
  for most C and C++ programs, the true entry point is not main, it’s the _start function.
@@ -18,11 +22,18 @@ __start:
  
 arm-gcc toolchain’s crt0 initialization function calls initialise_monitor_handles : initialises semihosting feature of ARM cortex MCU.
 
+export PATH=$PATH:/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin
+aarch64-elf-gcc  -march=armv8-a+crc -mcpu=cortex-a53  -specs=rdimon.specs -lc -lrdimon main.c -o main.elf
 
 
 
 export PATH=$PATH:/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin
 aarch64-elf-gcc  -O2 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -march=armv8-a+crc -mcpu=cortex-a53 main.c -o main.elf
+
+aarch64-elf-gcc  -O2 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -march=armv8-a+crc -mcpu=cortex-a53  -specs=rdimon.specs -lc -lrdimon main.c -o main.elf
+"-specs=rdimon.specs -lc -lrdimon" instead of "-specs=nano.specs -lc -lnosys -lc"
+
+aarch64-elf-gcc  -march=armv8-a+crc -mcpu=cortex-a53  -specs=rdimon.specs -lc -lrdimon main.c -o main.elf
 
 There are some fundamental things that must happen for C code to run. 
 For example, some variables need to be initialised to certain values, and some variables need to be initialised to 0.
@@ -83,4 +94,11 @@ int main(void) {
 If you are using the toolchain’s crt0 initialization function then initialise_monitor_handles has already been called for you.
 At runtime enable semihosting in OpenOCD with arm semihosting enable before initialise_monitor_handles is called. Failure to do this will result in a HardFault due to an unexpected debug event. Also be aware that semihosting is disabled on core reset. This effectively means that an image compiled with semihosting enabled will be unable to run in the absence of a debugger (unless you make the call to initialise_monitor_handles contingent on a runtime flag).
 
-You should now see your printf messages show up in the OpenOCD console. You can
+You should now see your printf messages show up in the OpenOCD console. 
+
+
+"-specs=rdimon.specs -lc -lrdimon" instead of "-specs=nano.specs -lc -lnosys -lc"
+
+
+
+
