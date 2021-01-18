@@ -22,6 +22,19 @@ __start:
  
 arm-gcc toolchain’s crt0 initialization function calls initialise_monitor_handles : initialises semihosting feature of ARM cortex MCU.
 
+
+
+__exit
+---------
+In the C library, which is not intended to be used with an operating system (hence arm-NONE-eabi-*), _exit is marked as being noreturn. 
+We must make sure it doesn't return otherwise we will get a warning about it.
+The prototype for _exit always includes an exit code int too. Yes, that's a bit oxymoronic!
+
+
+
+
+
+
 export PATH=$PATH:/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin
 aarch64-elf-gcc  -march=armv8-a+crc -mcpu=cortex-a53  -specs=rdimon.specs -lc -lrdimon main.c -o main.elf
 
