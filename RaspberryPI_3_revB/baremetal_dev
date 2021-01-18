@@ -1,0 +1,76 @@
+
+Summary: 
+
+compiling, linking, running a Simple cprogram
+aarch64-elf-gcc main.c -o main.elf
+ctr0.o which is libc object file is linked by the default linker script of gcc
+aarch64-elf/libc/usr/lib/crt0.o (libc is part of toolchain)
+crt0.o (C Run-Time zero) --> references the symbols `_start',`initialise_monitor_handles',`_exit' which are external.
+arm-gcc toolchain’s crt0 initialization function calls initialise_monitor_handles : initialises semihosting feature of ARM cortex MCU.
+
+
+
+
+export PATH=$PATH:/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin
+aarch64-elf-gcc  -O2 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -march=armv8-a+crc -mcpu=cortex-a53 main.c -o main.elf
+
+There are some fundamental things that must happen for C code to run. 
+For example, some variables need to be initialised to certain values, and some variables need to be initialised to 0.
+This is all taken care of by an object file which is usually implicitly linked in by the linker because the linker script will include a reference to it. 
+The object file is called crt0.o (C Run-Time zero)
+
+This code uses symbols that the linker can resolve to clear the start of the area where initialised variables starts and ends in order to zero this memory section.
+It generally sets up a stack pointer, and it always includes a call to _main. 
+Here's an important note: symbols present in C code get prepended with an underscore in the generation of the assembler version of the code. 
+So where the start of a C program is the main symbol, in assembler we need to refer to it as it's assembler version which is _main.
+
+
+
+ [jaguar@jaguar-macbookpro114 simple_main]$ aarch64-elf-gcc main.c
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin/../aarch64-elf/libc/usr/lib/crt0.o: In function `_start':
+/home/tcwg-buildslave/workspace/tcwg-make-release_1/snapshots/newlib.git~linaro-local~linaro-newlib-2_5_0/libgloss/aarch64/crt0.S:148: undefined reference to `initialise_monitor_handles'
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin/../aarch64-elf/libc/usr/lib/libc.a(lib_a-exit.o): In function `exit':
+/home/tcwg-buildslave/workspace/tcwg-make-release_1/snapshots/newlib.git~linaro-local~linaro-newlib-2_5_0/newlib/libc/stdlib/exit.c:70: undefined reference to `_exit'
+collect2: error: ld returned 1 exit status
+[jaguar@jaguar-macbookpro114 simple_main]$ 
+
+
+
+gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/aarch64-elf/libc/usr/lib   ------> libc
+
+aarch64-elf-gcc: error: unrecognized command line option ‘-mfloat-abi=hard’
+There is no soft float ABI defined for Aarch64, so GCC does not provide the ARM-specific -mfloat-abi option.
+
+ aarch64-elf-gcc  -O2 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -march=armv8-a+crc -mcpu=cortex-a53 main.c -o main.elf
+  
+    
+aarch64-elf-gcc  -march=armv8-a+crc -mcpu=cortex-a53 main.c -o main.elf
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin/../aarch64-elf/libc/usr/lib/crt0.o: In function `_start':
+/home/tcwg-buildslave/workspace/tcwg-make-release_1/snapshots/newlib.git~linaro-local~linaro-newlib-2_5_0/libgloss/aarch64/crt0.S:148: undefined reference to `initialise_monitor_handles'
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/Linaro/baremetal_toolchain/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin/../aarch64-elf/libc/usr/lib/libc.a(lib_a-exit.o): In function `exit':
+/home/tcwg-buildslave/workspace/tcwg-make-release_1/snapshots/newlib.git~linaro-local~linaro-newlib-2_5_0/newlib/libc/stdlib/exit.c:70: undefined reference to `_exit'
+collect2: error: ld returned 1 exit status
+Semihosting on ARM with GCC and OpenOCD
+One of the many nice features of the ARM Cortex microcontrollers is the ability to use the JTAG debug interface as a sink for printf messages. 
+This capability is known as semihosting. 
+It’s actually quite straightforward to configure with open source tooling (the newlib C standard library and OpenOCD JTAG implementation).
+
+You’ll need to add the following to LDFLAGS,
+
+LDFLAGS += --specs=rdimon.specs -lc -lrdimon
+Note that librdimon takes the place of libnosys.
+Ensure that initialise_monitor_handles() is called in main before calling printf,
+
+extern void initialise_monitor_handles(void);
+
+int main(void) {
+    initialise_monitor_handles();
+
+    printf("hello world!\n");
+    // do things
+}
+
+If you are using the toolchain’s crt0 initialization function then initialise_monitor_handles has already been called for you.
+At runtime enable semihosting in OpenOCD with arm semihosting enable before initialise_monitor_handles is called. Failure to do this will result in a HardFault due to an unexpected debug event. Also be aware that semihosting is disabled on core reset. This effectively means that an image compiled with semihosting enabled will be unable to run in the absence of a debugger (unless you make the call to initialise_monitor_handles contingent on a runtime flag).
+
+You should now see your printf messages show up in the OpenOCD console. You can
