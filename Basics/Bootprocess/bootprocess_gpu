@@ -344,6 +344,11 @@ git clone https://github.com/rhboot/grub2.git
 ./autogen.sh
 ./configure --disable-nls --prefix=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_usr --sbindir=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_sbin --sysconfdir=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_etc
 make -j8
+make install
+make clean
+make distclean
+
+
 
 
 boot.img --> MBR, 
@@ -415,6 +420,69 @@ while trying to  boot an existing Grub 2 based ISO from USB ,there is a chance t
 may have some incompatibility. Especially, you may run into the obnoxious error: symbol 'grub_isprint' not found.
 What this basically means is that there is a mismatch between your Grub 2 kernel version and Grub 2 module. 
 To fix that you will need to use kernel and modules from the same source. 
+
+
+
+lsblk -f
+NAME   FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINT
+sda                                                                           
+├─sda1 vfat   FAT32 EFI   67E3-17ED                                           
+└─sda2 apfs               d5378c1f-b1ee-4b67-8177-a5dcfb197220                
+
+sdc                                                         
+
+--------------------------
+sudo dd if=/dev/sdc of=/dev/sdc bs=(1024*1024*1024) count=15
+
+sudo mkfs -t vfat /dev/sdc
+
+sudo parted -l
+
+Model: SanDisk Ultra (scsi)
+Disk /dev/sdc: 15.4GB
+Sector size (logical/physical): 512B/512B
+Partition Table: loop
+Disk Flags: 
+
+Number  Start  End     Size    File system  Flags
+ 1      0.00B  15.4GB  15.4GB  fat32
+
+what is loop partition table ?
+parted shows loop as the "partition table" for disks that actually do not have a partition table (whole disk filesystem).
+
+what is loop device?
+
+Create A File And Loop It As A Filesystem 
+-------------------------------------------
+
+1)create a file system in a file within the current file system:
+------------------------------------------------------------
+dd if=/dev/zero of=file.img bs=1k count=10000  -->  creating a file of a given size
+losetup /dev/loop0 file.img  ---> merge a loop device with the file (making loop device a block device instead of just a regular file within the file system)
+mke2fs -c /dev/loop0 10000   --->  create a file system on the device with mke2fs
+
+Associating file systems to storage devices in Linux is called mounting.
+The mount command is used to attach a file system to a file system hierarchy. 
+
+mkdir /mnt/point1                    --> create mount point
+mount -t ext2 /dev/loop0 /mnt/point1 --> The file.img file, symbolized by the loop device (/dev/loop0), is now mounted to the mount point /mnt/point1 using the mount command
+ls /mnt/point1   --> this mount point has a  new file system : check by ls command
+
+2) Creating a new loop file system within a loop file system:
+---------------------------------------------------------------
+dd if=/dev/zero of=/mnt/point1/file.img bs=1k count=1000
+losetup /dev/loop1 /mnt/point1/file.img
+mke2fs -c /dev/loop1 1000
+mkdir /mnt/point2
+mount -t ext2 /dev/loop1 /mnt/point2
+ls /mnt/point2
+ls /mnt/point1
+
+
+
+
+
+
 
 
 Compiling Grub2 for BIOS and UEFI support on 32/64bit platforms
