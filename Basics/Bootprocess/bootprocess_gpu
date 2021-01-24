@@ -1,4 +1,52 @@
+internal power supply turns on, initializes and then takes a few moments to generate reliable power supply
+motherboard's chipset will generate a reset signal to the processor.
+After a Power Good signal is received, or after the reset button is released and there is confirmation of reliable power, the processor will be ready to start executing. 
+
+the processor to always look at the same place in the system, the BIOS ROM, for the small bit of startup code to begin the boot process.
+This is typically located at memory location FFFF0h, or right at the end of the system memory.
+Since there are only 16 bytes from there to the end of conventional memory area, this location contains just a "jump" instruction telling the processor where to go to find the real BIOS startup program.
+
+The BIOS performs the power-on self test (POST).
+If there are any fatal errors, the boot process stops. 
+If the POST is successful, the BIOS calls INT 19 (Interrupt 19) and then proceeds to look for devices attached to the motherboard.
+
+The BIOS code begins its search by looking for a video card, 
+more particularly, its looking for the video card's built in BIOS program, (normally found at location C000h in memory) 
+and if found, runs it. The system BIOS executes the video card BIOS, which in turn initializes the video card.
+Most modern video cards will display information on the screen about the video card, before you see the messages from the system BIOS itself.
+
+
+BIOS prom chip  on motherboard: has small code :system BIOS
 BIOS ROM finds out MBR of Harddisk
 boot code in MBR invokes GRUB.
 GRUB loads linux vmlinuz-x.x.x-x-name in /boot
-kernel need a filesystem containing drivers available to it at boot time:"initrd" (initial RAM disk) or "initramfs"
+kernel need a filesystem containing drivers available to it at boot time:"initrd" (initial RAM disk) or "initramfs" 
+/boot/initrd.img-x.x.x.x-name is initrd
+GRUB will load the kernel at a location in memory, and the initrd at a different location, 
+and jump to the kernel telling it where the initrd is, starting Linux.
+
+
+MBR(Master boot record)/Master boot sector/boot sector:
+--------------------------------------------------------
+is always located at cylinder 0, head 0, and sector 1, the first sector on the disk.
+
+The master boot record contains the following structures:
+
+Master Partition Table: 
+This small bit of code/table: describing partitions on the hard disk. 
+When the developers designed the size of this master partition table, they left just enough room for the description of four partitions.
+hence the four partition (physical partitions/primary partitions.) limit.
+Any additional partitions must be logical partitions that are linked to (or are part of) one of the primary partitions.
+One of these primary partitions is marked as active, indicating that it is the one that the computer should used to continue the boot process.
+
+Master Boot Code: 
+The master boot record is the small bit of computer code that the BIOS loads and executes to start the boot process. 
+This code transfers control to the boot program stored on the boot (active) partition to load the operating system.
+
+
+
+
+
+download a more recent kernel from kernel.org 
+create a new kernel binary image
+make or update an initrd with drivers that work with that kernel
