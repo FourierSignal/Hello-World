@@ -30,7 +30,25 @@ the BIOS will display a summary screen with your system's configuration.
 depending on the boot sequence selected,Once the BIOS identifies its target boot drive, 
 the it looks for boot information to start the operating system boot process. 
 If it is searching a hard disk, it looks for a master boot record at cylinder 0, head 0, sector 1, the first sector on the disk
-Next, the small program in the Master Boot Record will attempt to locate an active (bootable) partition in the hard drives partition table. If such a partition is found, the boot sector of that partition is also read into memory at location 0000:7C00 and then MBR program itself jumps to memory location 0000:7C00. Keep in mind that each operating system has its own boot sector format. The next step involves the small program in the boot sector locating the first part of the operating system's kernel loader program, or in some cases the kernel itself or perhaps a boot manager program, and read then that into memory. For you Windows NT and Windows 2000 fans, this kernel loader is referred to as NTLDR. You will find a description of the DOS boot process here.
+Next, the small program in the Master Boot Record will attempt to locate an active (bootable) partition in the hard drives partition table.
+If such a partition is found, the boot sector of that partition is also read into memory at location 0000:7C00 
+and then MBR program itself jumps to memory location 0000:7C00. 
+Keep in mind that each operating system has its own boot sector format. 
+
+the small program in the boot sector locating the first part of the operating system's kernel loader program
+or in some cases the kernel itself or perhaps a boot manager program, and read then that into memory. 
+For you Windows NT and Windows 2000 :this kernel loader is referred to as NTLDR.
+
+If no boot device of any type can be found, the system will display an error message and stop
+error message can range from "No boot device" to the very cryptic "NO ROM BASIC - SYSTEM HALTED".
+This will also happen if you have a bootable hard disk partition but forget to set it active.
+
+This entire process is referred to as a "cold boot" (since the machine was off, or cold, when it started). 
+A "warm boot" also known as a "soft boot" is the same thing except it occurs when the machine is rebooted using the Ctrl + Alt + Del keys.
+In this case the POST is skipped and the boot process continues to INT 19 .
+On most systems, Ctrl + Alt + Del causes a soft-boot.
+
+
 
 
 
