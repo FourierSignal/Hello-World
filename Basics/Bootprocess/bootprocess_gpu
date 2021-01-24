@@ -332,3 +332,98 @@ If any of the Windows 95/98/ME versions were being started, the above would only
 download a more recent kernel from kernel.org 
 create a new kernel binary image
 make or update an initrd with drivers that work with that kernel
+
+
+
+
+
+
+
+git clone https://github.com/rhboot/grub2.git 
+./bootstrap
+./autogen.sh
+./configure --disable-nls --prefix=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_usr --sbindir=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_sbin --sysconfdir=/home/jaguar/Downloads/Install_grub/grub_gitsrc2/install_dir/my_etc
+make -j8
+
+
+boot.img --> MBR, 
+bunch of sectors we need to write right after that. should come from a core.img 
+
+The reason we don't have a core.img yet is because it is generated dynamically, 
+and we need to tell Grub exactly what modules we want in there,
+as well as the disk location we want the kernel to look for additional modules and config files. 
+To do just that, we need to use the Grub utility grub-mkimage.
+
+telling grub that it should look at the USB generically and in isolation, and not to consider current OS or disk setup):
+to tell Grub to use BIOS/MBR mode (not UEFI/GPT) 
+and that we'll have one MBR partition on our USBFlashDrive containing the boot data that's not included in boot.img/core.img 
+and that it may need to proceed.
+And with BIOS setting our bootable UFD as the first disk (whatever gets booted is usually the first disk BIOS will list), 
+we should tell Grub that our disk target is hd0.
+Furthermore, the first MBR partition on this drive will be identified as msdos1 
+(Grub calls MBR-like partitions msdos#, and GPT partitions gpt#, with the index starting at 1, rather than 0 as is the case for disks).
+
+Thus, if we want to tell Grub that it needs to look for the first MBR partition on our bootable USBFlashDrive device, 
+we must specify (hd0,msdos1) as the root for our target.
+basic modules we need, so that Grub has the ability to actually identify and read stuff on a partition that may be FAT, NTFS or exFAT. 
+you'll need at least biosdisk and part_msdos, and then a module for each type of filesystem you want to be able to access
+
+cd grub-core/
+../grub-mkimage -v -O i386-pc -d. -p\(hd0,msdos1\)/boot/grub biosdisk part_msdos fat ntfs exfat -o core.img
+
+Obviously, you could add more file systems,but the one thing you want to pay attention is the size of core.img. 
+That's because if you want to keep it safe and stay compatible with the largest choice of disk partitioning tools,
+core.img should be below 32KB - 512 bytes. 
+The reason is there still exists a bunch of partitioning utilities out there that default to creating their first partition on the second "track" of the disk.
+And for most modern disks, including flash drives, a track will be exactly 64 sectors.
+To avoid the possibility of overflowing core.img onto your partition data, you really don't want it to be larger than 32256 or 0x7E00 bytes.
+
+so now that we have core.img, it's probably a good idea to create a single partition on our UFD
+and format it to either FAT/FAT32, NTFS or exFAT.
+and flat-copy both the MBR, a.k.a. boot.img, and core.img onto those first sectors. 
+
+use a regular 512 byte sector size, for the MBR, you need to make sure that only the first 446 bytes of boot.img are copied, 
+so as not to overwrite the partition data that also resides in the MBR and that has already been filled.
+dd if=boot.img of=/dev/sdb bs=446 count=1
+dd if=core.img of=/dev/sdb bs=512 seek=1 # seek=1 skips the first block (MBR)
+nstead of using plain old dd, one could have used Grub's custom grub-bios-setup like this:
+../grub-bios-setup -d. -b ./boot.img -c ./core.img /dev/sdb
+
+Grub MUST have loaded the following modules (which you'll find in your grub-core/ directory and that need to be copied on the target into a /boot/grub/i386-pc/ folder):
+    boot.mod
+    bufio.mod
+    crypto.mod
+    extcmd.mod
+    gettext.mod
+    normal.mod
+    terminal.mod
+
+Finally, to confirm that everything works, you can add echo.mod to the list above, and create a /boot/grub/grub.cfg on your target with the following:
+
+insmod echo
+set timeout=5
+ 
+menuentry "test" {
+    echo "hello"
+}
+
+Try it, and you should find that your Grub 2 config is executing at long last, whether your target filesystem in FAT, NTFS or exFAT, 
+and you can now build custom bootable Grub 2 USBs on top of that.
+
+Some possible error:
+while trying to  boot an existing Grub 2 based ISO from USB ,there is a chance that the modules from the ISO and the kernel we use in core 
+may have some incompatibility. Especially, you may run into the obnoxious error: symbol 'grub_isprint' not found.
+What this basically means is that there is a mismatch between your Grub 2 kernel version and Grub 2 module. 
+To fix that you will need to use kernel and modules from the same source. 
+
+
+
+
+
+
+
+
+
+
+
+
