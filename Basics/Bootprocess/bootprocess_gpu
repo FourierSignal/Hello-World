@@ -1,0 +1,4 @@
+BIOS ROM finds out MBR of Harddisk
+boot code in MBR invokes GRUB.
+GRUB loads linux vmlinuz-x.x.x-x-name in /boot
+kernel need a filesystem containing drivers available to it at boot time:"initrd" (initial RAM disk) or "initramfs"
