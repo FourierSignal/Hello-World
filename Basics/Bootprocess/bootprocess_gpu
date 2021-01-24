@@ -417,7 +417,83 @@ What this basically means is that there is a mismatch between your Grub 2 kernel
 To fix that you will need to use kernel and modules from the same source. 
 
 
+Compiling Grub2 for BIOS and UEFI support on 32/64bit platforms
 
+In order to support BIOS or UEFI booting from both 32 and 64 bit platforms, Grub2 must be compiled for each architecture. To accomplish this, we will create separate containers for each build.
+
+1.) First create a separate working container for each platform,
+
+    mkdir EFI64 EFI32 BIOS
+
+2.) Next to configure and then build for Grub2 64bit UEFI,
+
+a. First change to the EFI64 directory,
+
+    cd EFI64
+
+b. Then to configure and make Grub2 for 64Bit UEFI,
+
+    ../configure --target=x86_64 --with-platform=efi && make
+
+3.) Now to configure and then make for Grub2 32 bit UEFI,
+
+a. Change to the EFI32 directory,
+
+    cd ../EFI32
+
+b. Then to configure and make Grub2 for 32bit UEFI,
+
+    ../configure --target=i386 --with-platform=efi && make
+
+4.) Finally to configure and build for Grub2 BIOS
+
+a. Change to the BIOS directory,
+
+    cd ../BIOS
+
+b. Then to configure and make for BIOS systems,
+
+    ../configure --target=i386 --with-platform=pc --disable-nls && make
+    
+  
+ Grub2 USB Flash Drive Installation
+
+This next section covers the Grub2 installation of all three architectures (64bit UEFI, 32bit UEFI, BIOS) to your USB flash drive.
+
+According to the Grub manual, removable installs require the --removable option (with the exception of i386-pc). When using this, you must also specify --boot-directory and --efi-directory. In addition we'll include the --force option to allow buggy BIOS systems to detect the USB as a Hard Disk.
+
+1.) To install Grub2 64 bit UEFI x86_64-efi,
+
+a. First change to the EFI64 container,
+
+    cd ../EFI64/grub-core
+
+b. Then install x86_64-efi,
+
+    grub-install -d $PWD --force --removable --no-floppy --target=x86_64-efi --boot-directory=/mnt/USB/boot --efi-directory=/mnt/USB
+
+2.) Then to install Grub2 32 bit UEFI i386-efi,
+
+a. First change to the EFI32 container,
+
+    cd ../../EFI32/grub-core
+
+b. Then install i386-efi,
+
+    grub-install -d $PWD --force --removable --no-floppy --target=i386-efi --boot-directory=/mnt/USB/boot --efi-directory=/mnt/USB
+
+3.) Finally to put Grub2 BIOS i386-pc,
+(replacing  x with your device).
+
+a. First change to the BIOS container,
+
+    cd ../../BIOS/grub-core
+
+b. Then install i386-pc,
+
+    grub-install -d $PWD --force --no-floppy --target=i386-pc --boot-directory=/mnt/USB/boot /dev/sdx
+    
+    
 
 
 
