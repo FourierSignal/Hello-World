@@ -451,6 +451,17 @@ what is loop partition table ?
 parted shows loop as the "partition table" for disks that actually do not have a partition table (whole disk filesystem).
 
 what is loop device?
+A Loopback Device is a mechanism used to interpret files as real devices. 
+The main advantage of this method is that all tools used on real disks can be used with a loopback device.
+
+A loopback device in Linux is a virtual device that can be used like any other media device. 
+The loopback filesystem associates a file on another filesystem as a complete device.
+This can then be formatted and mounted just like any of the other devices listed above.
+To do this the device called /dev/loop0 or /dev/loop1 etc is associated with the file and then this new virtual device is mounted.
+
+The loop device is a block device that maps its data blocks not to a physical device
+but to the blocks of a regular file in a filesystem or to anotherblock device.
+
 
 Create A File And Loop It As A Filesystem 
 -------------------------------------------
