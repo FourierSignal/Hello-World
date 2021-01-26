@@ -1,0 +1,4 @@
+
+
+1. giving targetname as dependency.
+   you can give target name as dependency but if it is file not task.
