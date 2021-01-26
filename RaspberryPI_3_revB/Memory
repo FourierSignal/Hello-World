@@ -1,3 +1,19 @@
+Raspberry Pi 3 modelB:
+------------------------
+
+1GB LPDDR2
+
+Total SDRAM in RaspberryPI3    1
+
+
+From memory map in BCM2835 data sheet : 
+SDRAM physical address map 0000 0000 to Total system's SDRAM : 
+Rpi3-B : 0000 0000 - 4000 0000 (1Gb)
+This  memory is split b/w GPU and Arm with split determined by config.txt
+ARM SDRAM :  0000 0000 to  split
+GPU SDRAM :  split to  Max-SDRAM  
+
+
 
 
 There is only one physical SDRAM which is shared between the VideoCore (VC aka GPU) and the ARM processor.
