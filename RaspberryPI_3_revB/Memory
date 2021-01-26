@@ -1,0 +1,35 @@
+
+
+There is only one physical SDRAM which is shared between the VideoCore (VC aka GPU) and the ARM processor.
+The ARM uses the lower part of it while the VC uses the upper part.
+The memory split between the two can be set using the gpu_mem option in the config.txt file. By default the upper 64 MByte are used by the VC.
+
+The fixup.dat file should always be on the boot partition of SD card.
+The property mailbox call "Get ARM memory" (0x10005) reports the full available ARM memory (lower part) then. 
+You should only use this reported memory range for your bare metal program. 
+It is ensured then, that the code loaded from start.elf is not overwritten.
+Without fixup.dat your program may also run successfully, but a lot of memory is wasted.
+
+
+
+Early in the BCM2835 document you see a memory map.  
+I am going to operate based on the middle map, this is how the ARM comes up. 
+The left side is the system which we dont have direct access to in thatform, the gpu probably, not the ARM. 
+The ARM comes up with a memory space that is basically 0x40000000 bytes in size as it mentions in the middle chart.
+The bottom of this picture shows total system sdram (memory) and somewhere between zero and the top of ram is a
+split between sdram for the ARM on the bottom and a chunk of that for the VC SDRAM, basically memory for the gpu and memory shared
+between the ARM and GPU to allow the ARM to ask the GPU to draw stuff on the video screen. 
+
+256MBytes is 0x10000000, and 512MBytes is 0x20000000.  
+Some models of raspberry pi have 256MB, newer models have 512MB total ram which is split between the GPU and the ARM.
+Assume
+the ARM gets at least half of this.  Peripherals (uart, gpio, etc)
+are mapped into arm address space at 0x20000000.  When you see
+0x7Exxxxxx in the manual replace that with 0x20xxxxxx as your ARM
+physical address.  Experimentally I have seen the memory repeats every
+0x40000000, read 0x40008000 and you see the data from 0x8000.  From the
+Broadcom doc this looks to be giving us access to the memory with
+different caching schemes (cached, uncached, etc) depending on which
+upper address bits you use.  Most likely to allow more room for RAM
+the Raspberry Pi 2 uses a peripheral base address of 0x3Fxxxxxx instead
+of the 0x20xxxxxx.
