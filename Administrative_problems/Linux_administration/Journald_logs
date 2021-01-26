@@ -1,0 +1,56 @@
+journald, systemd’s logging service
+
+Journalctl is a utility for querying and displaying logs from journald
+
+journalctl  :  will show all journal entries,
+Journalctl splits the results into pages, similar to the less command in Linux. You can navigate using the arrow keys, the Page Up/Page Down keys, and the space bar. To quit navigation, press the Q key.
+
+
+
+Journald tracks each log to a specific system boot. To limit the logs shown to the current boot, use the -b switch.
+$ journalctl -b
+
+You can view messages from an earlier boot by passing in its offset from the current boot. 
+For example, the previous boot has an offset of -1, the boot before that is -2, and so on. 
+Here, we are retrieving messages from the last boot:
+$ journalctl -b -1
+
+To list the boots of the system, use the following command.
+$ journalctl --list-boots
+
+
+
+To see messages logged within a specific time window, we can use the --since and --until options. 
+The following command shows journal messages logged within the last hour.
+For greater accuracy, format the date and time as “YYYY-MM-DD HH:MM:SS”. You can also use any format that follows the systemd.time specification.
+
+$ journalctl --since "1 hour ago"
+$ journalctl --since "2 days ago"
+$ journalctl --since "2015-06-26 23:15:00" --until "2015-06-26 23:20:00"
+
+
+To see messages logged by any systemd unit, use the -u switch.
+The command below will show all messages logged by the Nginx web server. 
+$ journalctl -u nginx.service
+$ journalctl -u nginx.service -u mysql.service
+
+
+Like the tail command, the -n switch will print the specified number of most recent journal entries.
+In the command below, we are printing the last 50 messages logged within the last hour.
+$ journalctl -n 50 --since "1 hour ago"
+
+The -r parameter shows journal entries in reverse chronological order, so the latest messages are printed first. 
+The command below shows the last 10 messages from the sshd daemon, listed in reverse order.
+$ journalctl -u sshd.service -r -n 1
+
+
+The -o parameter enables us to format the output of journalctl query. -o (or --output if we are using the long form parameter name) can take a few values.
+    jsonwill show each journal entry in json format in one long line. This is useful when sending logs to a log centralization or analysis service, since it makes them easier to parse.
+    json-pretty will show each log entry in easy-to-read json format.
+    verbose will show very detailed information for each journal record with all fields listed.
+    cat shows messages in very short form, without any date/time or source server names.
+    shortis the default output format. It shows messages in syslog style.
+    short-monotonic is similar to short, but the time stamp second value is shown with precision. This can be useful when you are looking at error messages generated from more than one source, which apparently are throwing error messages at the same time and you want to go to the granular level.
+$ journalctl -u apache2.service -r -o json-pretty
+
+
