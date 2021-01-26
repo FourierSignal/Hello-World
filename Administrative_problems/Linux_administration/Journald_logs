@@ -53,4 +53,8 @@ The -o parameter enables us to format the output of journalctl query. -o (or --o
     short-monotonic is similar to short, but the time stamp second value is shown with precision. This can be useful when you are looking at error messages generated from more than one source, which apparently are throwing error messages at the same time and you want to go to the granular level.
 $ journalctl -u apache2.service -r -o json-pretty
 
+journalctl can print log messages to the console as they are added, much like the Linux tail command. 
+To do this, add the -f switch,
+$ journalctl -f
+
 
