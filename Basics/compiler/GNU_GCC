@@ -1,3 +1,4 @@
+######################################################################################################################################################################################
 GNU suite:
 
 °binutils:
@@ -15,3 +16,26 @@ Gcc also acts as aninterface to the overall process, calling cpp, the translator
 -------------
 Newlib was developed through Redhat and can be slightly more user friendly in cross-compilers designed to be used for embedded targets.
 You can also use the GNU Library (glibc), 
+
+
+######################################################################################################################################################################################
+what else needed?
+header files for the target operating system:
+-----------------------------------------------
+ which are required so that you have access to all the operating system-level functions and system calls that are required to build the application.
+ With Linux, you can get the headers fairly easily. 
+ For other operating systems, you can copy an existing set of headers.
+ ######################################################################################################################################################################################
+ 
+ Identify your target platform:
+ The format of a GNU target specification is CPU-PLATFORM-OS.
+ to know target platform run config.guess script of GNU suite in your target shell / examine target specs
+ ######################################################################################################################################################################################
+ prepare environment for build
+ 
+ $ mkdir crossbuild
+  mkdir build-binutils build-gcc build-glibc build-gdb
+  
+  Configuration and building
+ 
+ 
