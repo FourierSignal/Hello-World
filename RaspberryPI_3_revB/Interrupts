@@ -1,3 +1,39 @@
 With many embedded processors there's no coding or runtime setup of vector tables -
 instead the vector table is defined in the linker script 
 and the toolchain fills in those locations with the address or jump instruction necessary to execute the relevant handler.
+
+
+
+
+GPU loads the code from the SD card to RAM at address 0x00008000 and then starts executing the code.
+So how can we possibly code the vector table and get the correct jump instructions into the vector table?
+Ans:---
+Well, everything is in RAM and that's the key - this is read/write memory 
+and in supervisor mode we can write to any location we want. 
+So at runtime when our code is being executed we can overwrite the vector table at runtime.
+All we need is a vector table to write.
+
+one Implementation of Interrupt vector table:
+-----------------------------------------
+_statup: label which is where our linker knows we want to start execution. 
+The linker makes sure this is at the start of our binary:
+
+we need a table and copy that table to the start of RAM where the vector table resides
+_start:
+    ldr pc, =_reset_
+    ldr pc, =undefined_instruction_vector
+    ldr pc, =software_interrupt_vector
+    ldr pc, =prefetch_abort_vector
+    ldr pc, =_reset_
+    ldr pc, =_reset_
+    ldr pc, =interrupt_vector
+    ldr pc, =fast_interrupt_vector
+
+_reset_:
+    // Copy the vector table to the active table at 0x00000000
+    ldr     r0, =_start
+    ldr     r1, #0x0000
+    ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+    stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+    
+    The labels refer to C functions that have been implemented with the correct attributes for each exception type.
