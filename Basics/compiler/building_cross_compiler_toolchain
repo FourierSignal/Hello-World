@@ -215,6 +215,31 @@ make all
 make install
 **************************************************************
 
+installation:
+
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ pwd
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ ls
+aarch64-elf  bin  lib  share
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ 
+
+
+binutils---->
+
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ pwd
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ ls bin/
+aarch64-elf-addr2line  aarch64-elf-ld       aarch64-elf-readelf
+aarch64-elf-ar         aarch64-elf-ld.bfd   aarch64-elf-size
+aarch64-elf-as         aarch64-elf-nm       aarch64-elf-strings
+aarch64-elf-c++filt    aarch64-elf-objcopy  aarch64-elf-strip
+aarch64-elf-elfedit    aarch64-elf-objdump
+aarch64-elf-gprof      aarch64-elf-ranlib
+[jaguar@jaguar-macbookpro114 aarch64-elf]$ 
+
+
+
+###################################################################
 
 
 
