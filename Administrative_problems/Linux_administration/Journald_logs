@@ -63,3 +63,12 @@ journalctl --disk-usage
 
 sudo journalctl --rotate
 sudo journalctl --vacuum-time=1s
+
+--rotate asks the journal daemon to rotate journal files. 
+Journal file rotation has the effect that all currently active journal files are marked as archived and renamed, 
+so that they are never written to in future. 
+New (empty) journal files are then created in their place.
+Without this, active journal files are not removed by the --vacuum*= command.
+
+--vacuum-time=1s makes all journal files contain no data older than 1 second. 
+You may change the --vacuum-time period to suit your needs,
