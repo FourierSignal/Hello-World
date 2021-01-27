@@ -173,7 +173,7 @@ export INSTALL_DIR=$REL_PATH/gcc_from_GNU/install_toolchain
 
 export TARGET=aarch64-eabi
 export PREFIX=$INSTALL_DIR/$TARGET
-export PATH=$PATH:$PREFIX/bin
+
 
 tar xjfv binutils-2.36.tar.xz
 mkdir build-binutils
@@ -204,7 +204,7 @@ To compile binutils
 export HOME=/home/jaguar
 export REL_PATH=$HOME/Jaguar_workspace/Embedded/RSP3_revB/toolchains
 export INSTALL_DIR=$REL_PATH/gcc_from_GNU/install_toolchain
-export TARGET=aarch64-eabi
+export TARGET=aarch64-elf
 export PREFIX=$INSTALL_DIR/$TARGET
 
 tar xjfv binutils-2.36.tar.xz
@@ -261,13 +261,97 @@ git clone git://sourceware.org/git/newlib-cygwin.git
 or
 ftp://sourceware.org/pub/newlib/
 cd /home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/
-
 tar xzfv  newlib-4.1.0.tar.gz
 mkdir build-newlib
 cd build-newlib
-../newlib-4.1.0/configure --target=$TARGET --prefix=$PREFIX
+
+export PATH=$PATH:$PREFIX/bin
+
+Here you need to use bootstrap arm gcc just built -- thats because we are compiling newlib for target 
+
+CC=${TARGET}-gcc ../newlib-4.1.0/configure --host=$TARGET --prefix=$PREFIX
 make all
 make install
+
+
+
+
+[jaguar@jaguar-macbookpro114 build-newlib]$ CC=${TARGET}-gcc ../newlib-4.1.0/configure --host=$TARGET --prefix=$PREFIX
+configure: WARNING: If you wanted to set the --build type, don't use --host.
+    If a cross compiler is detected then cross compile mode will be used.
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... aarch64-unknown-elf
+checking target system type... aarch64-unknown-elf
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether ln works... yes
+checking whether ln -s works... yes
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for gawk... gawk
+checking for aarch64-elf-gcc... aarch64-elf-gcc
+checking for C compiler default output file name... 
+configure: error: in `/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/build-newlib':
+configure: error: C compiler cannot create executables
+See `config.log' for more details.
+[jaguar@jaguar-macbookpro114 build-newlib]$ 
+
+
+
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... aarch64-unknown-elf
+checking target system type... aarch64-unknown-elf
+
+
+
+
+
+
+
+
+
+configure:4077: checking for aarch64-elf-gcc
+configure:4104: result: aarch64-elf-gcc
+configure:4373: checking for C compiler version
+configure:4382: aarch64-elf-gcc --version >&5
+../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
+configure:4393: $? = 127
+configure:4382: aarch64-elf-gcc -v >&5
+../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
+configure:4393: $? = 127
+configure:4382: aarch64-elf-gcc -V >&5
+../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
+configure:4393: $? = 127
+configure:4382: aarch64-elf-gcc -qversion >&5
+../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
+configure:4393: $? = 127
+configure:4413: checking for C compiler default output file name
+configure:4435: aarch64-elf-gcc    conftest.c  >&5
+../newlib-4.1.0/configure: line 4437: aarch64-elf-gcc: command not found
+configure:4439: $? = 127
+configure:4476: result: 
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME ""
+| #define PACKAGE_TARNAME ""
+| #define PACKAGE_VERSION ""
+| #define PACKAGE_STRING ""
+| #define PACKAGE_BUGREPORT ""
+| #define PACKAGE_URL ""
+| /* end confdefs.h.  */
+| 
+| int
+| main ()
+| {
+| 
+|   ;
+|   return 0;
+| }
+configure:4482: error: in `/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/build-newlib':
+configure:4486: error: C compiler cannot create executables
+
+
+
+
+
 
 ################################################################################################################################
 
