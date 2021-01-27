@@ -37,3 +37,8 @@ _reset_:
     stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
     
     The labels refer to C functions that have been implemented with the correct attributes for each exception type.
+
+reset and undefined_instruction_vector, etc. are the labels used as the function addresses.
+So we have a table at the very start of our code.
+By having this table right at the start of our code,the reset vector code runs first and jumps to the reset label
+and starts the execution of our code, thus jumping the vector table we don't want it to try and execute. 
