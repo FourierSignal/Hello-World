@@ -1,0 +1,3 @@
+With many embedded processors there's no coding or runtime setup of vector tables -
+instead the vector table is defined in the linker script 
+and the toolchain fills in those locations with the address or jump instruction necessary to execute the relevant handler.
