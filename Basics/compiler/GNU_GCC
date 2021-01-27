@@ -35,7 +35,100 @@ header files for the target operating system:
  
  $ mkdir crossbuild
   mkdir build-binutils build-gcc build-glibc build-gdb
-  
+ 
+ ######################################################################################################################################################################################
   Configuration and building
  
+ export TARGET=i386pc
+ export PREFIX=/usr/local/crossgcc
+ export TARGET_PREFIX=$PREFIX/$TARGET
+ export PATH=$PATH:$PREFIX/bin
  
+ ######################################################################################################################################################################################
+ 
+ Obtain the operating system headers
+ 
+######################################################################################################################################################################################
+######################################################################################################################################################################################
+onfigure each package for an alternative targetplatform.
+
+$ cd build-binutils
+$ ../binutils-2.14/configure --target=$TARGET --prefix=$PREFIX --disable-nls -v
+$ make all
+
+ The--disable-nls: disables National Language Support (NLS).
+
+
+
+##################################################################################################################################
+
+
+Build a first-stage GCC:
+
+GCC is more complex than binutils only because the standard method for building GCC builds two compilers.
+GCC uses the GNU tools to build a primary(that is, a first-stage, orbootstrap) compiler that can build and parse the basiccode.
+GCC then uses the available library and header files for the target to build the full compiler. 
+
+Building the GCC first-stage compiler requires a few minor changes to the options for the configuration script 
+so that you can build thefirst-stage compiler without proper headers.
+(Strictly speaking, you don't havethe headers until you've built a library.) 
+The --with-newlib command doesn'tnecessarily mean you're using newlib:
+It just tells the configuration script not to  worry about headers.
+
+$ cd build-gcc
+$ ../gcc-3.3.2/configure --target=$TARGET --prefix=$PREFIX --without-headers --with-newlib -v
+$ make all-gcc
+$ make install-gcc
+
+######################################################################################################################################################################################
+
+You can use either newlib of glibc.
+In general, newlib is better on embeddedplatforms, because such systems are what newlib was designed to support.Glibc is better for Linux-style hosts.
+
+When building newlib, you need to build the library using the target compiler and tools.
+The library should, of course, be in the format and language of the target CPU and platform 
+for it to be used to build applications that rely on the library components:
+$ cd build-newlib$ CC=${TARGET}-gcc ../newlib-1.12.0/configure --host=$TARGET --prefix=$PREFIX
+$ make all
+$ make install
+When newlib has been built, you can create the final GCC based on this code tocreate the final compiler. 
+Alternatively, you can use glibc, which I cover in the next panel.
+
+
+######################################################################################################################################################################################
+
+Build glibc:
+
+The glibc package is straightforward to build;
+the primary difference from theprevious builds is that, as with newlib, you now start to use the bootstrap cross-compiler you just built. 
+You also need to tell the configure script wherethe header files for the operating system are kept.
+Finally -- and here's the big difference -- you define the host you're building on rather than the target. 
+That's because the GCC and binary utilities you've already built mean that this machine is your development host;
+the GCC you specify will generate then ecessary target code for you
+
+$ CC=${TARGET}-gcc ../glibc-2.3/configure --target=$TARGET --prefix=$PREFIX --with-headers=${TARGET_PREFIX}/include
+$ make all
+
+To install glibc, you still use make, but you explicitly set the installation root 
+and empty the prefix (otherwise, the two are concatenated, which is not what you want):
+
+$ make install_root=${TARGET_PREFIX} prefix="" install
+
+##################################################################################################################################
+
+Finally, you can build the final version of gcc, which now uses the above libraryand header information.
+
+You don't need to worry about the old gcc build, so you can remove that contentand start again in the build-gcc directory. 
+
+$ cd build-gcc
+$ rm -rf *
+$ ../gcc-3.3.2/configure --enable-languages=c --target=$TARGET --prefix=$PREFIX
+$ make all
+$ make install
+
+
+##################################################################################################################################
+
+
+
+##################################################################################################################################
