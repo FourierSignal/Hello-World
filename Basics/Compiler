@@ -1,0 +1,15 @@
+
+
+The main components of any compiler are:
+
+°Parser:The parser converts the raw language source code into assemblylanguage. 
+Because you're converting from one format to another (C to assembly), the parser needs to know the target assembly language.
+
+°Assembler:The assembler converts the assembly language code into thebytecode that the CPU executes.
+
+°Linker:The linker combines the individual object files that the assembler generates into an executable application. 
+Different operating system and CPU combinations generally use different encapsulation mechanisms and standards.
+The linker needs to know this target format to work.
+
+°Standard C library:The core C functions (for example, printf) are provided in a central C library. 
+
