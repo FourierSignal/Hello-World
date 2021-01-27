@@ -171,8 +171,8 @@ export REL_PATH=$HOME/Jaguar_workspace/Embedded/RSP3_revB/toolchains
 export INSTALL_DIR=$REL_PATH/gcc_from_GNU/install_toolchain
 
 
-export TARGET=aarch64-jaguar-none-eabi
-export PREFIX=$PROJ_DIR/$TARGET
+export TARGET=aarch64-eabi
+export PREFIX=$INSTALL_DIR/$TARGET
 export PATH=$PATH:$PREFIX/bin
 
 tar xjfv binutils-2.36.tar.xz
@@ -182,7 +182,38 @@ cd build-binutils
 make all
 make install
 
+failed with 
+*** BFD does not support target aarch64-unknown-eabi.
+*** Look in bfd/config.bfd for supported targets.
 
+The Binary File Descriptor library (BFD) is the GNU Project's main mechanism for
+the portable manipulation of object files in a variety of formats.
+As of 2003, it supports approximately 50 file formats for some 25 instruction set architectures
+
+
+BFD is a package which allows applications to use the same routines to operate on object files
+whatever the object file format. 
+A new object file format can be supported simply by creating a new BFD back end and adding it to the library. 
+
+export TARGET=aarch64-elf solves this problem because BFD does not support eabi
+
+
+
+********************************
+To compile binutils
+export HOME=/home/jaguar
+export REL_PATH=$HOME/Jaguar_workspace/Embedded/RSP3_revB/toolchains
+export INSTALL_DIR=$REL_PATH/gcc_from_GNU/install_toolchain
+export TARGET=aarch64-eabi
+export PREFIX=$INSTALL_DIR/$TARGET
+
+tar xjfv binutils-2.36.tar.xz
+mkdir build-binutils
+cd build-binutils
+../binutils-2.17/configure --target=$TARGET --prefix=$PREFIX
+make all
+make install
+**************************************************************
 
 
 
