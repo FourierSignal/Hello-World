@@ -1,0 +1,17 @@
+GNU suite:
+
+°binutils:
+-------------
+The binutils package includes basic binary utilities such as theassembler, the linker, and associated tools such as Size and Strip. 
+The binary utilities encompass both the core components for building anapplication and the tools that can be used to build 
+and manipulate the target execution format. 
+
+°gcc:The gcc is the main component of the compilation process.
+---------
+Gcc encompasses the C preprocessor (cpp) and the translator, which convertsthe C code into the target CPU assembly language. 
+Gcc also acts as aninterface to the overall process, calling cpp, the translator, the assembler,and the linker accordingly.
+
+°newlib/glibc:This library is the standard C library. 
+-------------
+Newlib was developed through Redhat and can be slightly more user friendly in cross-compilers designed to be used for embedded targets.
+You can also use the GNU Library (glibc), 
