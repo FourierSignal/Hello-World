@@ -243,7 +243,7 @@ aarch64-elf-gprof      aarch64-elf-ranlib
 
 
 Build bootstrap GCC
-
+-----------------------
 cd gcc
 mkdir build-gcc
 cd build-gcc
@@ -254,10 +254,21 @@ make install-gcc
 --with-gnu-as --with-gnu-ld prevents native assembler on certain architectures. (for others, these do not have any effects)
 
 ###################################################################################################################
-
+Build newlib
+--------------
 
 git clone git://sourceware.org/git/newlib-cygwin.git
 or
 ftp://sourceware.org/pub/newlib/
+
+tar xzfv newlib-1.14.0.tar.gz 
+mkdir build-newlib
+cd build-newlib
+../newlib-1.14.0/configure --target=$TARGET --prefix=$PREFIX
+make all
+make install
+
+################################################################################################################################
+
 
 
