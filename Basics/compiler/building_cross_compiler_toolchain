@@ -305,28 +305,50 @@ checking target system type... aarch64-unknown-elf
 
 
 
+cd /home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/
+tar xzfv  newlib-4.1.0.tar.gz
+mkdir build-newlib
+cd build-newlib
+
+export PATH=$PATH:$PREFIX/bin
+
+Here you need to use bootstrap arm gcc just built -- thats because we are compiling newlib for target 
+
+CC=${TARGET}-gcc ../newlib-4.1.0/configure --host=$TARGET --prefix=$PREFIX
+make all
+make install
 
 
 
-configure:4077: checking for aarch64-elf-gcc
-configure:4104: result: aarch64-elf-gcc
-configure:4373: checking for C compiler version
-configure:4382: aarch64-elf-gcc --version >&5
-../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
-configure:4393: $? = 127
-configure:4382: aarch64-elf-gcc -v >&5
-../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
-configure:4393: $? = 127
+
+Target: aarch64-elf
+Configured with: ../gcc/configure --target=aarch64-elf --prefix=/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf --without-headers --with-newlib --with-gnu-as --with-gnu-ld
+Thread model: single
+Supported LTO compression algorithms: zlib zstd
+gcc version 11.0.0 20210127 (experimental) (GCC) 
+configure:4393: $? = 0
 configure:4382: aarch64-elf-gcc -V >&5
-../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
-configure:4393: $? = 127
+aarch64-elf-gcc: error: unrecognized command-line option '-V'
+aarch64-elf-gcc: fatal error: no input files
+compilation terminated.
+configure:4393: $? = 1
 configure:4382: aarch64-elf-gcc -qversion >&5
-../newlib-4.1.0/configure: line 4384: aarch64-elf-gcc: command not found
-configure:4393: $? = 127
+aarch64-elf-gcc: error: unrecognized command-line option '-qversion'; did you mean '--version'?
+aarch64-elf-gcc: fatal error: no input files
+compilation terminated.
+configure:4393: $? = 1
 configure:4413: checking for C compiler default output file name
 configure:4435: aarch64-elf-gcc    conftest.c  >&5
-../newlib-4.1.0/configure: line 4437: aarch64-elf-gcc: command not found
-configure:4439: $? = 127
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find crti.o: No such file or directory
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find crtbegin.o: No such file or directory
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find crt0.o: No such file or directory
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find -lgcc
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find -lc
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find -lgcc
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find crtend.o: No such file or directory
+/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/install_toolchain/aarch64-elf/lib/gcc/aarch64-elf/11.0.0/../../../../aarch64-elf/bin/ld: cannot find crtn.o: No such file or directory
+collect2: error: ld returned 1 exit status
+configure:4439: $? = 1
 configure:4476: result: 
 configure: failed program was:
 | /* confdefs.h */
@@ -347,7 +369,7 @@ configure: failed program was:
 | }
 configure:4482: error: in `/home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/build-newlib':
 configure:4486: error: C compiler cannot create executables
-
+See `config.log' for more details.
 
 
 
