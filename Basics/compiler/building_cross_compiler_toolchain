@@ -260,15 +260,26 @@ Build newlib
 git clone git://sourceware.org/git/newlib-cygwin.git
 or
 ftp://sourceware.org/pub/newlib/
+cd /home/jaguar/Jaguar_workspace/Embedded/RSP3_revB/toolchains/gcc_from_GNU/newlib/
 
-tar xzfv newlib-1.14.0.tar.gz 
+tar xzfv  newlib-4.1.0.tar.gz
 mkdir build-newlib
 cd build-newlib
-../newlib-1.14.0/configure --target=$TARGET --prefix=$PREFIX
+../newlib-4.1.0/configure --target=$TARGET --prefix=$PREFIX
 make all
 make install
 
 ################################################################################################################################
+
+6. Build GCC again with newlib
+
+% cd build-gcc
+% ../gcc-4.1.1/configure --target=$TARGET --prefix=$PREFIX --with-newlib --with-gnu-as --with-gnu-ld --disable-shared --disable-libssp
+% make all
+% make install
+
+#############################################################################################################################
+
 
 
 
