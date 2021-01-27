@@ -57,4 +57,9 @@ journalctl can print log messages to the console as they are added, much like th
 To do this, add the -f switch,
 $ journalctl -f
 
+How to remove Journalctrl logs :
+-----------------------------------
+journalctl --disk-usage
 
+sudo journalctl --rotate
+sudo journalctl --vacuum-time=1s
