@@ -72,3 +72,6 @@ Without this, active journal files are not removed by the --vacuum*= command.
 
 --vacuum-time=1s makes all journal files contain no data older than 1 second. 
 You may change the --vacuum-time period to suit your needs,
+
+journalctl --vacuum-size=100M 
+to remove archived journal files until the disk space they use falls below 100M.
