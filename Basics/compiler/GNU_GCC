@@ -46,7 +46,26 @@ header files for the target operating system:
  
  ######################################################################################################################################################################################
  
- Obtain the operating system headers
+ Obtain the operating system headers:
+ 
+ For Linux targets, the best way to obtain the headers is to download the latestcopy of the appropriate kernel.
+ You'll need to do a basic configuration of the kernel so that the correct headersare generated for you to copy;
+ you don't, however, need to build or compile thekernel
+ 
+ $ cd linux-2.6.9
+ $ make ARCH=i386 CROSS_COMPILE=i386-linux- menuconfig
+ Note that the trailing hyphen above is not a typo.
+ 
+ menuconfig tool:
+  Becauseyou don't need to worry too much about the contents of the kernel itself, youcan just use the default options, save the configuration, and quit the tool.
+ 
+ $ mkdir -p $TARGET_PREFIX/include
+ $ cp -r include/linux 
+ $TARGET_PREFIX/include
+ $ cp -r include/asm-i386 $TARGET_PREFIX/include/asm
+ $ cp -r include/asm-generic $TARGET_PREFIX/include/
+ 
+ 
  
 ######################################################################################################################################################################################
 ######################################################################################################################################################################################
