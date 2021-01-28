@@ -148,6 +148,16 @@ arm-none-eabi toolchain generates obj code for micro-controllers or microprocess
 Unix cross compilers are loosely named using a convention of the form  
 arch[-vendor][-os]-abi.
 
+Different forms:
+<arch>-<vendor>-<os>-<libc/abi>
+<arch>-<os>-<libc/abi>
+
+arm-foo-none-eabi,
+bare-metal toolchain targeting the ARM architecture, fromvendorfoo
+▶arm-unknown-linux-gnueabihf, Linux toolchain targeting the ARM architecture,using the EABIhf ABI and the glibc C library, from an unknownvendor
+▶armeb-linux-uclibcgnueabi, Linux toolchain targeting the ARM big-endianarchitecture, using the EABI ABI and the uClibc C library
+▶mips-img-linux-gnu, Linux toolchain targeting the MIPS architecture, using theglibc C library, provided by Imagination Technologies
+
 The arch refers to the target architecture, which in our case is ARM. 
 
 The vendor nominally refers to thetoolchain supplier.
