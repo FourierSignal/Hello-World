@@ -1,0 +1,47 @@
+binutils
+Clibrary - glibc /newlib/uclib
+gcc
+
+
+
+
+glibc and gcc require binutils - so compile binutils first.
+
+
+gcc comes with a library libgcc which needs glibc
+inter dependency between gcc and glibc
+
+
+so we compile  primitive gcc.
+If primitive gcc compiles full we are lucky.
+if primitive gcc fails because of some dependency.we have to install incomplete compiler 
+
+with this incomplete gcc compiler , we can build some parts of C library
+with the incomplete Clibrary , we can try building full gcc compiler.
+if have to iterate between incomplete gcc compiler and incomplete c library
+at least untill full C-library is built
+
+the simplest way of installing incomplete gcc is to use make; make install with -k option
+so that make continues even with errors,skipping the failing parts(supporting libraries).
+
+
+glibc building
+--host should be different  as glibc should run on target
+--prefix should also be different as it should be placed in target specific sub directory within the installation directory
+additionally we need to tell where kerenel heads are available
+
+after installing glibc 
+ copy kernel headers into target specific directory
+ include/linux --- into  arm-linux/include/linux
+ include/asm-arm --- into arm-linux/include/asm
+ latest kerenels also want 
+ include/asm-generic --- into arm-linux/include/asm-generic
+ 
+ building Full-compiler
+ 
+
+
+
+
+
+
