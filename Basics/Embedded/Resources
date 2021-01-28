@@ -1,0 +1,91 @@
+
+The resources:
+
+    You can learn Arduino in 15 minutes.: This is a nice short video that talks about the basics of Arduino microcontroller systems. 
+    It helps to start breaking down the terminology and show some of the things involved. 
+    That makes it a good introduction to more involved topics
+    . You can also dive down the rabbit hole of endless videos on Arduino, microcontrollers, and electronics from here. 
+     This guy's channel alone offers lots of good information. 
+
+    Hacking Electronics: Learning Electronics with Arduino and Raspberry Pi, 2nd Edition, 2017, by Simon Monk.
+    This is a great beginner-level hands-on book that covers just enough of a wide range of hardware and software topics 
+    to allow you to get things up and running, starting from zero knowledge. 
+
+    Programming the Raspberry Pi: Getting Started with Python, 2nd Edition, 2016, by Simon Monk. This is a nice practical guide to Python on the Raspberry Pi, with much more detail on programming than his Hacking Electronics above. Meanwhile it has less beginner information on hardware. So the two books complement each other nicely. 
+
+    Programming Arduino: Getting Started with Sketches, 2nd Edition, 2016, by Simon Monk. Similar to his book on Python, but for C on Arduino, also a nice complement to his Hacking Electronics. 
+
+    Embedded Software Engineering 101: This is a fantastic blog series by Christopher Svec, Senior Principal Software Engineer at iRobot. What I really like about it is that he goes through things at very fine beginner steps, including a spectacular introduction to microcontroller assembly language. 
+
+    Modern Embedded Systems Programming: This is a breathtakingly spectacular series of short videos by Miro Samek that take you from the ground up programming embedded systems. They're fast paced, covering lots of material at once, including the C programming language, but he does a great job of breaking things down. He uses an inexpensive microcontroller evaluation kit (see hardware below) and the free size-limited evaluation version of the IAR development software suite. He also has a page of additional resource notes. What I really like about this is that in addition to covering a comprehensive set of information with many subtle details, he shows exactly how the C code translates to data and assembly instructions in microcontroller memory and registers. In contrast to Arduino, this is all the low-level details. You will know how things work under the hood after this course (currently 27 videos). Along the way you'll pick up all kinds of practical design, coding, and debugging skills that would normally take years to acquire. Did I mention this course is freakin' awesome? 
+
+    RoboGrok: This is an amazing complete online 2-semester college robotics video course by Angela Sodemann at Arizona State University, available to the public. Start with the preliminaries page. In addition to some of the basics of embedded systems, it covers kinematics and machine vision, doing hands-on motor and sensor control through a PSoC (Programmable System on a Chip) board. She sells a parts kit, listed below. This is a great example of applied embedded systems. 
+
+    C Programming Language, 2nd Edition, 1988, by Brian W. Kernighan and Dennis M. Ritchie: C is the primary language used for embedded systems software, though C++ is starting to become common. This is the seminal book on C, extremely well-written, that influenced a generation of programming style and other programming books. The resources listed above all include some basics of C, and this will complete the coverage. 
+
+    Embedded C Coding Standard, 2018 (BARR-C:2018), by Michael Barr: This will put you on the right track to writing clean, readable, maintainable code with fewer bugs. It's a free downloadable PDF, which you can also order as an inexpensive paperback. Coding standards are an important part of being a disciplined developer. When you see ugly, hard to read code, you'll appreciate this. 
+
+    Programming Embedded Systems: in C and C++, 1999, by Michael Barr: Even though this is now 20 years old, it's a great technical introduction and remains very relevant. Similar in many respects to Samek's video series, it takes a beginner through the process of familiarizing yourself with the processor and its peripherals, and introduces embedded operating system concepts. There is a later edition available, but this one is available used at reasonable prices.  
+
+    Programming Arduino Next Steps: Going Further with Sketches, 2nd Edition, 2019, by Simon Monk. This goes deeper into Arduino, covering more advanced programming and interfacing topics. It also includes information on the wide array of third-party non-Arduino boards that you can program with the IDE. This starts to get past the argument that Arduino is just for beginners doing little toy projects. 
+
+    Making Embedded Systems: Design Patterns for Great Software, 2011, by Elecia White. 
+    This is an excellent book on the software for small embedded systems that don't use operating systems (known as bare-metal, hard-loop, or superloop systems),
+    introducing a broad range of topics essential to all types of embedded systems.
+    And yes, the topic of design patterns is applicable to embedded systems in C. 
+    It's not just for non-embedded systems in object-oriented languages. The details of implementation are just different.  
+
+    Exploring Raspberry Pi: Interfacing to the Real World with Embedded Linux, 2016, by Derek Molloy. This goes into significantly more depth on the Raspberry Pi and embedded Linux. It's quite extensive, so is best approached by dividing it into beginner, intermediate, and advanced topics, based on your knowledge level at the moment. Spread out your reading accordingly. It has great information on hardware as well as software, including many details of the Linux environment. Two particularly fascinating areas are using other microcontrollers such as Arduino as slave real-time controllers, and creating Linux Kernel Modules (LKMs). 
+
+    Make: Electronics: Learning Through Discovery, 2nd Edition, 2015, by Charles Platt. 
+    This is hands down the best book on introductory electronics I've ever seen.
+    Platt focuses primarily on other components rather than microcontrollers, covering what all those other random parts on a board do.
+    See Review: Make: Electronics and Make:More Electronics for more information on this 
+    and the next book, and Learning About Electronics And Microcontrollers for additional resources. 
+
+    Make: More Electronics: Journey Deep Into the World of Logic Chips, Amplifiers, Sensors, and Randomicity, 2014, by Charles Platt. More components that appear in embedded systems. 
+
+    Debugging: The 9 Indispensable Rules for Finding Even the Most Elusive Software and Hardware Problems, 2006, David J. Agans. By now you've found many ways to get into trouble with code and hardware. This is a fantastic book for learning how to get out of trouble. It's a simple read that outlines a set of very practical rules that are universally applicable to many situations, then elaborates on them with real-life examples.  
+
+    Real-Time Concepts for Embedded Systems, 2003, by Qing Li and Caroline Yao. 
+    This is an introduction to the general concurrency control mechanisms in embedded operating systems (and larger-scale systems). 
+
+    Reusable Firmware Development: A Practical Approach to APIs, HALs, and Drivers, 2017, by Jacob Beningo. 
+    This covers how to write well-structured low-level device driver code in a way that you can use on multiple projects.
+    Embedded systems are notorious for having non-reusable low-level code, written in a way that's very specific to a specific hardware design,
+    which can often ripple up to higher levels. That means you have to rewrite everything every time for every project.
+    Good Hardware Abstraction Layers (HALs) and Application Programming Interfaces (APIs) provide a disciplined, coherent approach
+    that allows you to reuse code across projects, saving you enormous amounts of time in development and testing. 
+    This also helps you become a better designer, because it encourages you to think in a modular way, 
+    starting to think in terms of broader architecture in a strategic manner, 
+    not just how to deal with the immediate problem at hand in a tactical manner. 
+
+    Embedded Systems Architecture, 2018, by Daniele Lacamera. This is a very up-to-date book that uses the popular ARM Cortex-M microcontroller family as its reference platform. That makes it a great complement to Samek's video series, since the TI TIVA C that he uses is an ARM Cortex-M processor. This also goes into more detail on areas  such as the toolchain (including debugging with OpenOCD), bootloading, and memory management. It briefly uses the ST STM32F746 Discovery board as an example. 
+
+    Embedded Systems Fundamentals with Arm Cortex-M based Microcontrollers: A Practical Approach, 2017, by Alexander G. Dean. As the name indicates, this is another detailed book on ARM Cortex-M, intended as a college-level textbook. Among other good practical details, it includes a nice chapter on analog interfacing. It uses the inexpensive NXP FRDM-KL25Z development board for hands-on examples. 
+
+    TI Tiva ARM Programming For Embedded Systems: Programming ARM Cortex-M4 TM4C123G with C, 2016, by Muhammad Ali Mazidi, Shujen Chen, Sarmad Naimi, and Sepehr Naimi.
+    This is a detailed book that uses the exact same Tiva C board as Samek's video series.  
+
+    Designing Embedded Hardware: Create New Computers and Devices, 2nd Edition, 2005, by John Catsoulis.
+    This covers the hardware side of things, an excellent complement to White's book.
+    It provides the microcontroller information to complement Platt's books. 
+
+    Test Driven Development for Embedded C, 2011, by James Grenning. This is a spectacular book on designing and writing high quality code for embedded systems. See Review: Test Driven Development for Embedded C, James W. Grenning for full details. Just as White's book applies concepts from the OO world to embedded systems, Grenning applies Robert C. Martin's "Clean Code" concepts that are typically associated with OO to embedded systems. We'll all be better off for it. 
+
+    Modern C++ Programming with Test-Driven Development: Code Better, Sleep Better, 2013, by Jeff Langr. This is an equally spectacular book on software development. It reinforces and goes into additional detail on the topics covered in Grenning's book, so the two complement each other well. Even if you don't know C++, it's generally easy enough to follow and the material still applies. 
+
+    Taming Embedded C (part 1), 2016, by Joe Drzewiecki. This YouTube video is part of the Microchip MASTERs conference series. It covers some of the things that can be risky in embedded code and some methods for avoiding them. This gets into the characteristics that make embedded systems more challenging. I like to watch videos like this at 2X speed initially. Then I go back through sections at normal speed if I need to watch them more carefully. 
+
+    Interrupt and Task Scheduling - No RTOS Required, 2016, by Chris Tucker.
+    Another MASTERs video, this covers a critical set of topics for working in embedded systems. 
+
+Some Advanced Resources
+
+Ready to dig in further and deeper?
+
+    MC/OS the Real-Time Kernel, 1992, by Jean Labrosse. Labrosse decided to write his own real-time operating system when he had trouble getting support for a commercial one he was using. The rest is history. You can hear some of that history in this podcast interview with him, "How Hard Could It Be?". This not only explains how things work under the hood, it gives you the source code. 
+
+    MC/OS III, The Real-Time Kernel for the Texas Instruments Stellaris MCUs, 2010, by Jean Labrosse. This covers the 3rd generation of MC/OS, as well as details on the Stellaris microcontroller covered in Samek's video series. You can also download a free PDF version of this, as well as companion software. The MC/OS II and other books are also available there. The value in getting multiple versions is to see how the software evolved over time. 
+
+    Software Engineering for Embedded Systems: Methods, Practical Techniques, and Applications, 2nd edition, 2019, edited by Robert Oshana and Mark Kraeling. This is a broad survey of topics by various authors (Labrosse wrote the chapter on real-time operating systems). 
