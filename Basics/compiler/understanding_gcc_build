@@ -149,11 +149,9 @@ so we unpack kernel source some where and do some basic configuration
 make arch=ARM symlinks include/linux/version.h
 
 Define location of sysroot directory:
-
 $ export SYSROOTDIR=$INSTALLDIR/arc-snps-linux-uclibc/sysroot
 
 Install Linux headers:
-
 $ cd linux
 $ make ARCH=arc defconfig
 $ make ARCH=arc INSTALL_HDR_PATH=$SYSROOTDIR/usr headers_install
@@ -171,7 +169,12 @@ $ make ARCH=arc INSTALL_HDR_PATH=$SYSROOTDIR/usr headers_install
     --disable-werror \
     --enable-obsolete-rpc\
     --enable-add-ons
-    
+ 
+in case full glibc build fails,we need to install incomplete glibc library.
+
+some times it might help to touch arm-linux/include/gnu/stubs.h
+with in the installation directory,as in some platforms,files used during build include it.
+
 
 
 after installing glibc 
