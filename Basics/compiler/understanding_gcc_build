@@ -43,37 +43,136 @@ some of these object files might be fetched from external libraries.
 
 
 
-binutils   --> has assembler and linker
-Clibrary - glibc /newlib/uclib
-gcc
+binutils  ---> has assembler and linker
+we can integrate alternative assemblers to GNU assemnbler.
 
+Clibrary ---> glibc,libraries for other gcc supported languages 
+we can integrate newlib/uclib/...etc into toolchain if we need.
 
+gcc -->  libgcc:library for some primitive functionality for complex operations of destination platform processor.
 
 
 glibc and gcc require binutils - so compile binutils first.
+binutils are cross-tools which run on host system.hence compiled by host-gcc.
+so they are easily built with host-gcc
+
+../binutils/configure 
+    --target=arc-elf32|arceb-elf32 \
+    --with-cpu=arcem|archs|arc700|arc600 \
+    --disable-multilib|--enable-multilib \
+    --enable-fast-install=N/A \
+    --with-endian=little|big \
+    --disable-werror \
+    --enable-languages=c,c++ \
+    --with-headers=../../newlib/newlib/libc/include \
+    --prefix=${INSTALLDIR}
+    --enable-shared
+    --host=
+    --build=
+    
+    does it requires headers from newlib/libc ???
+    
+installing binutils in toolchain-installation-directory
+creates  a seperate directory for target-tools.
+everything other than this target-specific directory are host-build-tools.
+[jaguar@jaguar-macbookpro114 install_toolchain]$ ls 
+aarch64-jaguar-elf  bin   lib   share
+aarch64-jaguar-elf -- target specific tools.
+bin - cross tools to run on host
+lib - headers
 
 
-gcc comes with a library libgcc which needs glibc
+add toolchain_install directory's bin to PATH, as we will use the host's cross-tools
+to compile c-library and gcc.
+
+gcc comes with a library libgcc which needs glibc.
+glibc needs cross-gcc to be compiled for target.
 inter dependency between gcc and glibc
 
+compiling glibc and/or all other libraries needed by target. 
+-----------------
+here we have three options:
+1. copy pre-existing libraries in your host into toolchain directory.
+2. build libraries on target machine it self and then transfer them to your host system.
+3. build libraries needed by target on host machine itself with cross-tools you built.
 
-so we compile  primitive gcc.
-If primitive gcc compiles full we are lucky.
-if primitive gcc fails because of some dependency.we have to install incomplete compiler 
+building libraries for target on host machine:
+----------------------------------------------
+we need cross-gcc to build glibc.
+but building full-featured cross-gcc is not possible now, as it requires run-time libraries which are part of glibc.
+we can build a primitive-cross-gcc using parts of gcc-src which do not require glibc.
+
+we can start building gcc-src, but build of support libraries may fail.
+
+building primitive/simple-c compiler:
+---------------------------------------
+CFLAGS="-O2 Dinhibit_libc"
+ ../../gcc/configure \
+    --target=arc-elf32|arceb-elf32 \
+    --with-cpu=arcem|archs|arc700|arc600 \
+    --disable-multilib|--enable-multilib \
+    --enable-fast-install=N/A \
+    --with-endian=little|big \
+    --disable-werror \
+    --enable-languages=c,c++ \
+    --with-headers=../../newlib/newlib/libc/include \
+    --prefix=${INSTALLDIR}
+    --disable-shared
+    --host=
+    --build=
+
+configure command should limit all unnecessary components to limit possible compilation problems to minimum 
+some times it helps to set inhibit-libc flag to tell compiler that there is no libc yet.
+
+if this compiles full we are lucky.
+but if this fails because of some dependency.we have to install incomplete compiler 
+the simplest way of installing incomplete gcc is to use make -k; make install; -k option
+tells make to continue even with errors,skipping the failing parts(supporting libraries).
+(or) by touching the files that fail to build,this forces make to silently build and install corrupted 
+binaries-but this is ok as we will rebuild the entire gcc-src later.
 
 with this incomplete gcc compiler , we can build some parts of C library
 with the incomplete Clibrary , we can try building full gcc compiler.
 if have to iterate between incomplete gcc compiler and incomplete c library
 at least untill full C-library is built
 
-the simplest way of installing incomplete gcc is to use make; make install with -k option
-so that make continues even with errors,skipping the failing parts(supporting libraries).
 
 
-glibc building
+C-library(glibc) building
+-------------------
 --host should be different  as glibc should run on target
 --prefix should also be different as it should be placed in target specific sub directory within the installation directory
 additionally we need to tell where kerenel heads are available
+
+to build glibc, we need kernel headers - as some of library calls inturn call system calls.
+so we unpack kernel source some where and do some basic configuration
+make arch=ARM symlinks include/linux/version.h
+
+Define location of sysroot directory:
+
+$ export SYSROOTDIR=$INSTALLDIR/arc-snps-linux-uclibc/sysroot
+
+Install Linux headers:
+
+$ cd linux
+$ make ARCH=arc defconfig
+$ make ARCH=arc INSTALL_HDR_PATH=$SYSROOTDIR/usr headers_install
+
+
+../../glibc/configure \
+    --host=
+    --build=
+    --target=arc-snps-linux-gnu \
+    --build=x86_64-pc-linux-gnu \
+    --host=arc-snps-linux-gnu \
+    --with-headers=$SYSROOTDIR/usr/include \
+    or --with-headers=/local/linux/include
+    --prefix=/usr \
+    --disable-werror \
+    --enable-obsolete-rpc\
+    --enable-add-ons
+    
+
 
 after installing glibc 
  copy kernel headers into target specific directory
