@@ -60,9 +60,16 @@ The resources:
     starting to think in terms of broader architecture in a strategic manner, 
     not just how to deal with the immediate problem at hand in a tactical manner. 
 
-    Embedded Systems Architecture, 2018, by Daniele Lacamera. This is a very up-to-date book that uses the popular ARM Cortex-M microcontroller family as its reference platform. That makes it a great complement to Samek's video series, since the TI TIVA C that he uses is an ARM Cortex-M processor. This also goes into more detail on areas  such as the toolchain (including debugging with OpenOCD), bootloading, and memory management. It briefly uses the ST STM32F746 Discovery board as an example. 
+    Embedded Systems Architecture, 2018, by Daniele Lacamera. 
+    This is a very up-to-date book that uses the popular ARM Cortex-M microcontroller family as its reference platform.
+    That makes it a great complement to Samek's video series, since the TI TIVA C that he uses is an ARM Cortex-M processor.
+    This also goes into more detail on areas  such as the toolchain (including debugging with OpenOCD), bootloading, and memory management.
+    It briefly uses the ST STM32F746 Discovery board as an example. 
 
-    Embedded Systems Fundamentals with Arm Cortex-M based Microcontrollers: A Practical Approach, 2017, by Alexander G. Dean. As the name indicates, this is another detailed book on ARM Cortex-M, intended as a college-level textbook. Among other good practical details, it includes a nice chapter on analog interfacing. It uses the inexpensive NXP FRDM-KL25Z development board for hands-on examples. 
+    Embedded Systems Fundamentals with Arm Cortex-M based Microcontrollers: A Practical Approach, 2017, by Alexander G. Dean. 
+    As the name indicates, this is another detailed book on ARM Cortex-M, intended as a college-level textbook. 
+    Among other good practical details, it includes a nice chapter on analog interfacing.
+    It uses the inexpensive NXP FRDM-KL25Z development board for hands-on examples. 
 
     TI Tiva ARM Programming For Embedded Systems: Programming ARM Cortex-M4 TM4C123G with C, 2016, by Muhammad Ali Mazidi, Shujen Chen, Sarmad Naimi, and Sepehr Naimi.
     This is a detailed book that uses the exact same Tiva C board as Samek's video series.  
@@ -71,11 +78,22 @@ The resources:
     This covers the hardware side of things, an excellent complement to White's book.
     It provides the microcontroller information to complement Platt's books. 
 
-    Test Driven Development for Embedded C, 2011, by James Grenning. This is a spectacular book on designing and writing high quality code for embedded systems. See Review: Test Driven Development for Embedded C, James W. Grenning for full details. Just as White's book applies concepts from the OO world to embedded systems, Grenning applies Robert C. Martin's "Clean Code" concepts that are typically associated with OO to embedded systems. We'll all be better off for it. 
+    Test Driven Development for Embedded C, 2011, by James Grenning.
+    This is a spectacular book on designing and writing high quality code for embedded systems.
+    See Review: Test Driven Development for Embedded C, James W. Grenning for full details.
+    Just as White's book applies concepts from the OO world to embedded systems,
+    Grenning applies Robert C. Martin's "Clean Code" concepts that are typically associated with OO to embedded systems.
 
-    Modern C++ Programming with Test-Driven Development: Code Better, Sleep Better, 2013, by Jeff Langr. This is an equally spectacular book on software development. It reinforces and goes into additional detail on the topics covered in Grenning's book, so the two complement each other well. Even if you don't know C++, it's generally easy enough to follow and the material still applies. 
+    Modern C++ Programming with Test-Driven Development: Code Better, Sleep Better, 2013, by Jeff Langr. 
+    This is an equally spectacular book on software development. 
+    It reinforces and goes into additional detail on the topics covered in Grenning's book, so the two complement each other well.
+    Even if you don't know C++, it's generally easy enough to follow and the material still applies. 
 
-    Taming Embedded C (part 1), 2016, by Joe Drzewiecki. This YouTube video is part of the Microchip MASTERs conference series. It covers some of the things that can be risky in embedded code and some methods for avoiding them. This gets into the characteristics that make embedded systems more challenging. I like to watch videos like this at 2X speed initially. Then I go back through sections at normal speed if I need to watch them more carefully. 
+    Taming Embedded C (part 1), 2016, by Joe Drzewiecki. 
+    This YouTube video is part of the Microchip MASTERs conference series. 
+    It covers some of the things that can be risky in embedded code and some methods for avoiding them.
+    This gets into the characteristics that make embedded systems more challenging. 
+    I like to watch videos like this at 2X speed initially. Then I go back through sections at normal speed if I need to watch them more carefully. 
 
     Interrupt and Task Scheduling - No RTOS Required, 2016, by Chris Tucker.
     Another MASTERs video, this covers a critical set of topics for working in embedded systems. 
