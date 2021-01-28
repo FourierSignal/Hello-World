@@ -162,6 +162,7 @@ Overall build process▶The build process for a regular Linux cross-compilation 
 
 
 
+ C library▶Provides the implementation of the POSIX standard functions, plus several otherstandards and extensions▶Based on the Linux system calls▶Several implementations available:▶glibc▶uClibc-ng (formerly uClibc)▶musl▶bionic, for Android systems▶A few other more special-purpose: newlib (for bare-metal), dietlibc, klibc▶After compilation and installation, provides:▶The dynamic linker,ld.so▶The C library itselflibc.so, and its companion libraries:libm,librt,libpthread,libutil,libnsl,libresolv,libcrypt▶The C library headers:stdio.h,string.h, etc
  
 
 
