@@ -187,7 +187,19 @@ after installing glibc
  building Full-gcc compiler
   rebuild gcc compiler with all languages and runtime libs
   
-
+../../glibc/configure \
+    --target=arc-snps-linux-gnu \
+    --build=x86_64-pc-linux-gnu \
+    --host=arc-snps-linux-gnu \
+    --enable-languages=c,c++,f77
+    --prefix=/usr 
+    --with-system-zlib
+    --enable-shared
+    --with-gxx-include-dir=/local/cross/include/g++
+    
+  make ; make install
+  
+   
 
 
 
