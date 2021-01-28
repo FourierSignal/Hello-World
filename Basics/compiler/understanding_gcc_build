@@ -1,4 +1,49 @@
-binutils
+
+building cross tool chain: for embedded platforms / for nodes in a cluster of computers in a distributed computation
+
+----------------------
+
+building a cross toolchain is more involved than building a native toolchain.
+because of instrinsic dependencies between parts of toolchain, which must be resolved explicitly.
+
+References: compiler specific information: A.V.aho,R.sethi,JD.ullman compilers:principles,techniques and tools
+
+Parts of compiler:
+-------------------
+C preprocessor:
+remove comments,(include header files,conditional compiling)-based on preprocessing directives
+preprocessing requires header files of libraies used by application.
+on most systems preprocessor defines platform specific macros and
+it must be configured to include platform specific headers. Hence preprocessor is not really platform independent.
+In many compilers it is included as a part, for performance and to solve data flow issues 
+
+compiler: 
+
+responsible for converting c-code to assemby.
+some times compilers may include preprocessor and/or assembler as their integral part.
+compiler can be divided into : front-end , back-end
+front-end:  transforming C source into a proprietary  intermediate language.
+this intermediate language is independent of src and destination platform language , making frontend independent 
+of destination platform
+backend: intermediate language ---> assembler code
+as assembly language is platform dependent, backend is also platform dependent.
+Hence whole compiler is not platform independent.
+
+assembler:
+assembly code ---> relocatable binary object code.
+relocatable means there is no absolute address built into object code.
+object code files include 
+table of exported symbols,which are used by other object files.
+undefined symbols that require definition in other object files.
+
+Linker:
+It puts all binary object files into one file, replacing markers by absolute addresses
+and linking function calls/symbolsaccess to other object files where symbols are actually defined.
+some of these object files might be fetched from external libraries.
+
+
+
+binutils   --> has assembler and linker
 Clibrary - glibc /newlib/uclib
 gcc
 
@@ -37,8 +82,9 @@ after installing glibc
  latest kerenels also want 
  include/asm-generic --- into arm-linux/include/asm-generic
  
- building Full-compiler
- 
+ building Full-gcc compiler
+  rebuild gcc compiler with all languages and runtime libs
+  
 
 
 
