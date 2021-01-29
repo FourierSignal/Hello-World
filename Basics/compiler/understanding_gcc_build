@@ -126,7 +126,7 @@ some times it helps to set inhibit-libc flag to tell compiler that there is no l
 
 if this compiles full we are lucky.
 but if this fails because of some dependency.we have to install incomplete compiler 
-the simplest way of installing incomplete gcc is to use make -k; make install; -k option
+the simplest way of installing incomplete gcc is to use make -k; make install; -k / --keep-going option
 tells make to continue even with errors,skipping the failing parts(supporting libraries).
 (or) by touching the files that fail to build,this forces make to silently build and install corrupted 
 binaries-but this is ok as we will rebuild the entire gcc-src later.
