@@ -88,6 +88,10 @@ to compile c-library and gcc.
 gcc comes with a library libgcc which needs glibc.
 glibc needs cross-gcc to be compiled for target.
 inter dependency between gcc and glibc
+in other words - crosscompiled-gcc requires parts of glibc compiled for target.
+                 and to compile glibc for target, we need cross-gcc.
+
+
 
 compiling glibc and/or all other libraries needed by target. 
 -----------------
