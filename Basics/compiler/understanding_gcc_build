@@ -50,7 +50,7 @@ Clibrary ---> glibc,libraries for other gcc supported languages
 we can integrate newlib/uclib/...etc into toolchain if we need.
 
 gcc -->  libgcc:library for some primitive functionality for complex operations of destination platform processor.
-
+            gcc/libgcc/ -->
 
 glibc and gcc require binutils - so compile binutils first.
 binutils are cross-tools which run on host system.hence compiled by host-gcc.
@@ -136,6 +136,34 @@ with the incomplete Clibrary , we can try building full gcc compiler.
 if have to iterate between incomplete gcc compiler and incomplete c library
 at least untill full C-library is built
 
+some tips to iteratively build glibc and gcc:
+-----------
+In general:
+
+(1)
+prepare the gcc-source
+configure it (./configure …) - but enable as less as possible features
+compile it (make all-gcc ; make install all-gcc)
+
+(2)
+after that you have to create the libgcc but without the necessary glibc.
+This is done by just ignoring the dependency to the glibc:
+make -k all-target-libgcc
+make -i install-target-libgcc
+
+now you have a half working cross-compiler to use it to compile glibc.
+
+(3)
+Cross-compile the glibc.
+
+(4)
+configure the gcc again, this time with all features you need (like c++
+supports…)
+rebuild the gcc, but this time without the -k and -i flags
+
+---
+
+this process may differ if you don't use glibc but newlib or dietlibc
 
 
 C-library(glibc) building
