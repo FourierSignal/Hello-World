@@ -1,0 +1,58 @@
+
+compiler driver  - gcc
+
+compiler - cc
+
+compiler driver adds CRT objects as glue between the user supplied code, and the system code.
+
+CRT- C run time(but that's a vestigial historical artifact)
+base CRT objects apply to all executables and shared objects, regardless of the language they were written in.
+
+why use gcc rather than using cc,ld??
+It is recommend linking via the compiler rather than calling ld directly.
+1) As a user, you have no idea what crt objects to supply, 
+2) that list can change as compilers and OS evolve over time.
+
+In case of GPU: execution starts with linker
+linker maps and relocates the objects that make up the process,
+and then jumps to a symbol named _start to pass control to the program executable.
+crt1.o provides the _start symbol that the runtime linker jumps to in order to pass control to the executable,
+and is responsible for providing some ABI mandated symbols, language specific runtime setup, for calling main(),
+and ultimately, exit(). 
+crti.o and crtn.o provide prologue and epilogue 
+.init/.fini sections to encapsulate any user provided init/fini code.
+
+crt0.o is used on systems 
+> which didn't support constructors/destructors and are often linked staticly
+
+On new systems, like ELF tagets, C++ targets, etc.., the compiler normally 
+> uses crt1.o combined with crt[i/n].o and crt[begin/end].o to support the 
+> constructors
+
+
+glibc has several C run time libraries for auxillary programs :
+/usr/lib/--> crt0.o, crt1.o,crti.o,crtn.o,crtbegin.o,crtend.o
+
+crt1.o  has defined symbol __starts , and two undefined symbols _libc_start_main, _main
+_start  calls _libc_start_main to initialise libc and then calls main of user program
+
+crti.o,crtn.o -- (initialise and end): responsible for starting and ending this global object code before main
+crtbegin,crtend -(construct and destruct)these object files cooperate with glibc to realise construction and destruction of c++
+
+
+crt0.o
+.init section: initialisation code ---->depends on crti.o to achienv this 
+main
+.fini section: responsible for cleaning up after the main ---> depends on crtn.o to achieve this
+
+
+crt1.o
+.init section: initialisation code 
+              ---->depends on crti.o to achienv this and crtbegin.o to realise constructors
+main
+.fini section: responsible for cleaning up after the main 
+           ---> depends on crtn.o to achieve this and crtend.o to realise destructors
+           
+           
+
+
