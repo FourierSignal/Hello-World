@@ -1,4 +1,8 @@
 
+https://wiki.osdev.org/Creating_a_C_Library
+-------------------------------------------
+
+
 compiler driver  - gcc
 
 compiler - cc
@@ -7,6 +11,12 @@ compiler driver adds CRT objects as glue between the user supplied code, and the
 
 CRT- C run time(but that's a vestigial historical artifact)
 base CRT objects apply to all executables and shared objects, regardless of the language they were written in.
+
+CRT objects : perform some preparation before and after the call of the main () function
+Stack initialization of the process,
+IRQ’s and initializing the argc and argv parameters of main (),
+initializing global libc library variables...etc 
+doing cleanup after main () is terminated.
 
 why use gcc rather than using cc,ld??
 It is recommend linking via the compiler rather than calling ld directly.
@@ -53,6 +63,10 @@ main
 .fini section: responsible for cleaning up after the main 
            ---> depends on crtn.o to achieve this and crtend.o to realise destructors
            
-           
+ 
+ 
+ under standard linux platform , order of link is 
+ ld ctr1.0 ctri.o [user objects] [system Libraries] crtn.o
+ 
 
 
