@@ -32,6 +32,17 @@ and ultimately, exit().
 crti.o and crtn.o provide prologue and epilogue 
 .init/.fini sections to encapsulate any user provided init/fini code.
 
+
+
+The prologue of a function (__init) appears in the .init section of crti.o;
+the epilogue of a function (__fini) appears in the .fini section of crtn.o. 
+Normally these files are provided by the operating system or by the GNU C library, 
+but are provided by GCC for a few targets. 
+
+
+
+
+
 crt0.o is used on systems 
 > which didn't support constructors/destructors and are often linked staticly
 
