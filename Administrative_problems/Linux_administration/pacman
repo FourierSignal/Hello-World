@@ -1,0 +1,23 @@
+
+
+
+
+
+REMOVING PACAKAGES:
+--------------------------------
+
+pactree filezilla  :  check the dependencies of a package 
+
+pactree -d 1 filezilla :  check the dependencies of a package for leve1 i.e direct dependencies
+pactree -d 1 -u filezilla > filezilla.txt
+
+sudo pacman -R filezilla   : remove a package , leaving dependencies
+
+sudo pacman -Rcns filezilla  : remove a package with all dependencies
+
+
+Removing Packages that Don’t Depend on Other Packages
+
+sudo pacman -R filezilla   : remove a package , leaving dependencies
+pacman -Qdtq               : list all packages that are unnecessary
+sudo pacman -R $(pacman -Qdtq) : remove all unnecessary packages 
