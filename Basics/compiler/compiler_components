@@ -1,0 +1,14 @@
+
+
+
+    Debugger: Either GDB (800k lines) or LLDB (600k lines)
+    
+    Linker: GNU ld (160k lines), gold (140k lines) or lld (60k lines)
+    
+    Assembler/disassembler: GNU gas (850k lines) or the built in LLVM assembler
+    
+    Binary utilities: GNU binutils(90k lines) and/or LLVM (included in main LLVM source)
+    
+    Emulation library: libgcc (included in GCC source) or CompilerRT (340k lines)
+    
+    Standard C library: newlib (850k lines), glibc (1.2M lines), musl (82k lines) or uClibC-ng (251k lines)
