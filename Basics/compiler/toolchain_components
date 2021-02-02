@@ -14,3 +14,32 @@
     Standard C library: newlib (850k lines), glibc (1.2M lines), musl (82k lines) or uClibC-ng (251k lines)
 
 
+
+
+Runtime Libraries:
+
+Several runtime libraries are required by gcc  to build complete applications
+
+The compiler support library : (libgcc )
+-----------------------------------------------------
+and is provided by the compiler itself to supply low-level compiler support routines such as software floating-point emulation 
+and support for exception-handling. 
+
+This library is used by virtually all programs compiled with GCC.
+
+
+C runtime library ( glibc/uclibc/newlib)
+-------------------
+
+The C runtime library contains ISO C functions, like printf() and memcpy(). The three most popular C libraries used with the GNU toolchain are the GNU C Library (GLIBC), uClibc, and Newlib:
+
+    GLIBC is a full-featured, POSIX-compliant C library designed for use with the Linux kernel. In addition to those functions required by ISO C, it includes functions required by POSIX, functions provided in other UNIX C libraries, and GNU extensions.
+
+    uClibc is a smaller footprint library (also designed for use with the Linux® kernel) that contains a subset of the GLIBC functionality. You can use uClibc on either GNU/Linux or uClinux.
+
+    Newlib, generally used on bare-metal targets, has an even smaller footprint, but provides significantly reduced functionality.
+    
+
+
+
+
