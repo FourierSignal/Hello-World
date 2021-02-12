@@ -1,0 +1,18 @@
+Host ------------ JTAG adapter ---------- Target
+
+
+The connector pins are:
+
+    TDI (Test Data In)
+    TDO (Test Data Out)
+    TCK (Test Clock)
+    TMS (Test Mode Select)
+    TRST (Test Reset) optional.
+    
+    
+    
+
+The host communicates with the TAPs 
+by manipulating TMS and TDI in conjunction with TCK, and reading results through TDO (which is the only standard host-side input).
+
+TMS/TDI/TCK output transitions create the basic JTAG communication primitive on which higher layer protocols build: 
