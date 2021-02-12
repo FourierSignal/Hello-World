@@ -1,0 +1,11 @@
+
+
+JTAG functionality is exposed in GPIO pins as alternative functions.
+Therefore, in order to use it, these pins has to be configured accordingly in order to be able to access ARM JTAG Debugging capability.
+
+There are a few different ways to do it.
+the easiest one is to add enable_jtag_gpio=1 directive to config.txt and reboot you will have JTAG on ALT4 pins.
+
+we need to run a infinite loop program on Rpi3 board.
+It is the minimum possible program you can write, since we need to boot something 
+so that otherwise the board does not come to a state that we can connect with JTAG
