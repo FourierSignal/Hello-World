@@ -1,0 +1,24 @@
+
+General procedure:
+------------------------
+
+The command line consists of configuration files prefixed by -f, and commands prefixed by -c. In reality, a configuration file is just a series of commands; 
+eg:
+openocd -c "transport select jtag"  ==  openocd -f select_jtag.cfg where the file ‘select_jtag.cfg’ has the line:   transport select jtag
+
+
+sudo openocd -f rpi2.cfg \
+             -c "transport select swd" \
+             -c "adapter_khz 1000" \
+             -f target/stm32f1x.cfg
+
+
+
+
+
+
+cd ~/OpenOCD/OpenOCD_install/bin
+
+
+
+/openocd   -f ../share/openocd/scripts/interface/ftdi/ngxtech.cfg
