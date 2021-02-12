@@ -13,6 +13,12 @@ sudo openocd -f rpi2.cfg \
              -f target/stm32f1x.cfg
 
 
+OpenOCD has a wide variety of options, so generally needs more than one configuration file, to define:
+
+    1) Debug adaptor (in our case, ngx usb jtag)
+    2)Communication method (SWD or JTAG)
+    3)Target CPU. (Rpi3)
+
 
 
 
