@@ -1,0 +1,80 @@
+
+Unlike traditional ARM7 or ARM9, the debugging system of the Cortex-M3 processor is based on 
+the CoreSight debug architecture. Traditionally, ARM processors provide a Joint Test Action Group 
+(JTAG)  interface,  allowing  registers  to  be  accessed  and  memory  interface  to  be  controlled.  In  the 
+Cortex-M3, the control to the debug logic on the processor is carried out through a bus interface called 
+the Debug Access Port (DAP), which is similar to Advanced Peripheral Bus (APB) in Advanced Microcontroller Bus Architecture (AMBA). The DAP is controlled by another component that converts JTAG 
+or Serial-Wire (SW) communication protocols into the DAP bus interface protocol.
+
+
+The DP interface module (normally either Serial-Wire JTAG Debug Port [SWJ-DP] or Serial-Wire 
+Debug Port [SW-DP]) first converts the external signals into a generic 32-bit debug bus (a DAP bus in the 
+diagram). SWJ-DP supports both JTAG and SW, and SW-DP supports SW only. In the ARM CoreSight 
+product series, there is also a JTAG Debug Port, which only supports the JTAG protocol; chip manufacturers can choose to use one of these DP modules to suit their needs.
+
+The MCU vendor determines the debug feature configuration and
+therefore this can differ across different devices and families.
+
+LPC176x/5x devices support JTAG and Serial Wire Debug, Serial Wire Viewer, and
+include the Embedded Trace Macrocell
+
+
+
+The JTAG TAP controller contains device ID that can be used by debugging software to
+identify the general type of device. More detailed device information is available through
+ISP/IAP commands (see Section 32.7 and Section 32.8). 
+For the LPC176x/5x family, this JTAG TAP controller -device ID value is 0x4BA0 0477
+
+
+The SWJ-DP is a combined JTAG-DP and SW-DP that enables you to connect either a Serial Wire Debug (SWD) or JTAG probe to a target
+SWJ-DP enables one of the following modes to be selected:
+
+JTAG protocol
+Serial Wire Debug protocol
+Dormant.
+
+ A special sequence on the SWDIOTMS pin is used to switch between JTAG-DP and SW-DP. When the switching sequence has been transmitted to the SWJ-DP, it behaves as a dedicated JTAG-DP or SW-DP depending upon which sequence had been performed.
+
+
+
+
+
+$_CPUTAPID    $_CHIPNAME  $_CHIPSERIES  $_TARGETNAME"
+0x4ba00477    lpc17xx  lpc1700  lpc17xx.cpu
+
+
+# LPC17xx chips support both JTAG and SWD transports.
+
+
+
+jtag_ntrst_delay:
+How long (in milliseconds) OpenOCD should wait after deasserting nTRST (activelow JTAG TAP reset) before starting new JTAG operations.
+
+
+transport list [Command]
+displays the names of the transports supported by this version of OpenOCD
+
+
+transport select 
+
+set _CPUTAPID 0x4ba00477
+
+
+swj_newdap $_CHIPNAME cpu -irlen 4 -expected-id $_CPUTAPID
+dap create $_CHIPNAME.dap -chain-position $_CHIPNAME.cpu
+
+
+
+
+     lpc1700  lpc17xx.cpu
+
+swj_newdap   lpc17xx.cpu  -irlen 4  -expected-id  0x4ba00477
+dap create  lpc17xx.dap  -chain-position  lpc17xx.cpu
+
+
+
+
+
+#declaring a tap and naming as lpc1768.cpu
+
+jtag newtap  lpc1768.cpu -irlen 4 -expected-id 0x3ba00477
