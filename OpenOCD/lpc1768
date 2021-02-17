@@ -20,6 +20,8 @@ include the Embedded Trace Macrocell
 
 
 
+UM10360: LPC176x/5x User manual:
+------------------------------------------
 The JTAG TAP controller contains device ID that can be used by debugging software to
 identify the general type of device. More detailed device information is available through
 ISP/IAP commands (see Section 32.7 and Section 32.8). 
@@ -27,8 +29,8 @@ For the LPC176x/5x family, this JTAG TAP controller -device ID value is 0x4BA0 0
 
 
 The SWJ-DP is a combined JTAG-DP and SW-DP that enables you to connect either a Serial Wire Debug (SWD) or JTAG probe to a target
-SWJ-DP enables one of the following modes to be selected:
 
+SWJ-DP enables one of the following modes to be selected:
 JTAG protocol
 Serial Wire Debug protocol
 Dormant.
