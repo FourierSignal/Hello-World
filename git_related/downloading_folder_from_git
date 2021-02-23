@@ -1,0 +1,17 @@
+You can DIRECTLY DOWNLOAD or create DOWNLOAD LINK for any GitHub public directory or file from DownGit.
+
+https://downgit.github.io/#/home
+-----------------------------------
+
+
+(Or)
+
+Navigate to the folder you want to download. Let's download /test from master branch. 
+
+Modify the URL for subversion. Replace tree/master with trunk.
+https://github.com/lodash/lodash/tree/master/test ➜
+https://github.com/lodash/lodash/trunk/test
+
+svn checkout https://github.com/lodash/lodash/trunk/test
+
+https://stackoverflow.com/questions/7106012/download-a-single-folder-or-directory-from-a-github-repo
