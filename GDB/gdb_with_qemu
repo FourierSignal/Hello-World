@@ -1,0 +1,25 @@
+
+$ qemu -M raspi3 \
+ -serial telnet:127.0.0.1:1000,server,nowait \
+ -serial telnet:127.0.0.1:1001,server,nowait \
+ -S -kernel hello.elf
+
+
+
+select compat_monitor0 console
+
+
+QEMU 1.12.50 monitor - type 'help' for more information
+(qemu) gdbserver
+Waiting for gdb connection on device 'tcp::1234'
+(qemu)
+
+aarch64-elf-gdb hello.elf
+
+(gdb) target remote localhost:1234
+
+You can single step with   s
+you can step over with     n
+and you can run with       c
+
+
