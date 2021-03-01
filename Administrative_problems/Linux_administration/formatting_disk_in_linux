@@ -1,0 +1,23 @@
+Create a new partition (15.00 GiB, fat32) on ‘/dev/sdb’ 
+Job: Create new partition on device ‘/dev/sdb’ 
+Command: sfdisk --force --append /dev/sdb 
+
+Command: sfdisk --list --output Device,UUID /dev/sdb 
+Create new partition ‘/dev/sdb1’: Success
+
+Job: Create file system ‘fat32’ on partition ‘/dev/sdb1’ 
+Command: mkfs.fat -F32 -I -v /dev/sdb1 
+
+Command: sfdisk --part-type /dev/sdb 1 EBD0A0A2-B9E5-4433-87C0-68B6B72699C7 
+Create file system ‘fat32’ on partition ‘/dev/sdb1’: Success
+
+Job: Set the file system label on partition ‘/dev/sdb1’ to "" 
+Setting label for partition ‘/dev/sdb1’ to  
+
+Command: fatlabel /dev/sdb1 
+Set the file system label on partition ‘/dev/sdb1’ to "": Success
+
+Job: Check file system on partition ‘/dev/sdb1’ 
+Command: fsck.fat -a -w -v /dev/sdb1 
+Check file system on partition ‘/dev/sdb1’: Success
+Create a new partition (15.00 GiB, fat32) on ‘/dev/sdb’: Success
