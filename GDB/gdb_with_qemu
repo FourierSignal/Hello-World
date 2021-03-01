@@ -23,3 +23,19 @@ you can step over with     n
 and you can run with       c
 
 
+Example:
+-------------
+
+/home/jaguar/Documents/learning_baremetal/03_initialize_without_gcc_crt0_v6_newlib
+
+sudo qemu-system-aarch64  -M raspi3  -serial telnet:127.0.0.1:1000,server,nowait  -serial telnet:127.0.0.1:1001,server,nowait  -S -kernel build/obj/hello_world.elf 
+
+telnet localhost 1000
+
+telnet localhost 1001
+
+
+
+
+aarch64-elf-gdb build/obj/hello_world.elf
+(gdb) target remote localhost:1234
