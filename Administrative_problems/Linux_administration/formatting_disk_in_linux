@@ -1,9 +1,33 @@
+
+Delete partition ‘/dev/sdb1’ (15.00 GiB, fat32) 
+Job: Delete file system on ‘/dev/sdb1’ 
+Command: wipefs --all /dev/sdb1 
+Delete file system on ‘/dev/sdb1’: Success
+
+Job: Delete the partition ‘/dev/sdb1’ 
+Command: sfdisk --force --delete /dev/sdb 1 
+Delete the partition ‘/dev/sdb1’: Success
+Delete partition ‘/dev/sdb1’ (15.00 GiB, fat32): Success
+
+
+Create a new partition table (type: gpt) on ‘/dev/sdb’ 
+Job: Create new partition table on device ‘/dev/sdb’ 
+Command: sfdisk /dev/sdb 
+Create new partition table on device ‘/dev/sdb’: Success
+Create a new partition table (type: gpt) on ‘/dev/sdb’: Success
+
+
+
 Create a new partition (15.00 GiB, fat32) on ‘/dev/sdb’ 
 Job: Create new partition on device ‘/dev/sdb’ 
 Command: sfdisk --force --append /dev/sdb 
 
 Command: sfdisk --list --output Device,UUID /dev/sdb 
 Create new partition ‘/dev/sdb1’: Success
+
+Job: Set the attributes on partition ‘/dev/sdb1’ to "30003000300030" 
+Command: sfdisk --part-attrs /dev/sdb 1 GUID:52,GUID:53,GUID:63 
+Set the attributes on partition ‘/dev/sdb1’ to "30003000300030": Success
 
 Job: Create file system ‘fat32’ on partition ‘/dev/sdb1’ 
 Command: mkfs.fat -F32 -I -v /dev/sdb1 
@@ -21,3 +45,5 @@ Job: Check file system on partition ‘/dev/sdb1’
 Command: fsck.fat -a -w -v /dev/sdb1 
 Check file system on partition ‘/dev/sdb1’: Success
 Create a new partition (15.00 GiB, fat32) on ‘/dev/sdb’: Success
+
+
