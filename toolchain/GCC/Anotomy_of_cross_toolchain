@@ -1,0 +1,19 @@
+tools that allows to build source code into binary code for a  target platform different than the one where the build takes place
+▶Different CPU architecture
+▶Different ABI
+▶Different operating system
+▶Different C library
+
+A system definition describes a system: CPU architecture, operating system,vendor, ABI, C library
+
+autoconf system definitions:  represented as tuples
+Different forms:
+▶<arch>-<vendor>-<os>-<libc/abi>,full form
+▶<arch>-<os>-<libc/abi>
+
+▶<arch>, the CPU architecture: arm, mips, powerpc, i386, i686, etc.
+▶<vendor>, (mostly) free-form string, ignored byautoconf
+▶<os>, the operating system. Eithernoneorlinuxfor the purpose of this talk.
+▶<libc/abi>, combination of details on the C library and the ABI in use
+
+
