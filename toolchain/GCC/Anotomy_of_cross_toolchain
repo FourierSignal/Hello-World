@@ -1,3 +1,19 @@
+Difference between toolchain and SDK
+--------------------------------------
+
+
+▶Toolchain: just the compiler, binutils and C library
+▶SDK: a toolchain, plus a number (potentially large) of libraries built for the target architecture,
+      and additional native tools helpful when building software.
+     
+▶Build systems such as OpenEmbedded or Yocto can typically:
+                        ▶Use an existing toolchain as input, or build their own toolchain
+                        ▶In addition to producing a root filesystem,
+                          they can also produce a SDK to allow application developers to build applications/libraries for the target.
+                          
+                  
+
+
 How to get a cross tool chain
 ------------------------------
 ▶Pre-built
@@ -47,7 +63,26 @@ Different forms:
           ▶Supports Linux system calls
           ▶Can be used to build Linux userspace code, but also bare-metal code such asbootloaders or the kernel itself
           
-          
+ 
+ ▶ABI =Application Binary Interface
+            ▶From the point of a toolchain, the ABI defines:
+                        ▶How function calls are made (so-called calling convention)
+                        ▶How arguments are passed: in registers (which ones?), on the stack,
+                        how 64-bitsarguments are handled on 32 bits architectures
+                        ▶How the return value is passed
+                        ▶Size of basic data types
+                        ▶Alignment of members in structures
+                        ▶When there is an operating system, how system calls are made
+             ▶Object files from different ABIs cannot be linked together (especially important ifyou have pre-built libraries or executables!)
+             ▶For a given CPU architecture, there can potentially be an infinite number of ABIs:
+             ABIs are just specifications on how to use the CPU architecture
+             
+Architecture tuning:   
+   gcc configure-time options:  --with-arch,--with-cpu,--with-abi,--with-fpu
+       runtime  options: -march,-mcpu,-mabi,-mfpu
+   
+
+
  
  
  
