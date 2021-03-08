@@ -1,3 +1,19 @@
+How to get a cross tool chain
+------------------------------
+▶Pre-built
+        ▶From yourdistribution. Ubuntu and Debian have numerous cross-compilers readilyavailable.
+        ▶From variousorganization: Linaro provides ARM and AArch64 toolchains,
+                                   Mentorprovides a few free Sourcery CodeBench toolchains,
+                                   Imagination provides MIPStoolchains, etc.
+        
+▶Built it yourself
+        ▶Crosstool-NG, tool specialized in building cross-compilation toolchain. By far the most configurable/versatile.
+        ▶Embedded Linuxbuild systems generally all know how to build a cross-compilationtoolchain
+                                              : Yocto/OpenEmbedded, Buildroot, OpenWRT, etc
+
+CROSS TOOL CHAIN
+---------------
+
 tools that allows to build source code into binary code for a  target platform different than the one where the build takes place
 ▶Different CPU architecture
 ▶Different ABI
@@ -192,8 +208,41 @@ C library:
  ▶Can be overridden at runtime using gcc’s--sysrootoption.
  ▶The current sysroot can be printed using the-print-sysroot option.
  
+ ▶Most toolchains provide asingle sysrootwith the C library and gcc runtimelibraries
+ ▶These libraries, built for the target, are optimized for aspecific architecturevariant and ABI
  
+ ▶Multilib toolchains contain multiple sysroot, each having a version of the target libraries for different architecture/ABI variants
  
+ $ arm-none-linux-gnueabi-gcc -print-multi-lib;
+ armv4t;  @march=armv4t thumb2;   @mthumb@march=armv7-a
+ ▶Three sysroots: ARMv5, ARMv4 and ARMv7 Thumb-2
+ 
+ ▶The compiler automatically selects the right sysroot depending on the gcc flags:
+    $ arm-none-linux-gnueabi-gcc -march=armv5te -print-sysroot.
+    ../bin/../arm-none-linux-gnueabi/libc
+    
+    $ arm-none-linux-gnueabi-gcc -march=armv4t -print-sysroot.   
+    ../bin/../arm-none-linux-gnueabi/libc/armv4t
+    
+    $ arm-none-linux-gnueabi-gcc -march=armv7-a -mthumb -print-sysroot.
+      ../bin/../arm-none-linux-gnueabi/libc/thumb2
+      
+ ▶Each sysroot has a different library variant:
+ 
+    $ readelf -A arm-none-linux-gnueabi/libc/lib/ld-2.18.so
+    Tag_CPU_name: "5TE"
+    Tag_CPU_arch: v5TE
+    
+    $ readelf -A arm-none-linux-gnueabi/libc/armv4t/lib/ld-2.18.so
+    Tag_CPU_name: "4T"
+    Tag_CPU_arch: v4T
+    
+    $ readelf -A arm-none-linux-gnueabi/libc/thumb2/lib/ld-2.18.so
+    Tag_CPU_name: "7-A"Tag_CPU_arch: v7
+    Tag_THUMB_ISA_use: Thumb-2
+    
+    
+    
  
  
  
