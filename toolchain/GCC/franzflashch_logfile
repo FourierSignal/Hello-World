@@ -1,0 +1,87 @@
+
+
+
+[jaguar@jaguar-34489d6 franzflasch]$ cat logfile_commands.txt 
+
+
+6:CMD being executed: git clone --depth=1 git://sourceware.org/git/glibc.git git_glibc-glibc-2.32 -b glibc-2.32
+31:CMD being executed: git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git git_linux-v5.6 -b v5.6
+56:CMD being executed: git clone --depth=1 git://sourceware.org/git/binutils-gdb.git git_binutils-binutils-2_35-branch -b binutils-2_35-branch
+64:CMD being executed: git clone --depth=1 git://gcc.gnu.org/git/gcc.git git_gcc-gcc-10 -b releases/gcc-10
+71:CMD being executed: wget -c https://ftp.gnu.org/gnu/mpc/mpc-1.2.1.tar.gz
+99:CMD being executed: tar xvf mpc-1.2.1.tar.gz -C mpc-mpc-1.2.1 --strip-components=1
+452:CMD being executed: wget -c http://isl.gforge.inria.fr/isl-0.22.1.tar.xz
+496:CMD being executed: tar xvf isl-0.22.1.tar.xz -C isl-isl-0.22.1 --strip-components=1
+1765:CMD being executed: wget -c https://ftp.gnu.org/gnu/mpfr/mpfr-4.1.0.tar.xz
+1806:CMD being executed: tar xvf mpfr-4.1.0.tar.xz -C mpfr-mpfr-4.1.0 --strip-components=1
+2368:CMD being executed: wget -c https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz
+2419:CMD being executed: tar xvf gmp-6.2.0.tar.xz -C gmp-gmp-6.2.0 --strip-components=1
+4705:CMD being executed: wget -c http://www.bastoul.net/cloog/pages/download/cloog-0.18.4.tar.gz
+4810:CMD being executed: tar xvf cloog-0.18.4.tar.gz -C cloog-cloog-0.18.4 --strip-components=1
+6553:CMD being executed: git clone --depth=1 git://sourceware.org/git/binutils-gdb.git git_gdb-gdb-10-branch -b gdb-10-branch
+
+
+=========================
+==  BUILDING BINUTILS  ==
+=========================
+
+6559:CMD being executed: /home/jaguar/build-tools-gcc/sources/binutils-binutils-2_35-branch/configure --target=aarch64-linux-gnu --prefix=/home/jaguar/build-tools-gcc/toolchain --disable-nls --disable-werror --disable-gdb
+6665:CMD being executed: make   all
+10640:CMD being executed: make install
+
+
+============================
+==  MAKING LINUX HEADERS  ==
+============================
+
+10920:CMD being executed: make ARCH=arm64 INSTALL_HDR_PATH=/home/jaguar/build-tools-gcc/toolchain/aarch64-linux-gnu headers_install  
+
+
+==========================
+==  MAKING GCC STAGE 1  ==
+==========================
+
+11842:CMD being executed: /home/jaguar/build-tools-gcc/sources/gcc-gcc-10/configure --target=aarch64-linux-gnu --prefix=/home/jaguar/build-tools-gcc/toolchain --disable-nls --disable-bootstrap --enable-languages=c
+11958:CMD being executed: make   all-gcc
+20446:CMD being executed: make   install-gcc
+
+
+============================
+==  MAKING GLIBC HEADERS  ==
+============================
+
+21203:CMD being executed: /home/jaguar/build-tools-gcc/sources/glibc-glibc-2.32/configure CC=aarch64-linux-gnu-gcc CXX=aarch64-linux-gnufake-g++ --host=aarch64-linux-gnu --prefix=/home/jaguar/build-tools-gcc/toolchain/aarch64-linux-gnu --with-headers=/home/jaguar/build-tools-gcc/toolchain/aarch64-linux-gnu/include
+21308:CMD being executed: make install-bootstrap-headers=yes install-headers
+22114:CMD being executed: make   csu/subdir_lib
+22218:CMD being executed: install csu/crt1.o csu/crti.o csu/crtn.o /home/jaguar/build-tools-gcc/toolchain/aarch64-linux-gnu/lib
+22219:CMD being executed: /home/jaguar/build-tools-gcc/toolchain/bin/aarch64-linux-gnu-gcc -nostdlib -nostartfiles -shared -x c /dev/null -o /home/jaguar/build-tools-gcc/toolchain/aarch64-linux-gnu/lib/libc.so
+
+==========================
+==  MAKING GCC STAGE 2  ==
+==========================
+
+22223:CMD being executed: make   all-target-libgcc
+23095:CMD being executed: make install-target-libgcc
+
+
+====================
+==  MAKING GLIBC  ==
+====================
+23174:CMD being executed: make  
+38199:CMD being executed: make install
+
+
+========================
+==  MAKING GCC FINAL  ==
+========================
+41695:CMD being executed: make   all
+44096:CMD being executed: make install
+
+
+==================
+==  MAKING GDB  ==
+==================
+45533:CMD being executed: /home/jaguar/build-tools-gcc/sources/gdb-gdb-10-branch/configure --target=aarch64-linux-gnu --prefix=/home/jaguar/build-tools-gcc/toolchain --disable-binutils --disable-ld --disable-gas --with-expat
+45636:CMD being executed: make
+50087:CMD being executed: make install
+
