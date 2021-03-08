@@ -17,3 +17,201 @@ Different forms:
 ▶<libc/abi>, combination of details on the C library and the ABI in use
 
 
+▶Two main values for<os>
+    ▶none for bare-metal toolchains
+          ▶Used for development without an operating system
+          ▶C library used is generally newlib
+          ▶Provides C library services that do not require an operating system
+          ▶Allows to provide basic system calls for specific hardware targets
+          ▶Can be used to build bootloaders or the Linux kernel, cannot build Linux userspacecode
+     
+     ▶linux for Linux toolchains
+          ▶Used for development with a Linux operating system
+          ▶Choice of Linux-specific C libraries:glibc,uclibc,musl
+          ▶Supports Linux system calls
+          ▶Can be used to build Linux userspace code, but also bare-metal code such asbootloaders or the kernel itself
+          
+          
+ 
+ 
+ 
+ 
+ There are four core components in a Linux cross-compilation toolchain
+ 1.binutils
+ 2.gcc
+ 3.Linux kernel headers
+ 4.C library
+ In addition to these, a few dependencies are needed to build  gcc itself.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ BINUTILS
+ ------------
+ 
+ ▶“collection of binary tools”
+ ▶Main tools 
+        ▶ld, the linker. Links multiple object files into a shared library, an executable, oranother object file.
+        ▶as, the assembler. Takes architecture-specific assembler code in text form, andproduces a corresponding object file with binary code.
+        
+ ▶Debugging/analysis tools and other tools
+        ▶addr2line, ar, c++filt, gold, gprof, nm, objcopy, objdump, ranlib, readelf, size,strings, strip
+        
+ ▶Needs to be configured for each CPU architecture: your native x86 binutils cannotproduce ARM code.
+ 
+ ▶Pretty straightforward to cross-compile, no special dependencies are needed.
+      ./configure --target=arm-buildroot-linux-gnueabihf --with-sysroot=PATH
+      
+      
+ GCC
+ ----------
+ 
+ ▶GNU Compiler Collection
+ 
+ ▶Front-ends for many source languages: C, C++, Fortran, Go, etc.
+ 
+ ▶Back-ends for many CPU architectures.
+ 
+ ▶Provides:
+        ▶The compiler itself,cc1for C,cc1plusfor C++. Only generates assembly code intext format.
+        ▶The compiler driver,gcc,g++, which drives the compiler itself, but also the binutilsassembler and linker.
+        ▶Target libraries:libgcc(gcc runtime),libstdc++(the C++ library),libgfortran(the Fortran runtime)
+        ▶Header files for the standard C++ library.
+ 
+ ▶Building  gcc is a bit more involved : two steps are needed.
+ 
+ gcc dependencies: Several math libraries ompiled for the host machine are needed to buildgcc
+ 
+      ▶mpfr, multiple-precision floating-point computations. 
+             Used since gcc 4.3 to evaluate and replace at compile-time calls to built-in math functions having constant arguments with their mathematically equivalent results
+      
+      ▶gmp, dependency ofmpfr
+      ▶mpc, for computation of complex numbers. 
+            Used since gcc 4.5 toevaluate calls tocomplex built-in math functions having constant arguments and replace them at compile time with their mathematically equivalent result
+            
+            
+ 
+KERNEL HEADERS
+-------------------
+
+Linux Kernel headers
+
+▶In order to build a C library, the Linux kernel headers are needed:
+     definitions ofsystem call numbers, various structure types and definitions
+
+▶In the kernel, headers are split between:
+     ▶User-space visible headers, stored in uapi  directories:include/uapi/,arch/<ARCH>/include/uapi/asm
+     ▶Internal kernel headers.
+     
+▶Installation takes place using make ARCH=.. INSTALL_HDR_PATH=... headers_install
+     ▶The installation includes a sanitation pass to remove kernel-specific constructs fromthe headers.
+     ▶As of Linux 4.8, installs 756 header files.
+
+
+Which version of the kernel headers should be used in a toolchain?
+      the version of the kernel used for the kernel headers must be the sameversion or older than the kernel version running on the target system.
+      Otherwise the C library might use system calls that are not provided by the kernel
+      The kernel to userspace ABI is backward compatible.
+$ cat arm-none-linux-gnueabi/libc/usr/include/linux/version.h
+
+
+
+C library:
+-------------
+
+
+
+▶Provides the implementation of the POSIX standard functions, plus several otherstandards and extensions
+
+▶Based on the Linux system calls
+
+▶Several implementations available:
+       ▶glibc
+       ▶uClibc-ng (formerly uClibc)
+       ▶musl
+       ▶bionic, for Android systems
+ 
+▶A few other more special-purpose: 
+        newlib (for bare-metal)
+        dietlibc,
+        klibc
+        
+▶After compilation and installation, provides:
+        ▶The dynamic linker,ld.so
+        ▶The C library itself  libc.so  and its companion libraries:libm,librt,libpthread,libutil,libnsl,libresolv,libcrypt
+        ▶The C library headers:stdio.h,string.h, etc
+
+
+GLIBC
+------
+▶GNU C Library
+▶De-facto standard of Linux C libraries
+▶Used in virtually all common desktop/server distributions
+▶Full-featured
+▶Supports for numerous architectures or operating systems
+▶No support for noMMU platforms
+▶No support for static linking
+▶ABI backwardcompatibility
+▶Almost no configurability
+▶Used to be “too big” for embedded, but no longer necessarily the case.
+▶LGPLv2.1 or later
+▶https://www.gnu.org/software/libc/
+
+
+
+
+
+
+     
+     Which version of the kernel headers should be used in a toolchain?
+          .
+           Otherwise the C library might use system calls that are not provided by the kernel
+               The kernel to userspace ABI is backward compatible.
+         $ cat arm-none-linux-gnueabi/libc/usr/include/linux/version.h
+         
+         
+
+C library:
+-------------
+
+
+
+     
+ Concept of  SYSROOT
+ ------------------------
+ ▶The sysroot is the logical root directory for headers and libraries
+ ▶gcc looks for headers, and ldlooks for libraries
+ ▶Both gcc and binutils are built with --with-sysroot=<SYSROOT>
+ ▶The kernel headers and the C library are installed in<SYSROOT>
+ ▶If the toolchain has been moved to a different location,gcc will still find its sysroot if it’s in a subdir of --prefix
+ ▶--prefix=/home/thomas/buildroot/arm-uclibc/host/usr
+ ▶--with-sysroot=/home/thomas/buildroot/arm-uclibc/host/usr/arm-buildroot-linux-uclibcgnueabihf/sysroot
+ ▶Can be overridden at runtime using gcc’s--sysrootoption.
+ ▶The current sysroot can be printed using the-print-sysroot option.
+ 
+ 
+ 
+ 
+ 
+ 
+BUILDING GCC- overall process 
+---------------------------------
+        
+▶The build process for a regular Linux cross-compilation toolchain is in fact fairly easy:
+
+1.Build binutils
+2.Build the dependencies of gcc:mpfr,gmp,mpc
+3.Install the Linux kernel headers
+4.Build a first stage gcc: no support for a C library, support only for static linking
+5.Build the C library using the first stage gcc
+6.Build the final gcc, with C library and support for dynamic linking 
+
+
+
+ 
+ 
+ 
+ 
