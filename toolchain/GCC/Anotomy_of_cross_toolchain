@@ -83,6 +83,85 @@ Architecture tuning:
    
 
 
+UNDERSTANING TOOLCHAIN CONTENTS:
+------------------------------------
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l
+total 24
+drwxrwxr-x 11 jaguar jaguar 4096 Mar  7 13:50 aarch64-linux-gnu
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 14:20 bin
+drwxrwxr-x  3 jaguar jaguar 4096 Mar  7 14:20 include
+drwxrwxr-x  3 jaguar jaguar 4096 Mar  7 14:20 lib
+
+drwxrwxr-x  3 jaguar jaguar 4096 Mar  7 13:23 libexec   
+                                         -----------> libexec is meant for daemons and utilities executed by other programs.
+                                         meant for the consumption of other programs, and are not intended to be executed directly by users. 
+
+drwxrwxr-x  6 jaguar jaguar 4096 Mar  7 14:20 share    ------>  documentation (man pages and info pages), translation files for gcc and binutils
+
+
+
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l aarch64-linux-gnu/
+total 36
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 13:51 bin
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 13:50 etc
+drwxrwxr-x 32 jaguar jaguar 4096 Mar  7 13:51 include
+drwxrwxr-x  5 jaguar jaguar 4096 Mar  7 13:51 lib
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 13:54 lib64
+drwxrwxr-x  3 jaguar jaguar 4096 Mar  7 13:50 libexec
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 13:51 sbin
+drwxrwxr-x  5 jaguar jaguar 4096 Mar  7 13:50 share
+drwxrwxr-x  3 jaguar jaguar 4096 Mar  7 13:50 var
+
+
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l  include/gdb/
+total 12
+-rw-r--r-- 1 jaguar jaguar 12080 Mar  7 14:20 jit-reader.h
+jaguar@jaguar:~/build-tools-gcc/toolchain$ 
+
+
+
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l lib/
+total 13824
+drwxrwxr-x 3 jaguar jaguar     4096 Mar  7 13:23 gcc
+-rw-r--r-- 1 jaguar jaguar 12902182 Mar  7 14:20 libaarch64-linux-gnu-sim.a
+-rwxr-xr-x 1 jaguar jaguar      957 Mar  7 13:54 libcc1.la
+lrwxrwxrwx 1 jaguar jaguar       15 Mar  7 13:54 libcc1.so -> libcc1.so.0.0.0
+lrwxrwxrwx 1 jaguar jaguar       15 Mar  7 13:54 libcc1.so.0 -> libcc1.so.0.0.0
+-rwxr-xr-x 1 jaguar jaguar  1241336 Mar  7 13:54 libcc1.so.0.0.0
+
+
+
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l  libexec/gcc/aarch64-linux-gnu/10.2.1/
+total 571108
+-rwxr-xr-x 1 jaguar jaguar 291856944 Mar  7 13:54 cc1
+-rwxr-xr-x 1 jaguar jaguar   4257352 Mar  7 13:54 collect2
+drwxrwxr-x 2 jaguar jaguar      4096 Mar  7 13:54 install-tools
+-rwxr-xr-x 1 jaguar jaguar      1025 Mar  7 13:54 liblto_plugin.la
+lrwxrwxrwx 1 jaguar jaguar        22 Mar  7 13:54 liblto_plugin.so -> liblto_plugin.so.0.0.0
+lrwxrwxrwx 1 jaguar jaguar        22 Mar  7 13:54 liblto_plugin.so.0 -> liblto_plugin.so.0.0.0
+-rwxr-xr-x 1 jaguar jaguar    474248 Mar  7 13:54 liblto_plugin.so.0.0.0
+-rwxr-xr-x 1 jaguar jaguar   6023672 Mar  7 13:54 lto-wrapper
+-rwxr-xr-x 1 jaguar jaguar 282176944 Mar  7 13:54 lto1
+drwxrwxr-x 2 jaguar jaguar      4096 Mar  7 13:54 plugin
+
+
+
+jaguar@jaguar:~/build-tools-gcc/toolchain$ ls -l share/
+total 16
+drwxrwxr-x  4 jaguar jaguar 4096 Mar  7 14:20 gdb
+drwxrwxr-x  2 jaguar jaguar 4096 Mar  7 14:20 info
+drwxrwxr-x 28 jaguar jaguar 4096 Mar  7 14:20 locale
+drwxrwxr-x  5 jaguar jaguar 4096 Mar  7 14:20 man
+jaguar@jaguar:~/build-tools-
+
+
+
+
  
  
  
