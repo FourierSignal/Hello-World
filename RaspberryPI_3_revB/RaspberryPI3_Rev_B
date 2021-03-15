@@ -1,0 +1,9 @@
+Official specifications:
+
+CPU:ARM Cortex A-53, 1.2GHz (model B+ has 1.4GHz),
+Caches:32kB Level 1 and 512kB Level 2 cache memory
+System of chips:   Broadcom BCM2837
+RAM:1GB LPDDR2, 900MHz
+Peripherals:  GPIO 40 pins, HDMI,   3.5mm audio jack,   4X USB 2.0,
+              Ethernet,  Camera Serial Interface (CSI), Display Serial Interface (DSI).
+              
