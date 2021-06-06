@@ -1,0 +1,1056 @@
+
+"""
+#https://www.i-programmer.info/programming/python/11683-programmers-python-variables-objects-and-attributes.html
+
+
+Programmer's Python
+Everything is an Object
+
+
+Contents
+Hello Python World
+Variables, Objects and Attributes
+The Function Object
+  Extract - Function Objects
+Scope, Lifetime and Closure
+  Extract - Local and Global
+Advanced Functions
+  Extract -  Decorators 
+Class Methods and Constructors
+  Extract - Objects Become Classes ***NEW
+Inside Class
+Metaclass
+Advanced Attributes
+  Extract - Properties
+Custom Attribute Access
+  Extract -  Custom Attributes
+  Extract -  Default Methods
+Single Inheritance
+Multiple Inheritance
+Class and Type
+  Extract - Class
+Type Annotation
+  Extract - Type Annotation 
+More Magic - Operator Overloading
+
+"""
+
+
+
+
+'''
+Variables and Objects
+----------------------
+
+
+The two fundamental entities in Python, and in some form in all languages,are variables and objects.
+Variables are basically about allowing the programmer to work with objects
+and there are a number of possible ways of implementing this.
+
+In Python, variables are references to objects and any variable can reference any object.
+
+A variable is created by simply using it.That is, variables in Python are dynamic, untyped and are references to objects.
+
+Objects in Python are simply named collections of attributes. Each attribute is a reference to another object. This is a very simple, but very powerful, data structure.
+
+
+There is a tendency to think of variables as being things that store objects.
+This isn’t a helpful way to think about things.
+You should think of a variable as being a label, pointer or reference to an object which lives elsewhere in memory.
+The key idea is that objects and variables have their own existence.
+
+For example, multiple variables can reference the same object.
+What this also implies is that a variable doesn’t name an object and there is a sense in which all Python objects are anonymous.
+
+
+Python, initially at least, only has built-in objects
+To investigate further, we need an example Python object to work with
+The simplest way of getting a custom object is to use the class definition.
+
+For example:
+
+class MyObject:
+   myAttribute=1
+
+creates an object called MyObject that has the attribute myAttribute.
+Also notice that the class definition creates a class object,
+which is generally used for a purpose other than just creating a custom object.
+It also has a number of predefined properties that, for the moment, we can ignore.
+'''
+
+
+'''
+class MyObject:
+   myAttribute=1
+
+print(MyObject.myAttribute)
+MyObject.myAttribute=2
+print(MyObject.myAttribute)
+'''
+
+
+
+
+'''
+An attribute behaves just like a variable in that it can reference any object without having to be declared as a specific type.
+Attributes are untyped.
+'''
+
+
+'''
+Now we have an example custom object,
+we can demonstrate the idea that variables store references to objects.
+
+Despite the fact that the class definition:
+class MyObject:
+is an object with a name, i.e. MyObject,
+this isn’t what is happening.
+
+You should think of the class declaration as being the equivalent of:MyObject=class:
+where class is something that returns a custom object.
+MyObject is just another variable and you can assign to it, so destroying the association of the name MyObject with the custom object just created.
+'''
+
+
+
+'''
+MyObject="ABCD"
+print(MyObject.myAttribute)
+'''
+
+
+'''
+you will see the error
+AttributeError: 'str' object has no attribute
+'myAttribute'
+
+The variable MyObject no longer references the custom object, but a string object which doesn’t have a myAttribute attribute.
+'''
+
+'''
+You can also assign the reference to another variable:
+'''
+
+
+'''
+MyObject2=MyObject
+print(MyObject2.myAttribute)
+'''
+
+'''
+here both MyObject2 and MyObject variables refer to custom object created
+The point here is that the variable that you might think is permanently associated with the object isn’t
+and this is the sense in which Python objects are nameless.
+
+PYTHON OBJECTS ARE NAMELESS
+'''
+
+'''
+Advanced Note: There is a standard attribute of class objects, __name__,
+which stores the name of the variable that was used in the class definition
+and in this limited sense Python objects aren’t anonymous.
+'''
+
+'''
+It is very important that you always think of objects as having an existence all of their own, independent from any variables that might be used to reference them.
+This idea becomes really important when we look at function objects
+'''
+
+'''
+An object certainly has a lifetime that is independent of the life of any one variable that might reference it.
+However, if no variables reference an object then it is inaccessible from the program
+and the Python system will garbage collect it, i.e. remove it from memory and free the resources it once used.
+'''
+
+
+'''
+Dynamic Attributes
+Once you have a reference to an object you can generally add attributes to it simply by assigning to them.
+For example:
+MyObject.myNewAttr=2
+creates myNewAttr and sets it to the value 2.
+'''
+
+
+'''
+class MyObject:
+    pass
+MyObject.myAttribute1 = 0
+MyObject.myAttribute2 = "test"
+print(MyObject.myAttribute2)
+'''
+
+
+'''
+pass is the ultimate do nothing instruction in Python.
+You can use it as placeholder
+or anywhere an instruction would normally be expected.
+'''
+
+'''
+Just as it is possible to add attributes you can also remove them using the del command.
+del MyObject.myAttribute2
+If you need to delete an attribute that is determined at run time you can use the delattr function:
+delattr(obj,name) where where obj and name are variables.
+'''
+
+'''
+del MyObject.myAttribute2
+print(MyObject.myAttribute2)
+'''
+
+'''
+If you want to know what attributes an object currently has
+you can use the dir function:
+For example:
+dir(MyClass)
+'''
+
+'''
+class MyObject:
+    pass
+MyObject.myAttribute1 = 0
+dir(MyObject)
+
+# this is not giving any output . why ??
+'''
+
+
+
+
+
+
+"""
+a simple object created using the class built-in object has a lot of attributes that you didn’t create. This is because it isn’t a simple custom object in Python; it has a higher purpose
+"""
+
+"""
+Nested Objects
+Each attribute in an object can reference another object and any attributes in it can reference other objects. That is, nested objects are the norm in Python,
+"""
+
+"""
+For example:
+
+class MyObject1:
+    myAttribute1=1
+    class MyObject2:
+       myAttribute2=2
+
+"""
+
+
+"""
+Once you have a nested class you have to use a fully qualified name to access the attribute.
+For example:
+MyObject1.MyObject2.myAttribute2
+
+
+As this is just a reference you can use a new variable to simplify the name.
+For example:
+myRef=MyObject1.MyObject2
+myRef.myAttribute2
+You can always choose to save a reference in a simpler variable to create a shorter name and this is a general principle in Python.
+
+At this point objects don’t look particularly useful.
+An object is just a collection of attributes that you can access
+and attributes are just like variables that you have to access using a qualified name.
+"""
+
+"""
+Namespaces and Modules
+-----------------------
+This system of qualified names is central to Python and it is part of the object system it implements.
+When you create an object you also create a namespace.
+If you know about namespaces then it is worth saying that Python doesn’t quite do it in the same way as other languages.
+Each object has a Dictionary, i.e. a Python Dictionary data structure, that it uses to store names defined within the object and what they reference.
+"""
+
+"""
+For example:
+class MyObject:
+   myAttribute=1
+has a Dictionary, which has as an entry myAttribute with the value 1. When you use an instruction like:
+MyObject.myAttribute
+
+what happens is that the Dictionary belonging to the object that MyObject references is used to lookup myAttribute.
+If it finds it, then the value is retrieved and used.
+Clearly myAttribute defined on the object referenced by MyObject has nothing to do with any other attribute or variable defined in any other object, which is of course the purpose of namespaces.
+
+"""
+
+"""
+So it looks as if each object you create makes its own namespace, but notice that because objects don’t have fixed names the prefix can vary.
+All variables in Python are part of the namespace, i.e. the Dictionary of the object they are defined in.
+"""
+
+"""
+What about variables defined at the top level of a program, i.e. not within an object?
+ they are within an object – a module object.
+"""
+
+"""
+A module is a file of code that you can load into the Python system and run. The file has a name that ends in .py and the module has the same name as the file, but without the ,py. The module has a Dictionary and it stores all of the variables defined in the module not within an object, i.e. the global variables.
+"""
+
+"""
+When you are working within a module the modules’ Dictionary is used by default, but when you load a module into another program you have to use the module’s name as a prefix.
+Notice that if there is any executable code, rather than just definitions, then that code is executed as the module is read in.
+"""
+
+
+"""
+For example, if you create and save the a file called MyModule.py containing:
+
+class MyObject:
+   myAttribute=1
+myVariable=2
+
+you can load this module into another module using:
+
+import myModule
+
+This loads the module and its Dictionary. After this you can refer to variables in the module using a qualified name. For example:
+
+print(myModule.myVariable)
+
+If you want to access an attribute on an object you simply use the fully qualified name:
+
+print(myModule.MyObject.myAttribute)
+
+and so on.
+"""
+
+"""
+Modules behave like objects with attributes consisting of all of the global variable in the module.
+
+Viewed in this way you can see everything really is an object. Even the program that you write and save in a file is a module, which behaves like an object with attributes that are its global variables.
+This is also the sense in which there are no global variables, in Python just attributes of modules.
+
+"""
+
+
+
+
+"""
+Python also provides ways for you to modify the way names are made available when you import a module. Notice that none of this gives you anything new, it is just a way of avoiding have to write out fully qualified names.
+
+You can import specific objects within the module and you can change the name of the import by using the as qualifier.
+
+For example:
+
+import myModule.MyObject
+
+imports just the object specified and
+
+import myModule.MyObject as MySecondObj
+
+imports the same object, but changes the variable that references it to MySecondObj.
+
+"""
+
+
+"""
+If you want to get rid of the qualified names you can use from.
+
+For example:
+
+from myModule import MyObject
+
+imports just myModule.MyObject and references it with a variable called MyObject, i.e. no qualified name needed.
+
+You can also change the name of the variable:
+
+from myModule import MyObject as MySecondObj
+
+imports just MyObject and changes the variable to MySecondObj.
+"""
+
+"""
+Finally, you can use a wildcard character to import everything in a module without changing any variable names:
+
+from myModule import *
+
+This isn’t recommended because of the possibility of name clashes.
+"""
+
+
+"""
+Notice that in all cases changing the name of an imported attribute means that the original reference to that attribute isn’t imported.
+
+That is, after:
+
+from myModule import MyObject
+
+you have to refer to MyObject and not myModule.MyObject.
+
+"""
+
+
+
+
+
+
+"""
+It is also worth noting that a module is only loaded once, no matter how many import statements you use. If you really need to reload a module use the reload function.
+
+There are many variations on importing modules and there is a larger unit called a package which consists of multiple modules. However, the key point is that the idea of the module is part of the everything is an object idea and of the every object has a namespace provided by a Dictionary.
+"""
+
+
+
+
+"""
+Namespace Access – Advanced Topic
+One of the things that is amazing about Python is the way that most of its internal structure is implemented using Python.
+For example, the namespaces system is implemented using Dictionary objects.
+What is even more surprising is that the language provides access to most of these features.
+In particular, you can access the Dictionary object that each object(including a module) has.
+"""
+
+
+"""
+Every object has a __dict__ attribute that is its local namespace i.e. it records all of the object's attributes. You can read the namespace and in some cases you can modify it, although it is considered bad practice to do so
+"""
+
+"""
+If you try:
+
+print(MyObject.__dict__)
+
+You will see a listing of everything that its Dictionary contains:
+
+{'__module__': '__main__', 'myAttribute': 1,
+ '__dict__':
+  &lt;attribute '__dict__' of 'MyObject' objects>,
+ '__weakref__':
+  &lt;attribute '__weakref__' of 'MyObject' objects>,
+ '__doc__': None}
+
+Internally an attribute is looked up in the object’s dictionary. That is:
+
+print(MyObject.myAttribute)
+
+is equivalent to:
+
+print(MyObject.__dict__["myAttribute"])
+
+It isn’t often that modifying the Dictionary is useful but it can be useful to check what attributes are defined on an object.
+"""
+
+
+"""
+It isn’t often that modifying the Dictionary is useful but it can be useful to check what attributes are defined on an object.
+Generally speaking built-in objects don’t allow you to modify their Dictionary it is too dangerous.
+There are times, however, when being able to change and write new entries in a Dictionary is useful.
+"""
+
+##########################################################################################################
+
+
+"""
+The Function Object
+The Python function object is one of the reasons why programmers can completely miss the fact that Python is object-oriented.
+A Python function doesn’t give away the fact that it is an object as it can be used as if it was just a function, a function as you would find in almost any language.
+However, the Python function is an object and knowing this makes many things so much easier and so much more logical.
+"""
+
+
+"""
+The Function Definition
+A function is defined using def:
+
+def sum(a,b):
+    c=a+b
+    return c
+This looks like a function definition in many other languages and this is the intent.
+
+You can call a function using the call operator () which is also used to specify arguments for the parameters.
+
+For example:
+
+print(sum(1,2))
+prints the return value 3.
+"""
+
+"""
+A function doesn’t need to have a return statement and doesn’t need to return a value.
+By default a function that doesn’t return a value returns the special value None which is generally discarded.
+
+Variables that are defined within the function are added to the function’s local table which is different from its dictionary object.
+They are local variables in the sense that they have nothing to do with any variables with the same names elsewhere in the program.
+Unlike attributes, local variables only exist while the function is executing.
+"""
+
+"""
+Notice that a function is not executed when it is defined, only when it is explicitly executed,
+but as we will discover something does happen during a function definition.
+"""
+
+
+"""
+Pass-by-Object Reference:
+Parameters are added to the local table and hence behave like local variables.
+They are always passed by value  but as the value of any variable in Python is a reference to an object ,this behaves more like pass by reference – sometimes called pass-by-object reference.
+"""
+
+
+"""
+To make this clear we need more than one example.
+
+First we need an object to use to pass to the function:
+
+class MyClass:
+    a=0
+
+The function simply attempts to change the value of its parameter:
+def myFunction(x):
+    x=1
+    print(x)
+Now when we call the function:
+
+myFunction(MyClass)
+print(MyClass.a)
+what happens?
+
+Ans: 1
+     0
+
+Explaination:
+the reference in MyClass is copied into the parameter x. i.e Myclass and x both are references to same object.
+However this reference to object is overwritten by a reference to an integer object. This means that we see 1 printed by the function.
+When the function returns, MyClass still references the original object and its a attribute is unchanged and still zero.
+
+Keynote:  Reference to object i.e variable is copied into parameter
+
+This means changes to parameters within functions have no effect on variables in the calling program.
+However, this doesn’t mean that functions cannot change things in the calling program.
+
+class MyClass:
+    a=0
+    
+def myFunction(x):
+    x.a = 1
+    print(x.a)
+When this is called using:
+
+myFunction(MyClass)
+print(MyClass.a)
+
+Ans:  1
+      1
+
+Explaination:
+    the reference in MyClass is copied into x. i.e Myclass and x both are references to same object.
+    but then x.a which is the attribute on the same object that MyClass references is changed to 1
+    So the print in the function prints 1 . so does the print in the calling program.
+
+Attributes of objects in the calling program can be changed by a function.
+"""
+
+
+
+"""
+Functions are Objects
+------------------------
+So far we have been looking at Python functions viewed as any function in any language might be described.
+but as promised, Python functions are completely different.
+
+They are objects.
+
+This is something that you only find in languages that have been influenced by the early experimental object oriented languages such as Smalltalk.
+Python shares this idea with Ruby and JavaScript to name just two .
+but it isn’t common in class-based languages such as Java, C#, C++ and so on.
+However, the advantages of implementing functions as objects is so great that languages that don’t use this approach have had to add features to make up for it.
+C# added delegates and later, along with other languages, lambda expressions. Python doesn’t need such additions but it does have a form of a lambda expression which it doesn’t really need
+"""
+
+
+
+
+
+"""
+What does it mean that a function is an object?
+
+When you write a Python function definition:
+
+def sum(a,b):
+    c=a+b
+    return c
+something more happens than in other languages.
+
+When the Python system reads the function definition it does more than just store the name of the function in the dictionary.
+It creates a function object which stores the code of the function and sets a variable to reference it.
+The construction of an object to act as the function is key to the different way functions in Python work.
+
+It is a good idea to think of above function definition more like:
+
+sum = def(a,b):
+        c=a+b
+        return c
+
+#this is invalid syntax but if you think about it in this way you can see that the variable sum with a reference to the new function object is created.
+
+The function object is a perfectly standard object but it comes with a code object as one of its attributes which stores the code.
+
+
+It is also an example of a callable which means you can use the invocation operator () to execute the code they contain.
+
+Function objects have all of the built-in attributes that objects have and a few that are special and related to their callability.
+
+
+Notice that:
+sum
+is a variable that references the function object and:
+sum()
+is an evocation of that function object and it evaluates to whatever that function returns.
+
+
+You can add new attributes to a function object and make use of them:
+
+sum.myAttribute=1
+print(sum.myAttribute)
+Notice that any attributes you create exist even when the function is not being evaluated, but local variables only exist while the function is being evaluated.
+Function attributes and local variables have a different lifetime.
+"""
+
+
+
+
+
+
+"""
+Why Are Functions Objects?
+After all it has already been stated that it is possible to write good Python code without giving the fact that functions are objects a moment’s thought.
+What makes this approach so useful is often expressed by saying that in Python functions are first class objects.
+
+What this means is that anything you can do with an object you can do with a function.
+In particular you can pass a function as a parameter to another function and you can return a function from another function.
+These two simple features make things very much easier and we don’t have to invent additional mechanisms like delegates or lambdas to make them available.
+
+
+The standard example is to consider a sort function which can accept a comparison function to use to order the things it is going to sort.
+
+A simpler, but less likely, example is a math function that can apply a function that you pass in:
+def math(f,a,b):
+    return f(a,b)
+sum.myAttribute=1
+print(math(sum,1,2))
+
+Notice that the first parameter f is a function. More accurately it is a function object and the math function evaluates it and returns its result.
+
+
+Of course this doesn’t have any practical advantage unless you are going to have a range of possible functions that can be passed as f but you can see how this might work in practice.
+Being able to customize one function by passing it others to use is a huge simplification and there are other advantages of function objects.
+"""
+
+
+
+
+
+
+"""
+Summary
+ 
+
+Functions in Python are objects and can be used anywhere an object can.
+
+In particular you can pass a function as a parameter and return a function result.
+
+Function parameters are passed by object reference which means changes to parameters do not affect the variables used as arguments. However, changes to mutable objects, i.e. attributes, do affect the objects in the calling program.
+
+Functions can have attributes defined which have a lifetime beyond that of the function’s local variables.
+
+Local variables exist only while the function is being executed, but attributes exist as long as the function object does.
+
+Lambda expressions are lightweight ways of creating function objects. They simplify the syntax for passing functions as arguments.
+
+Functions, like all Python objects, are essentially anonymous – they have variables which reference them rather than immutable names.
+
+Functions can refer to their own attributes in code but exactly how to do this in a way that is immune from changes to the variables used to reference the function is more difficult that it first appears and needs closure for a reasonable solution
+
+"""
+
+
+
+
+####################################################################################
+
+#Scope, Lifetime and Closure  in python: Local and global
+
+
+'''
+Functions bring something new – local variables.
+
+There is also an important difference between Python functions and most other language’s functions.
+Python functions are objects that exist even when the function is not being executed.
+This has some interesting consequences for the code that the function object is associated with.
+'''
+
+'''
+Global v Local
+You can define a function anywhere in code.
+
+case1: Function at the top of module
+The simplest case is when a function is defined at the top level in a module.
+In this case all of the variables defined in the module are part of its execution context and are accessible from within the function.
+This is usually described as the function having access to the global variables of the module.
+
+
+If you try to access a variable that isn’t defined as a local variable within the function,
+the variable table for the entity that the function is defined in is searched.
+If the variable is found then it is used.
+For example:
+myGlobalVariable=10
+def myFunction():
+    print(myGlobalVariable)
+myFunction()
+In this case the print causes the system to look for myGlobalVariable in the local table.
+When it isn’t found in the function,
+the table of the containing entity, the module in this case, is searched
+and when the variable is found the value 10 is returned.
+
+
+Python, however, works differently when storing a new reference in a variable.
+As Python has no keyword like var or let to signal that a new variable is being defined, an assignment to a variable always creates that variable.
+For example:
+myGlobalVariable=10
+def myFunction():
+    myGlobalVariable=0
+    print(myGlobalVariable)
+myFunction()
+print(myGlobalVariable)
+
+Result:  0
+         10
+Explaination: assignment to myGlobalVariable within the function. This has to create a new local variable of the same name as global variable.
+
+In most languages assigning to a variable that didn’t exist locally but did exist globally would result in an assignment to the global variable.
+This cannot be how it works in Python because assignment creates variables.
+
+So how do you assign to a global variable within a function , in Python?
+you have to declare the variable global.
+
+For example:
+
+myGlobalVariable=10
+def myFunction():
+    global myGlobalVariable
+    myGlobalVariable=0
+    print(myGlobalVariable)
+myFunction()
+print(myGlobalVariable)
+
+Result:  0
+         0
+Explaination:
+the global modifier declares myGlobalVariable to be the same variable as in the enclosing entity(module).
+which means that the assignment doesn’t create a new local variable.The function has modified the global variable.
+
+
+A subtle point is that if the variable doesn’t exist as a global then it will be created when it is assigned to.
+That is, global allows you to create global variables from within functions.
+
+
+You can declare a list of variables as global:
+
+global var1, var2, var3 ...and all of these variables will be treated as global.
+The global declaration has to occur in the code before any assignments to the variable which would create a local variable of the same name.
+
+
+
+case2: Inner Functions
+You can define a function anywhere in code.
+When you first start with Python this generally means defining functions within a module i.e. at the “top level”.
+However, there is nothing wrong with defining functions within the code of another function
+
+For example:
+
+def myFunction():
+    def myInnerFunction():
+        myInnerVariable=20
+        print(myInnerVariable)
+    
+    myInnerFunction()    
+myFunction()
+
+Calling the outer function, myFunction results in calling the inner function and the display of its local variable.
+
+You can repeat this as many times as you like defining one function in the code of another.
+In practice it is rare for functions to be nested more than one deep
+but there is nothing in Python that rules it out.
+
+Each function is local to the function that immediately contains its definition.
+
+Local, Global and Nonlocal
+------------------------------
+This should be all very clear and obvious but notice that in the preceding example we have created two function objects.
+The first object comes into existence immediately i.e. the one referenced by myFunction.
+The second only comes into existence when we call myFunction and its code is executed i.e. the one referenced by myInnerFunction.
+
+Notice that the local variables for the inner function only exist while it is being executed
+and so there is no prospect of the outer function accessing them.
+
+However, the local variables of the outer function exist for the entire time that the inner function is executing
+– can it access them?
+In other words, are the containing function’s local variables like globals to the inner function?
+
+The answer is yes, but it is far more involved a story than you might imagine.
+The reason is once again the fact that Python has no keyword for defining a variable.
+When you assign to a variable it is created if it doesn’t already exist in the local context.
+
+What this means is that the inner function can access the local variables of the outer function,
+but it cannot assign to them without taking an extra step.
+
+For example:
+
+def myFunction():
+    myOuterVariable=10
+    def myInnerFunction():
+        print(myOuterVariable)
+    myInnerFunction()
+    print(myOuterVariable)
+myFunction()
+
+Result : 10
+         10
+
+
+def myFunction():
+    myOuterVariable=10
+    def myInnerFunction():
+        nonlocal myOuterVariable
+        myOuterVariable=20
+        print(myOuterVariable)
+    myInnerFunction()
+    print(myOuterVariable)
+myFunction()
+
+Result : 20
+         10
+
+declaring myOuterVariable nonlocal stops the Python system from creating a new local variable
+and forces it to search for the variable in the variable table of the enclosing function.
+
+
+
+
+what is the difference between nonlocal and global??
+
+Declaring a variable as global within a function will either create the global variable or make use of the one already defined.
+Notice this has to be a global variable defined at the module level.
+
+Declaring a variable as nonlocal within a function makes use of the variable defined within the containing function.
+If there isn’t one then the next containing function is used to supply the variable and so on.
+If no variable that is local to a containing function is found then an error occurs.
+
+This means that a nonlocal declaration never creates a new variable and never makes use of a global variable.
+It searches any set of nested functions from the innermost and uses the first variable of the same name it finds.
+
+
+Use global in a function when you want to use or create a global variable.
+
+Use nonlocal in a function when you want to use the first local variable available in the containing functions.
+
+
+some more topics:
+Closure
+What Use is Closure?
+Private State Variables
+Function Self Reference
+Callbacks
+Closures __closure__ and Cells (Advanced)
+
+
+
+Summary:
+A variable that a function assigns to is created as a local variable.
+
+To reference a global variable that the function assigns to it has to be declared as global.
+
+Functions can be defined within other functions and the inner functions have access to the containing function’s local variables but not vice versa.
+
+If an inner function assigns to a variable then it is created as a local variable.
+
+To refer to a local variable of a containing function in assignment you have to declare the variable nonlocal.
+
+Closure is a natural consequence of function objects outliving their local variables.
+If an inner function exists and can be invoked after its containing function has ended, then it still has access to the same local variable via the closure.
+
+The closure consists of all of the variables in scope when a function is declared – its execution context.
+
+All functions declared within the same execution context share that context as their closure.
+
+The values of variables in the closure are the last values they had before the outer function terminated.
+
+Closures have many uses but the main ones are to provide private state variables, provide a self reference, and to provide context to callback functions.
+
+You can work with the __closure__ magic attribute to access and even change the closure but how this works is platform dependent. Use the inspect module to isolate your code from such changes.
+         
+'''
+
+
+
+"""
+Advanced Functions
+  Extract -  Decorators 
+Class Methods and Constructors
+  Extract - Objects Become Classes ***NEW
+Inside Class
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################################################
+'''
+class dengue_infection:
+     patient_count=10
+
+print(dengue_infection.patient_count)
+dengue_infection.patient_count=12
+print(dengue_infection.patient_count)
+
+dengue_infection_backup_file = dengue_infection
+print(dengue_infection_backup_file.patient_count)
+
+#observe here
+#dengue_infection is not class name.it is not an object.
+#it is varible referencing the un named object created by class definition.
+#we can create several variables to refrence the same unnamed object.
+
+
+dengue_infection = 2
+print(dengue_infection.patient_count)
+#here dengue_infection is referencing another int object 2.
+#it is unlinked with previous object having the attribute patient_count and is now linked to object 2 of class int.
+#Hence the error :  AttributeError: 'int' object has no attribute 'patient_count'
+
+
+#in a way a self explainatory declaration should be like below
+class dengue_infection_object:
+     patient_count_attribute=10
+
+
+
+
+'''
+############################################################################
+
+
+"""
+dir() is a powerful inbuilt function in Python3.
+It returns list of the attributes and methods of any object (say functions , modules, strings, lists, dictionaries etc.)
+"""
+
+
+"""
+
+# Class attributes belong to the class itself
+# they will be shared by all the instances
+
+class sampleclass: 
+    count = 0     # class attribute 
+  
+    def increase(self): 
+        sampleclass.count += 1
+
+
+print(sampleclass.count)
+
+# Calling increase() on an object 
+s1 = sampleclass() 
+s1.increase()         
+print(s1.count) 
+  
+# Calling increase on one more 
+# object 
+s2 = sampleclass() 
+s2.increase() 
+print(s2.count) 
+  
+print(sampleclass.count) 
+
+print(dir(sampleclass))
+print(dir(s1))
+
+"""
+
+
+# instance attributes. 
+#Unlike class attributes, instance attributes are not shared by objects.
+#Every object has its own copy of the instance attribute 
+
+'''
+To list the attributes of an instance/object, we have two functions:-
+1. vars()– This function displays the attribute of an instance in the form of an dictionary.
+2. dir()– This function displays more attributes than vars function,as it is not limited to instance. It dis
+'''
+
+
+"""
+
+class emp: 
+    def __init__(self): 
+        self.name = 'xyz'
+        self.salary = 4000
+  
+    def show(self): 
+        print(self.name) 
+        print(self.salary) 
+  
+e1 = emp() 
+print("Dictionary form :", vars(e1)) 
+print(dir(e1)) 
+
+"""
+
+
+
