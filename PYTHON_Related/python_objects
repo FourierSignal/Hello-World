@@ -963,7 +963,7 @@ print(dengue_infection_backup_file.patient_count)
 
 #observe here
 #dengue_infection is not class name.it is not an object.
-#it is varible referencing the un named object created by class definition.
+#it is varible referencing the unnamed object created by class definition.
 #we can create several variables to refrence the same unnamed object.
 
 
@@ -1023,10 +1023,42 @@ print(dir(s1))
 
 """
 
+#################################################################
+
+class attributes VS instance attributes
 
 # instance attributes. 
 #Unlike class attributes, instance attributes are not shared by objects.
 #Every object has its own copy of the instance attribute 
+
+class Dog:
+
+    species = 'mammal'
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        
+        
+ here  
+ species is class attribute . It is commmon for all objects.
+ 
+ This __init__ is called the initializer. It is automatically called when we instantiate the class. 
+ It’s job is to make sure the class has any attributes it needs.
+ It’s sometimes also used to make sure that the object is in a valid state when it’s instantiated
+ 
+ >>> b2 = Dog("gull",23)
+ >>> b2.name
+'gull'
+
+
+ >>> b3 = Dog()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: __init__() missing 2 required positional arguments: 'name' and 'age'
+
+###################################################
+
 
 '''
 To list the attributes of an instance/object, we have two functions:-
@@ -1034,23 +1066,12 @@ To list the attributes of an instance/object, we have two functions:-
 2. dir()– This function displays more attributes than vars function,as it is not limited to instance. It dis
 '''
 
+>>> vars(b2)
+{'name': 'gull', 'age': 23}
 
-"""
+>>> dir(b2)
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'age', 'name', 'species']
+>>> 
 
-class emp: 
-    def __init__(self): 
-        self.name = 'xyz'
-        self.salary = 4000
-  
-    def show(self): 
-        print(self.name) 
-        print(self.salary) 
-  
-e1 = emp() 
-print("Dictionary form :", vars(e1)) 
-print(dir(e1)) 
-
-"""
-
-
+###################################################################
 
