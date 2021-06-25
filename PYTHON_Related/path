@@ -1,0 +1,32 @@
+WRONG WAY to code :
+-----------------------
+data_folder = "source_data/text_files/"
+
+file_to_open = data_folder + "raw_data.txt"
+
+f = open(file_to_open)
+
+
+The Old Solution: Python’s os.path module:
+-------------------------------------------
+
+import os.path
+
+data_folder = os.path.join("source_data", "text_files")
+
+file_to_open = os.path.join(data_folder, "raw_data.txt")
+
+f = open(file_to_open)
+
+
+
+The Better Solution: Python 3’s pathlib:
+----------------------------------------
+
+from pathlib import Path
+
+data_folder = Path("source_data/text_files/")
+
+file_to_open = data_folder / "raw_data.txt"
+
+f = open(file_to_open)
