@@ -6,6 +6,10 @@ qemu-system-x86_64 --nographic  -m 512 -boot d -cdrom boot.iso
 
 qemu-system-x86_64 --nographic -cdrom boot.iso
 
+qemu-img create mydiskimage.img 500M
+qemu -cdrom boot.iso -boot d mydiskimage.img
+
+
 Step 0
 Find the Bus and Device ID:
 
@@ -18,6 +22,18 @@ Boot with QEMU:
 
 sudo qemu-system-x86_64 -m 512 -enable-kvm -usb -device usb-host,hostbus=1,hostaddr=8
 You need to run this with root privilegues, because QEMU needs access to the corresponding files under /dev/bus/usb/.
+
+
+
+
+-----------------
+-boot c - Boot the first virtual hard drive.
+-boot d - Boot the first virtual CD-ROM drive.
+-boot n - Boot from virtual network.
+
+
+-----------
+
 
 
 
