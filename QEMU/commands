@@ -1,0 +1,83 @@
+qemu-system-x86_64  --nographic -drive format=raw,file=x86-64.img 
+
+qemu-system-x86_64  --nographic -m 4096  -ctrl-grab  -no-reboot  x86-64.img
+
+qemu-system-x86_64 --nographic  -m 512 -boot d -cdrom boot.iso 
+
+qemu-system-x86_64 --nographic -cdrom boot.iso
+
+Step 0
+Find the Bus and Device ID:
+
+$ lsusb
+...
+Bus 001 Device 008: ID 0781:5151 SanDisk Corp. Cruzer Micro Flash Drive
+...
+Step 1
+Boot with QEMU:
+
+sudo qemu-system-x86_64 -m 512 -enable-kvm -usb -device usb-host,hostbus=1,hostaddr=8
+You need to run this with root privilegues, because QEMU needs access to the corresponding files under /dev/bus/usb/.
+
+
+
+qemu-system-x86_64 -boot --nographic
+(or)
+qemu-system-x86_64  --nographic
+
+------------------------------------------------------------------------
+SeaBIOS (version rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org)
+Press ESC for boot menu.
+
+Booting from Hard Disk...
+Boot failed: could not read the boot disk
+
+Booting from Floppy...
+Boot failed: could not read the boot disk
+
+Booting from DVD/CD...
+Boot failed: Could not read from CDROM (code 0003)
+Booting from ROM...
+iPXE (PCI 00:03.0) starting execution...ok
+iPXE initialising devices...ok
+
+
+
+iPXE 1.20.1+ (g4bd0) -- Open Source Network Boot Firmware -- http://ipxe.org
+Features: DNS HTTP iSCSI TFTP AoE ELF MBOOT PXE bzImage Menu PXEXT
+press ctrl+B for iPXE command line
+iPXE>                                    
+iPXE> 
+iPXE> 
+
+
+net0: 52:54:00:12:34:56 using 82540em on 0000:00:03.0 (open)
+  [Link:up, TX:0 TXE:0 RX:0 RXE:0]
+Configuring (net0 52:54:00:12:34:56)...... ok
+net0: 10.0.2.15/255.255.255.0 gw 10.0.2.2
+Nothing to boot: No such file or directory (http://ipxe.org/2d03e13b)
+No more network devices
+
+--------------------------------------------------------------------------
+
+qemu-system-x86_64  --nographic -boot menu=on
+
+-boot order=c,menu=on
+
+
+SeaBIOS (version rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org)
+
+
+iPXE (http://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8F290+07EEF290 CA00
+                                                                               
+
+
+
+Press ESC for boot menu.
+
+Select boot device:
+
+1. Legacy option rom
+2. Floppy [drive A]
+3. DVD/CD [ata1-0: QEMU DVD-ROM ATAPI-4 DVD/CD]
+4. iPXE (PCI 00:03.0)
