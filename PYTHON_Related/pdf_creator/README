@@ -16,3 +16,50 @@ features of this class are:
  However, the performance penalty keeps very reasonable and suits in most cases, unless your documents are particularly complex or heavy.
  
  
+making Python applications installable on linux:
+
+ dh_virtualenv tool: It builds a .deb package that wraps a Python virtual environment around an application and deploys it upon installing.
+ apt-get install dh-virtualenv devscripts
+ create a directory to keep the source: 
+ mkdir medical_prescr
+ create the debian/control file:
+ 
+Source: medical_prescriptions
+Section: python
+Priority: extra
+Maintainer: Jan Doe <jandoe@example.org>
+Build-Depends: debhelper (>= 9), python3.7, dh-virtualenv (>= 0.8)
+Standards-Version: 3.9.5
+
+Package: medical_prescriptions
+Architecture: any
+Pre-Depends: dpkg (>= 1.16.1), python3.7, ${misc:Pre-Depends}
+Depends: ${misc:Depends}
+Description: pdf creator with images 
+Useful for doing stuff
+
+debian/compat file, which exists mostly for historical purposes:
+echo "9" > debian/compat
+
+
+create the changelog to tell package users what has changed since the last release. The easiest way is to use dch --create to create a template and then fill in the values.
+
+pip-compile requirements.in > requirements.txt
+This will produce a strict dependency file called requirements.txt
+
+
+Finally, write a debian/rules file for creating the package. Since dh_virtualenv does all the hard work, the rules file is simple:
+
+#!/usr/bin/make -f
+
+%:
+        dh $@ --with python-virtualenv --python /usr/bin/python3.7
+
+
+
+build the package:
+$ debuild -b -us -uc
+This will produce a file in the parent directory with a name like myhttp_2.0.0-1_amd64.deb. This file can be installed on any compatible operating system.
+
+
+
