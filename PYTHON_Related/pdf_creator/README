@@ -1,5 +1,18 @@
 convert a given text to PDF
 FPDF is a Python class that allows generating PDF files with Python code
+??
+
+FPDF is a PHP class which allows to generate PDF files with pure PHP, that is to say without using the PDFlib library 
+PyFPDF is
+“… a library for PDF document generation under Python, ported from PHP 
+
+
 FPDF stands for Free PDF.It is free to use and it does not require any API keys.
 features of this class are:
  allows :page format and margin,to manage page header and footer,PNG, GIF and JPG support,
+ 
+ 
+ the generation speed of the document is less than with PDFlib. 
+ However, the performance penalty keeps very reasonable and suits in most cases, unless your documents are particularly complex or heavy.
+ 
+ 
