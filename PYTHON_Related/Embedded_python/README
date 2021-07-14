@@ -1,0 +1,49 @@
+
+https://docs.python.org/3/extending/embedding.html
+-------------------------------------------------------
+
+When you install Python on your computer, you’re usually installing a specific implementation of Python called CPython
+You could call CPython the default Python implementation since it’s written by the people who define the language itself. 
+However, CPython isn’t the only implementation of Python. 
+
+some implementations that are specifically aimed at writing embedded code.
+MicroPython
+CircuitPython
+
+extending python vs Embedding python
+
+Extending Python:
+------------------
+extend the functionality of Python by attaching a library of C functions to it
+
+
+Embedding python:
+-----------------
+It is also possible to do it the other way around: enrich your C/C++ application by embedding Python in it. 
+Embedding provides your application with the ability to implement some of the functionality of your application in Python rather than C or C+
+
+
+Embedding Python is similar to extending it, but not quite. 
+The difference is that when you extend Python, the main program of the application is still the Python interpreter,
+while if you embed Python,
+the main program may have nothing to do with Python — instead, some parts of the application occasionally call the Python interpreter to run some Python code.
+
+
+So if you are embedding Python, you are providing your own main program. 
+One of the things this main program has to do is initialize the Python interpreter.
+At the very least, you have to call the function Py_Initialize().
+There are optional calls to pass command line arguments to Python.
+Then later you can call the interpreter from any part of the application.
+
+
+
+
+There are several different ways to call the interpreter: 
+you can pass a string containing Python statements to PyRun_SimpleString(), 
+or you can pass a stdio file pointer and a file name (for identification in error messages only) to PyRun_SimpleFile().
+You can also call the lower-level operations described  to construct and use Python objects.
+
+
+
+
+
