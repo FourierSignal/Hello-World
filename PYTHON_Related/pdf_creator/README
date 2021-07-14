@@ -63,3 +63,77 @@ This will produce a file in the parent directory with a name like myhttp_2.0.0-1
 
 
 
+PDF page turner software : 
+Flipsnack 
+
+How to add the PDF page turning effect
+PDF page transitions in HTML5
+With Flipsnack you can create a HTML5 page flip PDF easily. 
+
+Perhaps you’ve seen other interesting page transitions for PDF presentations, created in InDesign.
+Truthfully, Flipsnack is not the only tool that can be used to make PDF pages interactive.
+It’s possible to create some interesting page transition effects in InDesign or with other online tools, but beware the Flash.
+Flash is an outdated technology that was very popular once. 
+Now it’s prone to vulnerabilities, so browsers are blocking all Flash content. 
+Despite these issues, most flipbook makers are still Flash-based, so they should be avoided. 
+
+
+
+First, the effect that you are trying to achieve is called a "Page Turn." From everything I know, there isn't any way to get that effect in an actual PDF document.
+The only way I know to do that is to convert your PDF file into a Flash (swf) document. There the Page Turn transition is easy to create.
+I create these Flash documents using the Export as SWF feature in InDesign.
+ However, there are quite a few third-party products that will convert your PDF into a Flash document. (Ironically this is not something that native Adobe products do.)
+But remember, the final document will not be a PDF. People will have to have the Flash Reader, not the Adobe Reader, to open the file.
+It might be a good idea to look at how the final document will be distributed and played, before you decide on a transition effect
+
+
+If you use InDesign CS4 (or 5) to create your layout, this may interest you:
+http://indesignsecrets.com/adding-zoom-and-print-to-indesign-swf-files.php
+Not PDF, but very easy way to get pageturn effect + other controls to your publication...
+
+
+
+PDF itself is more like a readable file than a page flip book. While, Flash files support that kinda animated effect.
+To make page flip book from PDF, I reommend this one http://www.pdf-to-flash-magazine.com/ , 
+Both free online conversion and offline software download are offered, not to mention the wonderful page-flip effect they made.
+
+
+Try something like a PDF to Flash Magazine converter,  You can take advantage of a good and mature software instead of developing one yourself.
+Still, some open sources for page flip which had great use in animation.
+
+Issuu: an online open source service can turn uploaded PDF into a page flipping book.
+2. Page Flip flap: A free online tool that can accept PDF and create page flippable books 
+
+
+
+https://stackoverflow.com/questions/40186787/rotate-an-image-around-its-x-axis
+
+
+
+
+I recommend using Impressive: It's a presentation software written in Python and running on Windows, Linux and Macintosh. Amongst other transition effects, it supports two page flipping effects, PagePeel and PageTurn. The transitions can be configured in a text file.
+
+Example
+
+If you have a presentation mytalk.pdf, create a text file called mytalk.pdf.info. In order to use e. g. the PageTurn effect between slide 1 and 2 and to use no transitions in the rest of the presentation, the contents of this file would look like this:
+
+DocumentTitle = "My talk"
+PageProps = {
+  1: {
+       'transition': PageTurn
+     }
+}
+AvailableTransitions = [None]
+More information on how to configure the appearance of your presentations can be found in the Impressive manual.
+
+
+
+
+
+
+
+Accessibility is very important for your stylish PDF presentation, right?
+
+
+
+
