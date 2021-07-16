@@ -1,0 +1,4 @@
+mkdir /media/usb-drive
+mount /dev/sdc1 /media/usb-drive/
+mount | grep sdc1
+umount /media/usb-drive
