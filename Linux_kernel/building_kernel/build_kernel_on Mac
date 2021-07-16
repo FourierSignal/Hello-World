@@ -18,3 +18,11 @@ Next you'll need malloc.h to be in the expected location for a Linux system, so 
 sudo ln -s /usr/include/malloc/malloc.h /usr/include/malloc.h
 
 check whether or not the compiler installed on your system is suitable for building the Linux kernel. 
+
+if your compiler can not generate elf format, install libelf from macports
+$ sudo port install libelf
+
+
+
+you need GNU version of sed
+$ sudo port install gsed
