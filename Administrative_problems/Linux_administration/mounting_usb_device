@@ -1,4 +1,17 @@
+examine disk name:
+------------------
+fdisk -l 
+
+
+mount:
+------------
 mkdir /media/usb-drive
 mount /dev/sdc1 /media/usb-drive/
+
+check mounting
+------------
 mount | grep sdc1
+
+unmount:
+-------------
 umount /media/usb-drive
