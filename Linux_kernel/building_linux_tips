@@ -1,1 +1,17 @@
-h
+getting verbose:
+--------------------
+ make VERBOSE=1  ARCH=i386 CROSS_COMPILE=i386-foo-linux-gnu-  KBUILD_VERBOSE=1 HOSTCFLAGS="--verbose" 
+
+ VERBOSE=1  ---> native make verbose
+ 
+ KBUILD_VERBOSE=1 ---> linux KBUILD verbose 
+ 
+ HOSTCFLAGS="--verbose"  ---> host gcc verbose 
+ 
+ 
+make ARCH=i386 CROSS_COMPILE=i386-foo-linux-gnu-  HOSTCFLAGS="--verbose" 
+HOSTCC  scripts/basic/fixdep
+HOSTCC  arch/x86/tools/relocs_32.o 
+
+some programs in the kernel compile natively on the host (e.g. modpost).
+
