@@ -4,3 +4,12 @@ If you want to compile on mac itself :
 --------------------------------
 (the default HFS filesystem on mac is case insensitive.)
 Before you can even start, you may need to install the Linux source tree on a case-sensitive filesystem on your Mac. 
+
+you'll need the following files to cross-compile a kernel on an OS X (to your local /usr/include): copy them from any linux system.
+/usr/include/elf.h
+/usr/include/features.h
+/usr/include/bits/predefs.h
+/usr/include/bits/wordsize.h
+/usr/include/gnu/stubs.h
+/usr/include/gnu/stubs-64.h
+
