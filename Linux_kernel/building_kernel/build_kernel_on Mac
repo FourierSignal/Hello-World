@@ -1,0 +1,6 @@
+It is  simpler to just use a Linux VM. --> use docker.
+
+If you want to compile on mac itself :
+--------------------------------
+(the default HFS filesystem on mac is case insensitive.)
+Before you can even start, you may need to install the Linux source tree on a case-sensitive filesystem on your Mac. 
