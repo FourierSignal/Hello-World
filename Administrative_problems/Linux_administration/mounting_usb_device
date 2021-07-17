@@ -15,3 +15,30 @@ mount | grep sdc1
 unmount:
 -------------
 umount /media/usb-drive
+
+
+mounting as non root user:
+----------------------------------
+
+
+Look for to which group device file belongs to
+
+ls -l /dev/sda2                                                                                                                                                                
+brw-rw---- 1 root disk  /dev/sda2
+
+Saw that device file belongs to group disk
+
+Now add our user to group disk
+
+usermod -G disk -a username
+
+And now in /etc/fstab
+
+/dev/sda2   /mnt/backups    ext4    noauto,group,suid,dev,async      0   2
+
+or with UUID
+
+UUID=c90324c1-3fba-119c-913c-5f913afdca8b   /mnt/backups    ext4    noauto,group,suid,dev,async      0   2
+
+Now all users in group disk, for now it's only username, can mount certain disk.
+
