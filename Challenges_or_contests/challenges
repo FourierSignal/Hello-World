@@ -1,6 +1,20 @@
 
+zenodo.org
+--------------
+
 https://grand-challenge.org/
 -------------------------------
+
+
+http://www.miccai.org/special-interest-groups/challenges/miccai-registered-challenges/
+-----------------------------------------------
+Challenge name
+Acronym
+DOI
+3D Teeth Scan Segmentation and Labelling Challenge	3DTeethSeg22	10.5281/zenodo.4575210
+Baby Steps	BabySteps	10.5281/zenodo.4575215
+Diabetic Foot Ulcers Grand Challenge 2022	DFUC2022	10.5281/zenodo.4575227
+Whole-heart and Great Vessel Segmentation from 3D Cardiovascular Magnetic Resonance Images in Congenital Heart Disease (Part II) (Challenge withdrawn)	HVSMR-II	10.5281/zenodo.4575237
 
 
 
@@ -13,3 +27,4 @@ https://github.com/l3das/L3DAS21
 
 arXivLabs: experimental projects with community collaborators
 -----------------------------------------------------------
+
