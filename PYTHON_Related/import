@@ -1,0 +1,7 @@
+from pathlib import Path
+moments_folder = '/Users/__/Documents/__/SIgnal_processing/3.1_statisticalSP/SSP_library/moments'
+
+import sys
+sys.path.append(moments_folder)
+
+from moments import *
