@@ -1,0 +1,84 @@
+pyenv versions
+
+
+pyenv version
+
+
+pyenv which pip
+The which command is helpful for determining the full path to a system executable. 
+Because pyenv works by using shims, this command allows you to see the full path to the executable pyenv is running. 
+For example, if you wanted to see where pip is installed, you could run this:  pyenv which pip
+
+
+
+pyenv global 3.6.8    ---  This command sets the ~/.pyenv/version to 3.6.8
+pyenv global 3.6.8
+$ pyenv versions
+  system
+  2.7.15
+* 3.6.8 (set by /home/realpython/.pyenv/version)
+  3.8-dev
+$cat ~/.pyenv/version
+3.6.8
+
+
+
+ pyenv local 2.7.15    ------ This command creates a .python-version file in your current directory. 
+ pyenv local 2.7.15
+$ pyenv versions
+  system
+* 2.7.15 (set by /home/realpython/.python-version)
+  3.6.8
+  3.8-dev
+$ ls -a
+.  ..  .python-version
+$ cat .python-version
+2.7.15
+
+
+ pyenv shell 3.8-dev     -------This command activates the version specified by setting the PYENV_VERSION environment variable
+ 
+ pyenv shell 3.8-dev
+$ pyenv versions
+  system
+  2.7.15
+  3.6.8
+* 3.8-dev (set by PYENV_VERSION environment variable)
+
+echo $PYENV_VERSION
+3.8-dev
+
+
+
+
+pyenv virtualenv <python_version> <environment_name>
+
+A good practice is to name your environments the same name as your project. 
+
+mkdir myproject
+pyenv virtualenv 3.6.8 myproject
+pyenv local myproject
+
+ here for pyenv local, instead of specifying a Python version, you specify an environment. 
+ This creates a .python-version file in your current working directory 
+ and because you ran eval "$(pyenv virtualenv-init -)" in your environment, the environment will automatically be activated
+ 
+ pyenv which python
+ /home/realpython/.pyenv/versions/myproject/bin/python
+ If you look at any executable this environment provides, you will see the same thing. Take, for example, pip:
+ pyenv which pip
+/home/realpython/.pyenv/versions/myproject/bin/pip
+
+
+
+If you did not configure eval "$(pyenv virtualenv-init -)" to run in your shell, you can manually activate/deactivate your Python versions with this:
+$ pyenv activate <environment_name>
+$ pyenv deactivate
+The above is what pyenv-virtualenv is doing when it enters or exits a directory with a .python-version file in it.
+
+
+
+
+
+
+
