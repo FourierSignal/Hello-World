@@ -1,3 +1,46 @@
+Using the pyenv-installer
+------------------------------
+ curl https://pyenv.run | bash
+ 
+ Load pyenv automatically by adding
+the following to ~/.bashrc:
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+exec "$SHELL" # Or just restart your terminal
+
+
+
+ pyenv commands
+ 
+ pyenv shims --help
+ 
+
+pyenv install --list | grep
+pyenv install -v 3.10.0
+pyenv install -v 3.9.0
+
+ls ~/.pyenv/versions/
+
+rm -rf ~/.pyenv/versions/2.7.15  or pyenv uninstall 2.7.15  --- will remove a version
+ 
+
+pyenv versions
+python -V
+
+which python
+/home/realpython/.pyenv/shims/python
+
+pyenv which python
+/usr/bin/python
+
+
+
+
+
+
+
 pyenv versions
 
 
