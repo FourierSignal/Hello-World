@@ -263,9 +263,54 @@ The above is what pyenv-virtualenv is doing when it enters or exits a directory 
 
 
 
+difference  
+/home/sudheer/.python-version 
 
 
 
-  
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ python -V
+Python 2.7.17
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv version
+system (set by /home/sudheer/.python-version)
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versions
+* system (set by /home/sudheer/.python-version)
+  3.10.0
+  3.10.0/envs/hpf
+  3.10.4
+  3.10.4/envs/hpf_aliasing
+  3.8.0
+  3.8.0/envs/lpf
+  3.8.0/envs/lpf_aliasing
+  hpf
+  hpf_aliasing
+  lpf
+  lpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv global 
+3.10.4
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cat /home/sudheer/.pyenv/version
+3.10.4
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ ls /home/sudheer/.pyenv/ver*
+/home/sudheer/.pyenv/version
+
+/home/sudheer/.pyenv/versions:
+3.10.0  3.10.4  3.8.0  hpf  hpf_aliasing  lpf  lpf_aliasing
+
+
+
+  sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ ls -a
+.  ..  hpf  hpf_aliasing  lpf  project_amplification  project_wave_ops
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv local
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ ls -a
+.  ..  .python-version
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ pyenv local
+hpf
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ pyenv version
+hpf (set by /home/sudheer/Downloads/workspace_python/Audio_sp/hpf/.python-version)
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ 
+
   
 
