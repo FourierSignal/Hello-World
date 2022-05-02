@@ -121,7 +121,14 @@ The above is what pyenv-virtualenv is doing when it enters or exits a directory 
 
 
 
+creating virual environments
+------------------------------
+pyenv virtualenv 3.8.0  lpf
+pyenv virtualenv 3.10.0 hpf
 
+
+cd ~/Download/workspace_python/Audio_sp/hpf
+pyenv local hpf
 
 
 sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versions
@@ -158,6 +165,24 @@ sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf
   lpf
 (hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ 
 
+
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv install 3.10.4
+Downloading Python-3.10.4.tar.xz...
+-> https://www.python.org/ftp/python/3.10.4/Python-3.10.4.tar.xz
+Installing Python-3.10.4...
+Installed Python-3.10.4 to /home/sudheer/.pyenv/versions/3.10.4
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versions
+* system (set by /home/sudheer/.python-version)
+  3.10.0
+  3.10.0/envs/hpf
+  3.10.4
+  3.8.0
+  3.8.0/envs/lpf
+  hpf
+  lpf
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
 
 
 
