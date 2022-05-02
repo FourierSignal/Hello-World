@@ -320,5 +320,48 @@ sudheer@sudheer-OptiPlex-5060:~$ python -V
 Python 2.7.17
 
 
+sudheer@sudheer-OptiPlex-5060:~$ pyenv virtualenv 3.10.0 bpf
+sudheer@sudheer-OptiPlex-5060:~$ pyenv versions
+  system
+  3.10.0
+  3.10.0/envs/bpf
+  3.10.0/envs/hpf
+* 3.10.4 (set by /home/sudheer/.pyenv/version)
+  3.10.4/envs/hpf_aliasing
+  3.8.0
+  3.8.0/envs/lpf
+  3.8.0/envs/lpf_aliasing
+  bpf
+  hpf
+  hpf_aliasing
+  lpf
+  lpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~$ 
+
+
+sudheer@sudheer-OptiPlex-5060:~$ cd ~/Downloads/workspace_python/Audio_sp/lpf/
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ 
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ python -V
+Python 2.7.17
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ pyenv versions
+  system
+  3.10.0
+  3.10.0/envs/bpf
+  3.10.0/envs/hpf
+  3.10.4
+  3.10.4/envs/hpf_aliasing
+  3.8.0
+  3.8.0/envs/lpf
+  3.8.0/envs/lpf_aliasing
+  bpf
+  hpf
+  hpf_aliasing
+* lpf (set by /home/sudheer/Downloads/workspace_python/Audio_sp/lpf/.python-version)
+  lpf_aliasing
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ cd ..
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+
 
 
