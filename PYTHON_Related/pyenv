@@ -124,4 +124,40 @@ The above is what pyenv-virtualenv is doing when it enters or exits a directory 
 
 
 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versions
+* system (set by /home/sudheer/.python-version)
+  3.10.0
+  3.10.0/envs/hpf
+  3.8.0
+  3.8.0/envs/lpf
+  hpf
+  lpf
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd lpf
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ pyenv versions
+  system
+  3.10.0
+  3.10.0/envs/hpf
+  3.8.0
+  3.8.0/envs/lpf
+  hpf
+* lpf (set by /home/sudheer/Downloads/workspace_python/Audio_sp/lpf/.python-version)
+(lpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/lpf$ cd ..
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ pyenv versions
+  system
+  3.10.0
+  3.10.0/envs/hpf
+  3.8.0
+  3.8.0/envs/lpf
+* hpf (set by /home/sudheer/Downloads/workspace_python/Audio_sp/hpf/.python-version)
+  lpf
+(hpf) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf$ 
+
+
+
 
