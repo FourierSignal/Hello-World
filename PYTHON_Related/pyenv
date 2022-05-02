@@ -203,3 +203,69 @@ sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versi
   lpf_aliasing
 sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
 
+
+
+
+sudheer@sudheer-OptiPlex-5060:~$ pyenv virtualenv 3.10.4  hpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~$ pyenv versions
+* system (set by /home/sudheer/.python-version)
+  3.10.0
+  3.10.0/envs/hpf
+  3.10.4
+  3.10.4/envs/hpf_aliasing
+  3.8.0
+  3.8.0/envs/lpf
+  3.8.0/envs/lpf_aliasing
+  hpf
+  hpf_aliasing
+  lpf
+  lpf_aliasing
+  
+  
+  
+  sudheer@sudheer-OptiPlex-5060:~$ cd ~/Downloads/workspace_python/Audio_sp/
+  
+  sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ mkdir hpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf_aliasing/
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ ls -a
+.  ..
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ pyenv local hpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ ls -a
+.  ..  .python-version
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ cat .python-version 
+hpf_aliasingsudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ cd ..
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf
+hpf/          hpf_aliasing/ 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf_aliasing/
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ 
+
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ pyenv activate hpf_aliasing
+pyenv-virtualenv: prompt changing will be removed from future release. configure `export PYENV_VIRTUALENV_DISABLE_PROMPT=1' to simulate the behavior.
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ 
+
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ 
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ cd ..
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ cd hpf_aliasing/
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp/hpf_aliasing$ cd ..
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+(hpf_aliasing) sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv deactivate 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+
+
+
+If you did not configure eval "$(pyenv virtualenv-init -)" to run in your shell, you need not  manually activate/deactivate your Python versions like above
+The above is what pyenv-virtualenv is doing when it enters or exits a directory with a .python-version file in it.
+
+
+
+
+
+
+
+
+  
+  
+
