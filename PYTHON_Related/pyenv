@@ -185,4 +185,21 @@ sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versi
 sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
 
 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv virtualenv 3.8.0  lpf_aliasing
+Looking in links: /tmp/tmpah615ooy
+Requirement already satisfied: setuptools in /home/sudheer/.pyenv/versions/3.8.0/envs/lpf_aliasing/lib/python3.8/site-packages (41.2.0)
+Requirement already satisfied: pip in /home/sudheer/.pyenv/versions/3.8.0/envs/lpf_aliasing/lib/python3.8/site-packages (19.2.3)
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ pyenv versions
+* system (set by /home/sudheer/.python-version)
+  3.10.0
+  3.10.0/envs/hpf
+  3.10.4
+  3.8.0
+  3.8.0/envs/lpf
+  3.8.0/envs/lpf_aliasing
+  hpf
+  lpf
+  lpf_aliasing
+sudheer@sudheer-OptiPlex-5060:~/Downloads/workspace_python/Audio_sp$ 
 
