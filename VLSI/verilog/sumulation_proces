@@ -13,3 +13,5 @@ Simulation :  is the process in which HDL code gets executed (after a successful
               Changes in signals/nets will trigger evaluation of all dependent processes and further updates of other events.
               
  notion of time in simulation:  evaluation proceeds by execution of process in a current time slot and moves on to next time slot
+
+study verilog LRM = SystemVerilog 3.1a Language Reference Manual 
