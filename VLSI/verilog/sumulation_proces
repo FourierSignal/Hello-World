@@ -1,0 +1,15 @@
+  design model coded in the HDL
+ 
+ compilation:  analyzing the source code for syntax and semantic errors.
+ 
+ 
+ Elaboration:  binds modules to module instances, builds the model hierarchy, computes parameter values, resolves hierarchical names,
+                establishes net connectivity, and prepares all of this for simulation
+                
+An HDL description of the design would consist of several concurrent process , assignments and some connections between then.                
+               
+Simulation :  is the process in which HDL code gets executed (after a successful compilation and elaboration) based on a given execution model.
+              Most HDL simulators uses an event based execution model. 
+              Changes in signals/nets will trigger evaluation of all dependent processes and further updates of other events.
+              
+ notion of time in simulation:  evaluation proceeds by execution of process in a current time slot and moves on to next time slot
