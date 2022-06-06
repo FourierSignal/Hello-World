@@ -1,29 +1,54 @@
 
-VLSI 
+VLSI overall stages:
+
 system specification---> Architecural design--> Fuunctional design and logic design --> circuit design --> physical design --> 
 physical verification-and signoff --> Layout post processing--> fabrication--> packaging and testing
 
 Physical design: partitioning--> floor planning--> placement-->clock tree synthesis--> signal routing-> timing closure
 
+###########################################################################################################################################
 
-Specification: This is the first stage in the design process where we define the important parameters of the system that has to be designed into a specification.
-High level Design: In this stage, various details of the design architecture are defined. In this stage, details about the different functional blocks and the interface communication protocols between them etc. are defined.
-Low level Design: This phase is also known as microarchitecture phase. In this phase lower level design details about each functional block implementation are designed. This can include details like modules, state machines, counters, MUXes, decoders, internal registers etc.
-        RTL coding: In RTL coding phase, the micro design is modelled in a Hardware Description Language like Verilog/VHDL, using synthesizable constructs of the language. Synthesizable constructs are used so that the RTL model can be input to a synthesis tool to map the design to actual gate level implementation later.
-        Functional Verification: Functional Verification is the process of verifying the functional characteristics of the design by generating different input stimulus and checking for correct behavior of the design implementation. 
-        Logic Synthesis: Synthesis is the process in which a synthesis tool like design compiler takes in the RTL, target technology, and constraints as inputs and maps the RTL to target technology primitives. Functional equivalence checks are also done after synthesis to check for equivalence between the input RTL model and the output gate level model.
-        Placement and Routing: Gate-level netlist from the synthesis tool is taken and imported into place and route tool in the Verilog netlist format. All the gates and flip-flops are placed, Clock tree synthesis and reset is routed. After this each block is routed, output of the P&R tool is a GDS file, which is used by a foundry for fabricating the ASIC
-        Gate level Simulation:  The Placement and Routing tool generates an SDF (Standard Delay File) that contains timing information of the gates. This is back annotated along with gate level netlist and some functional patterns are run to verify the design functionality. A static timing analysis tool like Prime time can also be used for performing static timing analysis checks
-        Fabrication: Once the gate level simulations verify the functional correctness of the gate level design after the Placement and Routing phase, then the design is ready for manufacturing. The final GDS file (a binary database file format which is the default industry standard for data exchange of integrated circuit or IC layout artwork) is normally send to a foundry which fabricates the silicon. Once fabricated, proper packaging is done and the chip is made ready for testing.
-        Post silicon Validation: Once the chip is back from fabrication, it needs to be put in a real test environment and tested before it can be used widely in the market. This phase involves testing in lab using real hardware boards and software/firmware that programs the chip. Since the speed of simulation with RTL is very slow compared to testing in lab with real silicon, there is always a possibility to find a bug in silicon validation and hence this is very important before qualifying the design for a market.
+Specification:  define the important parameters of the system that has to be designed into a specification.
 
+High level Design: In this stage, various details of the design architecture are defined. 
+                    In this stage, details about the different functional blocks and the interface communication protocols between them etc. are defined.
+                    
+Low level Design: This phase is also known as microarchitecture phase. 
+                  In this phase lower level design details about each functional block implementation are designed.
+                  This can include details like modules, state machines, counters, MUXes, decoders, internal registers etc.
+                  
+RTL coding: In this phase, the micro design is modelled in a Hardware Description Language like Verilog/VHDL,using synthesizable constructs of the language.
+            Synthesizable constructs are used so that the RTL model can be input to a synthesis tool to map the design to actual gate level implementation later.
+            
+Functional Verification:  is the process of verifying the functional characteristics of the design by generating different input stimulus 
+                          and checking for correct behavior of the design implementation. 
+                          
+Logic Synthesis: Synthesis is the process in which a synthesis tool like design compiler takes in the RTL, target technology,
+                 and constraints as inputs and maps the RTL to target technology primitives. 
+                 Functional equivalence checks are also done after synthesis to check for equivalence between the input RTL model and the output gate level model.
+                 
+Placement and Routing: Gate-level netlist from the synthesis tool is taken and imported into place and route tool in the Verilog netlist format.
+                        All the gates and flip-flops are placed, Clock tree synthesis and reset is routed. 
+                        After this each block is routed, output of the P&R tool is a GDS file, which is used by a foundry for fabricating the ASIC
+                        
+Gate level Simulation:  The Placement and Routing tool generates an SDF (Standard Delay File) that contains timing information of the gates.
+                        This is back annotated along with gate level netlist and some functional patterns are run to verify the design functionality.
+                        A static timing analysis tool like Prime time can also be used for performing static timing analysis checks.
+                        
+Fabrication: Once the gate level simulations verify the functional correctness of the gate level design after the Placement and Routing phase,
+             then the design is ready for manufacturing. 
+             The final GDS file (a binary database file format which is the default industry standard for data exchange of IC layout artwork) 
+             is normally send to a foundry which fabricates the silicon.
+             Once fabricated, proper packaging is done and the chip is made ready for testing.
+        
+Post silicon Validation: Once the chip is back from fabrication, it needs to be put in a real test environment and tested 
+                          before it can be used widely in the market.
+                          This phase involves testing in lab using real hardware boards and software/firmware that programs the chip. 
+                          Since the speed of simulation with RTL is very slow compared to testing in lab with real silicon, 
+                          there is always a possibility to find a bug in silicon validation 
+                          and hence this is very important before qualifying the design for a market.
 
-
-
-
-
-
-
+###########################################################################################################################################
 
 VLSI Design has two part, one is called Front End. another part is Back-end.
 
