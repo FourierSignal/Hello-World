@@ -1,9 +1,16 @@
+
+https://github.com/nmap/npcap/issues ---- npcap issues on github
+
 https://github.com/nmap/npcap/issues/535
 https://github.com/nmap/npcap/issues/30
 https://seclists.org/nmap-dev/2022/q4/1
 
-
 https://seclists.org/nmap-dev/ ---> npcap dev list (Nmap Development Mailing List)
+https://seclists.org/tcpdump/ ---->  TCPDump/LibPCAP Devlist
+
+Nmap is a network scanner created by Gordon Lyon.
+Nmap is used to discover hosts and services on a computer network by sending packets and analyzing the responses.
+Nmap provides a number of features for probing computer networks, including host discovery and service and operating system detection.
 
 
 audio processing application need to capture a ton (~100,000) tiny UDP packets per second.
