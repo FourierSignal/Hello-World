@@ -1,5 +1,10 @@
 https://github.com/nmap/npcap/issues/535
 https://github.com/nmap/npcap/issues/30
+https://seclists.org/nmap-dev/2022/q4/1
+
+
+https://seclists.org/nmap-dev/ ---> npcap dev list (Nmap Development Mailing List)
+
 
 audio processing application need to capture a ton (~100,000) tiny UDP packets per second.
 real-time requirements(latency/jitter)  to deliver smooth audio places bigger constraint on npcap.
@@ -19,3 +24,107 @@ count the number of bytes processed in each call to pcap_dispatch, and if it's r
 watch the values from pcap_stats. If they start seeing the dropped packet count go up, then they are not reading from Npcap fast enough. They can increase the kernel buffer size, but unless their traffic is really bursty, that won't help; they need to process the data faster.
 
 pcap_setfilter can help because it allows the driver to ignore packets that the user isn't interested in.
+
+
+It is also possible
+that the packets were dropped by some other participant in the data path,
+such as an upstream router, switch, or another component of the NDIS stack
+like a firewall. A better measurement of wether your application drops packets is Npcap's own internal stats, which
+can be obtained with the pcap_stats() function.
+
+
+struct pcap_stat : ps_recv member -> the number of packets delivered on the adapter. (regardless of whether they are captured by
+your application, due to BPF filtering or buffer size limitations, etc.)
+ps_drop member --> number of packets dropped by this capture handle, due usually to buffer size limits but also
+potentially due to memory allocation failures.
+
+generally  capture handle  is opened using pcap_open() for eg: with a snap length of 65536, promiscuous mode enabled, and a read timeout of 500ms.
+The recommended functions to open a capture handle are pcap_create() and pcap_activate(), which allow better fine-grained control over capture
+parameters via a number of pcap_set_*() functions.
+in case of packets larger than the MTU/MSS where Receive Side Coalesce the packet fragments, if your intent is to capture the entire packet, do not set a
+snaplen at all, which will set the maximum value.
+
+ Promiscuous mode may not be supported on all adapters.know if adapter supports the mode before setting it.
+for most switched networks, Promiscuous mode will not necessarily result in more data captured.
+Review your application's needs to be sure Promiscuous mode is appropriate.
+
+
+
+to increase the size of the kernel buffer Use pcap_set_buffer_size() instead of pcap_setbuff(),which is a WinPcap extension.
+
+the kernel buffer is the ring buffer that must be read from at least as fast as the data is received in order to
+minimize/eliminate the occurrence of dropped packets. 
+size of the buffer won't prevent dropped packets if the application can't keep up (it merely delays the moment when that occurs).
+But a bigger ring buffer can accommodate data spikes, allowing the application to catch up during data lulls.
+
+how big can we make the kernel buffer via pcap_setbuff()?  Is there a practical or rule-of-thumb limit?
+Ans: The kernel buffer space is allocated from the NonPagedPool, which is a very precious resource. 
+On Windows 11 with 4GB of RAM, the NonPagedPool is 768MB. 
+Fortunately, since Npcap 1.00 the "kernel buffer size" is interpreted as a limit, not allocated all at once as it was in WinPcap. 
+This means that setting a ridiculously large buffer size will not immediately crash the system, 
+and as long as you continue to read from it, it will likely never attain the full size. 
+However, it does open up the possibility of running out of resources later, especially if you stop processing packets without closing the handle.
+
+    
+
+An implementtaion example and flaws in it:
+ 1.call pcap_next_ex() inside a for loop to get the next capture
+ 2.Upon successful return, we allocate a byte array using pkt_header.caplen, copy the pkt_data into the byte array, and add the byte array to a pre-allocated list.
+3. We execute this for loop until the pre-allocated list is filled (to avoid reallocation) or a predetermined timeout is exceeded on the
+application side.
+4.When either of these conditions is satisfied, we hand the pre-allocated list off to another thread, allocate a new list, and do the loop again.
+Questions: Is pcap_next_ex() the most efficient way of transferring captures to the application? 
+It looks like pcap_loop() or pcap_dispatch() might allow multiple captures to be returned via a single callback.
+Is that correct? And if so, would that be the recommended way to get the captures in a high data rate environment?
+Ans: 
+1.The advantage of pcap_loop or pcap_dispatch() is that they handle the looping and offer better control over when to stop processing packets.
+2.pcap_dispatch(), in particular, will process packets until it is time to issue another request for packet data to the kernel (the Npcap driver)
+3. This can be combined with the Windows Event returned by the pcap_getevent() function, which is signaled when a batch of packets is
+   "ready" for the application to process, as defined by parameters set via pcap_setmintocopy(), pcap_set_timeout(), pcap_set_immediate(), etc.
+   So an application will typically WaitForSingleObject (or other API function for synchronizing on an Event) until the event is signaled,
+   then call pcap_dispatch() to run the callback on all received packets.
+   
+
+Is the ring buffer associated with each handle???
+Ans:
+The size limit is tracked per-handle, referring to the amount of packet data that particular handle is waiting on.
+If multiple handles are waiting on the same data, each one will account the storage towards its own limit,
+but the data will not be actually duplicated, and it will not be freed until the last handle retrieves the associated packet.
+
+Should we use pcap_set_buffer_size() instead of pcap_setbuff()? 
+Both of these functions achieve the same result, but pcap_set_buffer_size() is preferred because it is standard libpcap API 
+and will work on non-Npcap platforms.
+
+
+Q:  How does the user buffer work with pcap_next_ex()?  Since pcap_next_ex() only returns a single packet at a time, does the user buffer even matter?
+
+The "user buffer" is used to transfer packet data between the kernel(Npcap's NDIS filter driver) and userspace (wpcap.dll). 
+Tuning this parameter may help reduce overhead, but other parameters should probably be adjusted first.
+pcap_next_ex() reads from this buffer until it is empty,then it issues a Read call to retrieve more packets.
+
+Q :  How does pcap_mintocopy() work with pcap_next_ex()? 
+     Again, since pcap_next_ex() only returns a single packet at a time, does this even  apply? 
+     Perhaps should it be used with with pcap_loop() or pcap_dispatch()?
+Ans:
+The same mechanism retrieves packets for all of these functions. 
+The MinToCopy parameter serves to reduce the number of Read calls, which each requires the user buffer be mapped and locked.
+It works best using the Windows Event synchronization mechanism along with pcap_dispatch().
+
+Q:  can stats be enabled for the same handle that is capturing the data? .
+If we want to monitor, for example, the number of dropped packets seen during a capture, how do we do that with the pcap_t returned
+by pcap_open()?  If we need two pcap_t handles, one for capture and one forstats, does that imply a single ring buffer under the hood for a given NIC?.
+Ans:
+"Statistics mode" using pcap_setmode() with MODE_STAT is a WinPcap extension, and we have not done much to alter or fix it.
+It is mutually exclusive with capture mode, so two handles are required, but it does not buffer packets, only counts them. 
+But ,The preferred way to check statistics is the pcap_stats() function mentioned earlier. This can be used on any open capture handle regardless of mode.
+
+pcap_stats() ( can be used on any opened handle) is preferred way to collect stats than using pcap_setmode() with MODE_STAT, which require a seperate 
+capture handle.
+
+
+
+     
+
+
+
+
