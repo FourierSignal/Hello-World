@@ -7,3 +7,15 @@ But if they're willing to process things in batches as long as they don't truly 
 then Npcap can be tuned to support some very high throughputs.
 you can process the packets as fast as possible from the libpcap API standpoint.
 using pcap_getevent() to get a handle for each pcap descriptor and using WaitForMultipleObjects to ensure  Read only when it's appropriate.
+using appropriate values for the various buffers, timeouts, and the mintocopy value.
+performance improvements can be done in user code, or increase the mintocopy value and user buffer size in order to reduce the overhead of calls to the driver to get packets.
+
+pcap_set_immediate_mode(), but that is performance-intensive compared to letting the driver buffer a bunch of packets to transfer in fewer calls.
+
+buffer sizes and mintocopy value are Npcap-specific tunings,make sure their user buffer size is large enough to accommodate at least that much.
+
+count the number of bytes processed in each call to pcap_dispatch, and if it's really close to the user buffer size, then they're probably leaving packets behind in the kernel buffer that could have been transfered in a single call. Solution: increase user buffer size.
+
+watch the values from pcap_stats. If they start seeing the dropped packet count go up, then they are not reading from Npcap fast enough. They can increase the kernel buffer size, but unless their traffic is really bursty, that won't help; they need to process the data faster.
+
+pcap_setfilter can help because it allows the driver to ignore packets that the user isn't interested in.
