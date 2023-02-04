@@ -1,0 +1,9 @@
+https://github.com/nmap/npcap/issues/535
+https://github.com/nmap/npcap/issues/30
+
+audio processing application need to capture a ton (~100,000) tiny UDP packets per second.
+real-time requirements(latency/jitter)  to deliver smooth audio places bigger constraint on npcap.
+But if they're willing to process things in batches as long as they don't truly fall behind, 
+then Npcap can be tuned to support some very high throughputs.
+you can process the packets as fast as possible from the libpcap API standpoint.
+using pcap_getevent() to get a handle for each pcap descriptor and using WaitForMultipleObjects to ensure  Read only when it's appropriate.
