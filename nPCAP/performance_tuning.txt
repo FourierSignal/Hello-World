@@ -13,6 +13,19 @@ Nmap is used to discover hosts and services on a computer network by sending pac
 Nmap provides a number of features for probing computer networks, including host discovery and service and operating system detection.
 
 
+
+
+The Npcap driver stores captured packets in a circular buffer until they are retrieved (pcap_next_ex(), pcap_dispatch(), pcap_loop(), PacketRecievePacket()) by the user program.
+
+Each adapter handle (pcap_t or ADAPTER) has its own buffer, the size of which is set via pcap_set_buffer_size(), pcap_setbuff() (deprecated WinPcap extension), or PacketSetBuff(), and which defaults to 1MB.
+
+The buffer is split into a number of independent segments according to the number of processors on the system. When a packet is received by the driver, it is put into the buffer segment corresponding to the driver thread's current processor. If there is not enough room in that segment, the packet is dropped.
+
+A user program receives packets into a "user buffer" which is passed to PacketRecievePacket(). The driver empties packets from its own buffer segments in the order they were received until it runs out of space in the user buffer or runs out of packets to return. A large user buffer can ensure the kernel buffer is emptied more quickly, preventing packet drops. The libpcap API (wpcap.dll) configures the size of this user buffer via pcap_setuserbuffer(), which defaults to 256KB.
+
+
+
+
 audio processing application need to capture a ton (~100,000) tiny UDP packets per second.
 real-time requirements(latency/jitter)  to deliver smooth audio places bigger constraint on npcap.
 But if they're willing to process things in batches as long as they don't truly fall behind, 
