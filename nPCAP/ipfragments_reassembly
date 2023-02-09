@@ -181,3 +181,151 @@ void packet_handler(u_char *param, const struct pcap_pkthdr *header, const u_cha
 
 
 
+
+#include <pcap.h>
+#include <stdio.h>
+#include <string.h>
+#include <netinet/ip.h>
+
+#define IP_MF 0x2000 /* More fragments flag */
+#define IP_OFFMASK 0x1fff /* Mask for fragment offset */
+
+#define MAX_FRAGMENTS 100
+
+struct fragment {
+    u_char *data;
+    int len;
+    int offset;
+};
+
+struct fragments {
+    struct fragment fragments[MAX_FRAGMENTS];
+    int num_fragments;
+};
+
+struct fragments fragments[65536];
+
+void packet_handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data)
+{
+    struct iphdr *ip;
+    u_int ip_len;
+    u_short id, off;
+    struct fragments *f;
+
+    /* Get the IP header and its length */
+    ip = (struct iphdr *)(pkt_data + 14);
+    ip_len = ip->ihl * 4;
+
+    /* Get the fragment ID and offset */
+    id = ntohs(ip->id);
+    off = ntohs(ip->frag_off) & IP_OFFMASK;
+
+    /* Get the fragment list for this ID */
+    f = &fragments[id];
+
+    /* Check if the packet is a fragment */
+    if (ntohs(ip->frag_off) & IP_MF)
+    {
+        /* This is a fragment, add it to the list */
+        if (f->num_fragments < MAX_FRAGMENTS)
+        {
+            f->fragments[f->num_fragments].data = malloc(header->len - 14 - ip_len);
+            memcpy(f->fragments[f->num_fragments].data, pkt_data + 14 + ip_len, header->len - 14 - ip_len);
+            f->fragments[f->num_fragments].len = header->len - 14 - ip_len;
+            f->fragments[f->num_fragments].offset = off * 8;
+            f->num_fragments++;
+        }
+    }
+    else
+    {
+        /* This is the last fragment, reassemble the packet */
+        int i;
+        u_char *data;
+        int data_len;
+
+        /* Allocate memory for the reassembled packet */
+        data = malloc(header->len - 14 + (off * 8));
+        data_len = header->len - 14 - ip_len;
+
+        /* Copy the data from the last fragment into the buffer */
+        memcpy(data, pkt_data + 14 + ip_len, header->len - 14 - ip_len);
+
+        /* Add the data from each fragment to the buffer */
+        for (i = 0; i < f->num_fragments; i++)
+        {
+            mem
+
+
+#include <pcap.h>
+#include <stdio.h>
+#include <string.h>
+#include <netinet/ip.h>
+
+#define IP_MF 0x2000 /* More fragments flag */
+#define IP_OFFMASK 0x1fff /* Mask for fragment offset */
+
+#define MAX_FRAGMENTS 100
+
+struct fragment {
+    u_char *data;
+    int len;
+    int offset;
+};
+
+struct fragments {
+    struct fragment fragments[MAX_FRAGMENTS];
+    int num_fragments;
+};
+
+struct fragments fragments[65536];
+
+void packet_handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data)
+{
+    struct iphdr *ip;
+    u_int ip_len;
+    u_short id, off;
+    struct fragments *f;
+
+    /* Get the IP header and its length */
+    ip = (struct iphdr *)(pkt_data + 14);
+    ip_len = ip->ihl * 4;
+
+    /* Get the fragment ID and offset */
+    id = ntohs(ip->id);
+    off = ntohs(ip->frag_off) & IP_OFFMASK;
+
+    /* Get the fragment list for this ID */
+    f = &fragments[id];
+
+    /* Check if the packet is a fragment */
+    if (ntohs(ip->frag_off) & IP_MF)
+    {
+        /* This is a fragment, add it to the list */
+        if (f->num_fragments < MAX_FRAGMENTS)
+        {
+            f->fragments[f->num_fragments].data = malloc(header->len - 14 - ip_len);
+            memcpy(f->fragments[f->num_fragments].data, pkt_data + 14 + ip_len, header->len - 14 - ip_len);
+            f->fragments[f->num_fragments].len = header->len - 14 - ip_len;
+            f->fragments[f->num_fragments].offset = off * 8;
+            f->num_fragments++;
+        }
+    }
+    else
+    {
+        /* This is the last fragment, reassemble the packet */
+        int i;
+        u_char *data;
+        int data_len;
+
+        /* Allocate memory for the reassembled packet */
+        data = malloc(header->len - 14 + (off * 8));
+        data_len = header->len - 14 - ip_len;
+
+        /* Copy the data from the last fragment into the buffer */
+        memcpy(data, pkt_data + 14 + ip_len, header->len - 14 - ip_len);
+
+        /* Add the data from each fragment to the buffer */
+        for (i = 0; i < f->num_fragments; i++)
+        {
+            mem
+
