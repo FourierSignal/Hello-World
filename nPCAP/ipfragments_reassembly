@@ -1,0 +1,69 @@
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <npcap.h>
+
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "npcap.lib")
+
+#define MAX_PACKET_SIZE 65535
+#define MAX_FRAGMENTS 10000
+
+// Fragment information structure
+typedef struct
+{
+    BOOL fInUse;
+    DWORD dwSrcIP;
+    DWORD dwID;
+    DWORD dwFragOff;
+    DWORD dwFragSize;
+    BYTE byData[MAX_PACKET_SIZE];
+} FRAGMENT, *PFRAGMENT;
+
+// Function to reassemble fragments
+void ReassembleFragments(PFRAGMENT pFragments, DWORD dwCount)
+{
+    for (DWORD i = 0; i < dwCount; i++)
+    {
+        PFRAGMENT pFragment = &pFragments[i];
+        if (!pFragment->fInUse)
+            continue;
+
+        // Check if this fragment is the first fragment of a datagram
+        if ((pFragment->dwFragOff & 0x1FFF) == 0)
+        {
+            DWORD dwTotalSize = 0;
+            DWORD dwID = pFragment->dwID;
+            DWORD dwSrcIP = pFragment->dwSrcIP;
+
+            // Calculate the total size of the datagram
+            for (DWORD j = i; j < dwCount; j++)
+            {
+                PFRAGMENT pFragment2 = &pFragments[j];
+                if (!pFragment2->fInUse || pFragment2->dwID != dwID || pFragment2->dwSrcIP != dwSrcIP)
+                    continue;
+
+                dwTotalSize += pFragment2->dwFragSize;
+            }
+
+            // Allocate a buffer to hold the complete datagram
+            BYTE* pData = (BYTE*)malloc(dwTotalSize);
+            if (pData == NULL)
+                continue;
+
+            // Copy the data from each fragment into the buffer
+            DWORD dwOffset = 0;
+            for (DWORD j = i; j < dwCount; j++)
+            {
+                PFRAGMENT pFragment2 = &pFragments[j];
+                if (!pFragment2->fInUse || pFragment2->dwID != dwID || pFragment2->dwSrcIP != dwSrcIP)
+                    continue;
+
+                memcpy(pData + dwOffset, pFragment2->byData, pFragment2->dwFragSize);
+                dwOffset += pFragment2->dwFragSize;
+
+                pFragment2->fInUse = FALSE;
+            }
+
+            // Process the complete datagram
+            printf("Reassembled IPv4 datagram: size=%u, src=%u.%u.%u.%u\n",
+                dwTotalSize, (dwSrcIP & 0xFF), (dwSrcIP & 0xFF00) >> 8, (dwSrcIP & 0xFF
