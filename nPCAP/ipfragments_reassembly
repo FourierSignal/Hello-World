@@ -152,3 +152,32 @@ int main(int argc, char* argv[])
     {
         printf("pcap_find
 
+
+
+#include <npcap.h>
+#include <stdio.h>
+
+void packet_handler(u_char *param, const struct pcap_pkthdr *header, const u_char *pkt_data)
+{
+    struct iphdr *ip;
+    u_int ip_len;
+
+    /* Get the IP header and its length */
+    ip = (struct iphdr *)(pkt_data + 14);
+    ip_len = ip->ihl * 4;
+
+    /* Check if the packet is a fragment */
+    if (ntohs(ip->frag_off) & 0x1fff)
+    {
+        /* This is a fragment, reassemble the packet */
+        ...
+    }
+    else
+    {
+        /* This is not a fragment, process the packet */
+        ...
+    }
+}
+
+
+
