@@ -67,3 +67,88 @@ void ReassembleFragments(PFRAGMENT pFragments, DWORD dwCount)
             // Process the complete datagram
             printf("Reassembled IPv4 datagram: size=%u, src=%u.%u.%u.%u\n",
                 dwTotalSize, (dwSrcIP & 0xFF), (dwSrcIP & 0xFF00) >> 8, (dwSrcIP & 0xFF
+
+
+
+
+
+
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <npcap.h>
+
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "npcap.lib")
+
+#define MAX_PACKET_SIZE 65535
+#define MAX_FRAGMENTS 10000
+
+// Fragment information structure
+typedef struct
+{
+    BOOL fInUse;
+    DWORD dwSrcIP;
+    DWORD dwID;
+    DWORD dwFragOff;
+    DWORD dwFragSize;
+    BYTE byData[MAX_PACKET_SIZE];
+} FRAGMENT, *PFRAGMENT;
+
+// Callback function for received packets
+void PacketHandler(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes)
+{
+    PFRAGMENT pFragments = (PFRAGMENT)user;
+
+    // Check if the packet is an IPv4 fragment
+    if (h->len >= 20 && (bytes[9] == 0x40 || bytes[9] == 0x60))
+    {
+        DWORD dwSrcIP = *(DWORD*)(bytes + 12);
+        DWORD dwID = *(WORD*)(bytes + 4);
+        DWORD dwFragOff = *(WORD*)(bytes + 6) & 0x1FFF;
+        DWORD dwFragSize = h->len - 20;
+
+        // Find a free fragment structure
+        PFRAGMENT pFragment = NULL;
+        for (DWORD i = 0; i < MAX_FRAGMENTS; i++)
+        {
+            if (!pFragments[i].fInUse)
+            {
+                pFragment = &pFragments[i];
+                break;
+            }
+        }
+
+        // If we couldn't find a free fragment, discard this fragment
+        if (pFragment == NULL)
+            return;
+
+        // Store the fragment information
+        pFragment->fInUse = TRUE;
+        pFragment->dwSrcIP = dwSrcIP;
+        pFragment->dwID = dwID;
+        pFragment->dwFragOff = dwFragOff;
+        pFragment->dwFragSize = dwFragSize;
+        memcpy(pFragment->byData, bytes + 20, dwFragSize);
+    }
+}
+
+int main(int argc, char* argv[])
+{
+    // Initialize Winsock
+    WSADATA wsaData;
+    int nResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (nResult != 0)
+    {
+        printf("WSAStartup failed: %d\n", nResult);
+        return 1;
+    }
+
+    // Open the Npcap adapter
+    char szError[PCAP_ERRBUF_SIZE];
+    pcap_if_t* pDevices;
+    nResult = pcap_findalldevs(&pDevices, szError);
+    if (nResult != 0)
+    {
+        printf("pcap_find
+
