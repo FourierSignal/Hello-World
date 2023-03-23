@@ -1,0 +1,8 @@
+https://www.verilogpro.com/verilog-module-for-design-and-testbench/
+
+Verilog module is one of the fundamental hierarchical constructs in Verilog.
+It encapsulates code and functionality, allowing a larger design to be built from lower level components, enhancing modularity and reuse.
+
+how to define a module?
+how to connect multiple modules together?
+how the interconnection creates a design hierarchy?
