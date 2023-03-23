@@ -1,0 +1,17 @@
+https://github.com/steveicarus/iverilog: by Stephen Williams : written in c++
+-------------------------------------------------
+
+parser : reads in Verilog (plus extensions) and generates an internal netlist.
+          The output of the parse is a list of Module objects in "pform"
+          
+ivlpp:  does the preprocessing of directives
+
+Elaboration: This phase takes the pform and generates a netlist.
+             The driver selects (by user request or lucky guess) the root module to elaborate, resolves references and expands the instantiations 
+             to form the design netlist.
+             semantic checks,simple optimizations are performed
+             The netlist includes all the behavioural descriptions, as well as gates and wires.
+             human-readable version of the final, elaborated and optimized netlist can be seen by using the -N <path> flag to the compiler. 
+             If elaboration succeeds, the final netlist (i.e., after optimizations but before code generation) will be dumped into the file named <path>.
+             
+             Elaboration is performed in two steps: scopes and parameters first, followed by the structural and behavioural elaboration.
