@@ -6,3 +6,67 @@ It encapsulates code and functionality, allowing a larger design to be built fro
 how to define a module?
 how to connect multiple modules together?
 how the interconnection creates a design hierarchy?
+
+
+
+
+module and_gate
+#(
+    parameter WIDTH = 1
+) (
+    input wire              clk,
+    input wire              rst_n,
+    input wire [WIDTH-1:0]  in_a, in_b,
+    output reg [WIDTH-1:0]  out_c
+);
+
+always @(posedge clk or negedge rst_n)
+    out_c <= in_a & in_b;
+
+endmodule
+
+name of the module :  and_gate
+
+Optional list of parameters: They allow a single piece of Verilog module code to be more extensible and reusable.
+Each instantiation of a Verilog module can supply different values to the parameters, creating different variations of the same base Verilog module.
+ For example, a FIFO Verilog module may have a Verilog parameter to adjust its data width (or even data type, in SystemVerilog).
+ 
+Verilog Parameter  :  parameter WIDTH = 1
+
+Optional list of ports:
+For example, a top level testbench may not have any Verilog ports at all.
+Verilog ports allow different modules of a design to communicate with each other.
+There are other (more backdoor) ways that Verilog modules can communicate. But for a design that intends to be synthesized, Verilog ports is the standard method.
+There are many ways to code port connections.
+
+Verilog Port
+
+Module Item: Module item is essentially the “code that is inside the module” .
+             It defines what constitutes the module, and can include many different types of declarations and definitions
+             (net and variable declarations, always blocks and initial blocks, etc.)
+      
+Instantiating a Verilog Module:
+--------------------------------------
+The Verilog module instantiation statement creates one or more named instances of a defined module.
+Multiple instances (identical copies of the Verilog module) can be created on the same line of code.  
+
+A Verilog module can instantiate other Verilog modules, creating a hierarchy of modules to form the full design and testbench. 
+Any uninstantiated module is at the top level.   
+
+Connecting the Ports
+------------------------
+For a Verilog module that does have ports, Verilog defines two styles to connect the ports:
+
+    By position – specify the connection to each port in the same order as the ports were listed in the module declaration
+    By name – specify each port by the name used in the (sub) module declaration, followed by the name used in the instantiating module
+
+When connecting by name, an unconnected port can be indicated by either omitting it from the port list, 
+or by providing no expression in the parentheses ( .name () ). 
+The two types of port connections shall not be mixed (in Verilog) in a single declaration.
+For a Verilog module that does not have any port, you still need to write the parentheses when instantiating it.
+
+As to what to connect to the port, from Verilog, it can be a register or net identifier, an expression,or a blank (to indicate no connection that that port).
+An unconnected port may also be simply omitted from the port list, but only when connecting by name.
+
+
+Verilog Module Hierarchy:
