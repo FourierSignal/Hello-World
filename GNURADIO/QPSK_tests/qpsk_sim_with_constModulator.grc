@@ -1,0 +1,942 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: qpsk_sim_with_constModulator
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: excess_bw
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.35'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 12.0]
+    rotation: 0
+    state: enabled
+- name: qpsk_constellation
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: None
+    sym_map: '[0, 1, 3, 2]'
+    type: calcdist
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 540.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 12]
+    rotation: 0
+    state: enabled
+- name: sps
+  id: variable
+  parameters:
+    comment: ''
+    value: '256'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 12.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '2'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '100'
+    repeat: 'True'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 300.0]
+    rotation: 0
+    state: disabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 760.0]
+    rotation: 0
+    state: disabled
+- name: blocks_packed_to_unpacked_xx_0
+  id: blocks_packed_to_unpacked_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: '1'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 212.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 460.0]
+    rotation: 0
+    state: enabled
+- name: blocks_uchar_to_float_0
+  id: blocks_uchar_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [744, 160.0]
+    rotation: 0
+    state: enabled
+- name: blocks_uchar_to_float_1
+  id: blocks_uchar_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 856.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_decoder_cb_0
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk_constellation
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 852.0]
+    rotation: 0
+    state: enabled
+- name: digital_constellation_encoder_bc_0
+  id: digital_constellation_encoder_bc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk_constellation
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 324.0]
+    rotation: 0
+    state: disabled
+- name: digital_constellation_modulator_0
+  id: digital_constellation_modulator
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk_constellation
+    differential: 'True'
+    excess_bw: excess_bw
+    log: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_symbol: sps
+    truncate: 'False'
+    verbose: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [320, 444.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\n\nclass FramingPlusTagInserter(gr.basic_block):\n\
+      \    \"\"\"\n    A sync block that generates a framed packet by adding a preamble\
+      \ and postamble\n    to the input bit stream and tags the start and end with\
+      \ 'packet_start' and 'packet_end'.\n    \"\"\"\n\n    def __init__(self, preamble=0xAABBCCDD,\
+      \ postamble=0xEEFF1122):\n        gr.basic_block.__init__(\n            self,\n\
+      \            name=\"frame_generator\",\n            in_sig=[np.uint8],\n   \
+      \         out_sig=[np.uint8]\n        )\n\n        self.preamble= list(preamble.to_bytes((preamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n        self.postamble = list(postamble.to_bytes((postamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n\n        self.state = 'preamble'\n        self.preamble_index\
+      \ = 0\n        self.payload = []\n        self.payload_index = 0\n        self.postamble_index\
+      \ = 0\n        self.packet_start_tagged = False\n        self.packet_end_tagged\
+      \ = False\n        self.eof_detected = False\n        self.transmission_ended\
+      \ = False\n        print(self.preamble)\n\n    def find_subsequence(self, data,\
+      \ pattern):\n        for i in range(len(data) - len(pattern) + 1):\n       \
+      \     if np.array_equal(data[i:i+len(pattern)], pattern):\n                return\
+      \ i\n        return -1  # Not found\n\n    def general_work(self, input_items,\
+      \ output_items):\n        inp = input_items[0]\n        out = output_items[0]\n\
+      \n\n        noutput_items = len(out)\n        in0_length = len(inp)\n      \
+      \  space_left_in_out = noutput_items\n        produced = 0\n        consumed\
+      \ = 0\n\n\n        print(\"\\n------>inp=\",inp)\n\n        print(\"in0_length=\"\
+      ,in0_length,\"noutput_items=\",noutput_items)\n\n\n\n        if in0_length ==0\
+      \ and self.state == 'payload' and not self.eof_detected:\n            self.eof_detected\
+      \ = True\n            self.state = 'postamble'\n            print(\"\\n--Entered\
+      \ postamble state\")\n\n        if  self.state == 'postamble' and self.transmission_ended\
+      \ == False:\n\n            while self.postamble_index < len(self.postamble):\n\
+      \                remaining_postamble = len(self.postamble) - self.postamble_index\n\
+      \                print(\"noutput_items=\",noutput_items, remaining_postamble)\n\
+      \                to_copy = min(noutput_items - produced, remaining_postamble)\n\
+      \                print(\"to_copy=\",to_copy)\n                if to_copy ==\
+      \ 0:\n                    break\n                print(self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy])\n                out[produced:produced + to_copy] = self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy]\n                self.postamble_index += to_copy\n\n          \
+      \      if self.postamble_index == len(self.postamble):\n                   \
+      \ self.transmission_ended = True\n                \n                produced\
+      \ += to_copy\n                print(\"produced=\",produced, to_copy)\n     \
+      \           space_left_in_out = noutput_items - produced\n                print(\"\
+      space_left_in_out=\",space_left_in_out)\n                if space_left_in_out\
+      \ == 0:\n                    self.consume(0, 0)\n                    return\
+      \ produced\n\n\n        elif  self.state == 'postamble' and self.transmission_ended\
+      \ == True:\n            return 0\n\n\n        while  consumed < len(inp):\n\n\
+      \           if self.state == 'preamble':\n                print(self.state)\n\
+      \                print(\"len(out)=\",len(out))\n                while self.preamble_index\
+      \ < len(self.preamble):\n\n                    remaining_preamble = len(self.preamble)\
+      \ - self.preamble_index\n                    print(\"noutput_items=\",noutput_items,\
+      \ remaining_preamble)\n                    to_copy = min(noutput_items - produced,\
+      \ remaining_preamble)\n                    print(\"to_copy=\",to_copy)\n   \
+      \                 if to_copy == 0:\n                        break\n        \
+      \            print(self.preamble[self.preamble_index:self.preamble_index + to_copy])\n\
+      \                    out[produced:produced + to_copy] = self.preamble[self.preamble_index:self.preamble_index\
+      \ + to_copy]\n                    self.preamble_index += to_copy\n         \
+      \           produced += to_copy\n                    print(\"produced=\",produced,\
+      \ to_copy)\n                    space_left_in_out = noutput_items - produced\n\
+      \                    print(\"space_left_in_out=\",space_left_in_out)\n     \
+      \               self.consume(0, 0)\n                    return produced\n\n\n\
+      \                if self.preamble_index >= len(self.preamble):\n           \
+      \         self.state = 'payload'\n                    self.packet_start_tagged\
+      \ = False  # Reset for new frame\n                    produced = 0\n\n     \
+      \      elif self.state == 'payload':\n\n                print(self.state)\n\n\
+      \                remaining_payload = len(inp) - consumed\n                if\
+      \ remaining_payload == 0:\n                    break\n                to_copy\
+      \ = min(space_left_in_out, remaining_payload)\n                print(\"to_copy=\"\
+      ,to_copy,\"consumed,produced=\",consumed,produced)\n                if not self.packet_start_tagged:\n\
+      \                    # Add tag at the start of payload\n                   \
+      \ self.add_item_tag(0, self.nitems_written(0) + produced,\n                \
+      \                      pmt.intern(\"packet_start\"), pmt.PMT_NIL)\n        \
+      \            self.packet_start_tagged = True\n\n                print(\"will\
+      \ output->\",inp[consumed:consumed + to_copy])\n\n\n                if not self.packet_end_tagged:\n\
+      \                    data_slice = inp[consumed:consumed + to_copy]\n       \
+      \             match_index = self.find_subsequence(data_slice, self.postamble)\n\
+      \                    if match_index != -1:\n                        tag_position\
+      \ = self.nitems_written(0) + consumed + match_index\n                      \
+      \  # one extra bit to accomodate FIR filters tail loss i.e tag at 2nd bit of\
+      \ preamble \n                        self.add_item_tag(0, tag_position,pmt.intern('packet_end'),pmt.PMT_NIL)\n\
+      \                        self.packet_end_tagged = True\n\n\n\n\n\n         \
+      \       out[produced:produced + to_copy] = inp[consumed:consumed + to_copy]\n\
+      \                self.payload.extend(inp[consumed:consumed + to_copy])\n   \
+      \             consumed += to_copy\n                produced += to_copy\n   \
+      \             print(\"----->\",consumed,produced)\n                self.consume(0,\
+      \ consumed)\n                return consumed\n\n        print(\"in while,consumed=\
+      \ \",consumed)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0f'
+    preamble: '0xaa'
+  states:
+    _io_cache: ('frame_generator', 'FramingPlusTagInserter', [('preamble', '2864434397'),
+      ('postamble', '4009693474')], [('0', 'byte', 1)], [('0', 'byte', 1)], "\n    A
+      sync block that generates a framed packet by adding a preamble and postamble\n    to
+      the input bit stream and tags the start and end with 'packet_start' and 'packet_end'.\n    ",
+      ['postamble', 'preamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 212.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_4
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nimport numpy as np\nfrom\
+      \ gnuradio import gr\n\nclass file_with_postamble(gr.sync_block):\n    def __init__(self,\
+      \ filename='/tmp/sample.txt', postamble=0xEEFF1122):\n        gr.sync_block.__init__(self,\n\
+      \            name=\"file_with_postamble\",\n            in_sig=None,\n     \
+      \       out_sig=[np.uint8])\n\n        # Convert integer postamble to byte list\n\
+      \        self.postamble = list(postamble.to_bytes((postamble.bit_length() +\
+      \ 7) // 8, byteorder='big'))\n\n        try:\n            with open(filename,\
+      \ 'rb') as f:\n                raw = np.frombuffer(f.read(), dtype=np.uint8)\n\
+      \        except IOError:\n            raw = np.array([], dtype=np.uint8)\n\n\
+      \        print(\"raw=\",raw)\n        # No bit unpacking, just concatenate bytes\n\
+      \        self.data = np.concatenate([raw, np.array(self.postamble, dtype=np.uint8)])\n\
+      \        self.offset = 0\n\n    def work(self, input_items, output_items):\n\
+      \        out = output_items[0]\n        n = min(len(out), len(self.data) - self.offset)\n\
+      \        if n > 0:\n            out[:n] = self.data[self.offset:self.offset\
+      \ + n]\n            self.offset += n\n        return n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    filename: '''/media/linux1/600GB_EXT4/GNU_radio/GNURadio_src_dev_test_dir/03_flowgraphs/BPSK_tests/alice_excerpt.txt'''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0F00'
+  states:
+    _io_cache: ('file_with_postamble', 'file_with_postamble', [('filename', "'/tmp/sample.txt'"),
+      ('postamble', '4009693474')], [], [('0', 'byte', 1)], '', ['postamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 212.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"Modulated output"'
+    nconnections: '1'
+    size: 1024*10
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 460.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: 1024*10
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [752, 748.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: 1024*10
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 612.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Bitstream"'
+    nconnections: '1'
+    size: int((1024*10)/256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 140.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"decoded data"'
+    nconnections: '1'
+    size: 1024*10
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 828.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bitstream
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 220.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: modulated_sig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 548.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bitstream
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 468.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: modulated_sig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 852.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_random_source_x_0, '0', digital_constellation_encoder_bc_0, '0']
+- [blocks_packed_to_unpacked_xx_0, '0', blocks_uchar_to_float_0, '0']
+- [blocks_packed_to_unpacked_xx_0, '0', virtual_sink_0, '0']
+- [blocks_throttle2_0, '0', qtgui_const_sink_x_0, '0']
+- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_throttle2_0, '0', virtual_sink_0_0, '0']
+- [blocks_uchar_to_float_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_uchar_to_float_1, '0', qtgui_time_sink_x_0_1, '0']
+- [digital_constellation_decoder_cb_0, '0', blocks_uchar_to_float_1, '0']
+- [digital_constellation_modulator_0, '0', blocks_throttle2_0, '0']
+- [epy_block_1, '0', blocks_packed_to_unpacked_xx_0, '0']
+- [epy_block_4, '0', epy_block_1, '0']
+- [virtual_source_0, '0', digital_constellation_modulator_0, '0']
+- [virtual_source_0_0, '0', digital_constellation_decoder_cb_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.11.0

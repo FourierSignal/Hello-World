@@ -1,0 +1,964 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: ASK_grFlowgraph
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Mhz
+  id: variable
+  parameters:
+    comment: ''
+    value: 1000*1000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1440, 20.0]
+    rotation: 0
+    state: enabled
+- name: N
+  id: variable
+  parameters:
+    comment: ''
+    value: 2**nbits
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 100.0]
+    rotation: 0
+    state: enabled
+- name: RF_BW
+  id: variable
+  parameters:
+    comment: ''
+    value: int(1.5*Mhz)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1536, 20.0]
+    rotation: 0
+    state: enabled
+- name: excess_bw
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 12.0]
+    rotation: 0
+    state: enabled
+- name: fc
+  id: variable
+  parameters:
+    comment: ''
+    value: 32000*1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 12.0]
+    rotation: 0
+    state: enabled
+- name: filelength
+  id: variable
+  parameters:
+    comment: ''
+    value: (1+594+2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 100.0]
+    rotation: 0
+    state: enabled
+- name: interpolation_factor
+  id: variable
+  parameters:
+    comment: ''
+    value: int(24)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 12.0]
+    rotation: 0
+    state: enabled
+- name: lpf_taps_downsampling
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.low_pass(1.0, samp_rate*64 , samp_rate/(2*interpolation_factor),
+      200, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1808, 4.0]
+    rotation: 0
+    state: enabled
+- name: lpf_taps_upsampling
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.low_pass(1.0, samp_rate*64 , fc+300, 200, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 20.0]
+    rotation: 0
+    state: enabled
+- name: nbits
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 108.0]
+    rotation: 0
+    state: enabled
+- name: ntaps
+  id: variable
+  parameters:
+    comment: "for short bursts of data like 8 symbols \nntaps = 16 is ok.  which introduce\
+      \ very small group delay and it does not distort the signal"
+    value: int(interpolation_factor*11)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 12.0]
+    rotation: 0
+    state: enabled
+- name: qpsk_constellation
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
+    precision: '8'
+    rot_sym: '4'
+    soft_dec_lut: None
+    sym_map: '[0, 1, 3, 2]'
+    type: calcdist
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 548.0]
+    rotation: 0
+    state: enabled
+- name: rrc_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.array ( firdes.root_raised_cosine(1,samp_rate,symbol_rate, excess_bw,ntaps
+      ))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 192*1000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 12.0]
+    rotation: 0
+    state: enabled
+- name: symbol_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 2*50
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 12.0]
+    rotation: 0
+    state: enabled
+- name: total_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: ((filelength*8)/nbits)/10
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 100.0]
+    rotation: 0
+    state: enabled
+- name: analog_noise_source_x_0
+  id: analog_noise_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_type: analog.GR_GAUSSIAN
+    seed: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 1044.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '2'
+    maxoutbuf: '0'
+    min: '0'
+    minoutbuf: '0'
+    num_samps: '100'
+    repeat: 'True'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 444.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: '1000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 596.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1.414'
+    comment: ''
+    freq: fc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: float
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 1124.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1.414'
+    comment: ''
+    freq: fc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: float
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 844.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_xx_0
+  id: blocks_add_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [288, 1000.0]
+    rotation: 0
+    state: enabled
+- name: blocks_complex_to_real_0
+  id: blocks_complex_to_real
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1200, 624.0]
+    rotation: 0
+    state: enabled
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 1008.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 608.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_1
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 872.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_2
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 1144.0]
+    rotation: 0
+    state: enabled
+- name: blocks_packed_to_unpacked_xx_0
+  id: blocks_packed_to_unpacked_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: nbits
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 308.0]
+    rotation: 0
+    state: disabled
+- name: blocks_throttle2_0_1
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [544, 460.0]
+    rotation: 0
+    state: enabled
+- name: digital_chunks_to_symbols_xx_0_0
+  id: digital_chunks_to_symbols_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    dimension: '1'
+    in_type: byte
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    out_type: complex
+    symbol_table: (numpy.exp(1j*2*numpy.pi*numpy.arange(N)/N ))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 320.0]
+    rotation: 0
+    state: disabled
+- name: digital_constellation_encoder_bc_0
+  id: digital_constellation_encoder_bc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk_constellation
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 468.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0_0_0_0_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass byte_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte + ASCII Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        data = input_items[0]\n        for i,\
+      \ byte_val in enumerate(data):\n            try:\n                ascii_char\
+      \ = chr(byte_val) if 32 <= byte_val <= 126 else '.'\n            except:\n \
+      \               ascii_char = '?'\n            print(f\"[{i}] Byte: {byte_val},\
+      \ ASCII: '{ascii_char}'\")\n            self.item_counter += 1\n        print(f\"\
+      Total items printed: {self.item_counter}\")\n        return len(data)  # Consume\
+      \ all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte + ASCII Display Block', 'byte_display_block', [], [('0', 'byte',
+      1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 240.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\n\nclass FramingPlusTagInserter(gr.basic_block):\n\
+      \    \"\"\"\n    A sync block that generates a framed packet by adding a preamble\
+      \ and postamble\n    to the input bit stream and tags the start and end with\
+      \ 'packet_start' and 'packet_end'.\n    \"\"\"\n\n    def __init__(self, preamble=0xAABBCCDD,\
+      \ postamble=0xEEFF1122):\n        gr.basic_block.__init__(\n            self,\n\
+      \            name=\"frame_generator\",\n            in_sig=[np.uint8],\n   \
+      \         out_sig=[np.uint8]\n        )\n\n        self.preamble= list(preamble.to_bytes((preamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n        self.postamble = list(postamble.to_bytes((postamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n\n        self.state = 'preamble'\n        self.preamble_index\
+      \ = 0\n        self.payload = []\n        self.payload_index = 0\n        self.postamble_index\
+      \ = 0\n        self.packet_start_tagged = False\n        self.packet_end_tagged\
+      \ = False\n        self.eof_detected = False\n        self.transmission_ended\
+      \ = False\n        print(self.preamble)\n\n    def find_subsequence(self, data,\
+      \ pattern):\n        for i in range(len(data) - len(pattern) + 1):\n       \
+      \     if np.array_equal(data[i:i+len(pattern)], pattern):\n                return\
+      \ i\n        return -1  # Not found\n\n    def general_work(self, input_items,\
+      \ output_items):\n        inp = input_items[0]\n        out = output_items[0]\n\
+      \n\n        noutput_items = len(out)\n        in0_length = len(inp)\n      \
+      \  space_left_in_out = noutput_items\n        produced = 0\n        consumed\
+      \ = 0\n\n\n        #print(\"\\n------>inp=\",inp)\n\n        print(\"in0_length=\"\
+      ,in0_length,\"noutput_items=\",noutput_items)\n\n\n\n        if in0_length ==0\
+      \ and self.state == 'payload' and not self.eof_detected:\n            self.eof_detected\
+      \ = True\n            self.state = 'postamble'\n            print(\"\\n--Entered\
+      \ postamble state\")\n\n        if  self.state == 'postamble' and self.transmission_ended\
+      \ == False:\n\n            while self.postamble_index < len(self.postamble):\n\
+      \                remaining_postamble = len(self.postamble) - self.postamble_index\n\
+      \                print(\"noutput_items=\",noutput_items, remaining_postamble)\n\
+      \                to_copy = min(noutput_items - produced, remaining_postamble)\n\
+      \                print(\"to_copy=\",to_copy)\n                if to_copy ==\
+      \ 0:\n                    break\n                print(self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy])\n                out[produced:produced + to_copy] = self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy]\n                self.postamble_index += to_copy\n\n          \
+      \      if self.postamble_index == len(self.postamble):\n                   \
+      \ self.transmission_ended = True\n                \n                produced\
+      \ += to_copy\n                print(\"produced=\",produced, to_copy)\n     \
+      \           space_left_in_out = noutput_items - produced\n                print(\"\
+      space_left_in_out=\",space_left_in_out)\n                if space_left_in_out\
+      \ == 0:\n                    self.consume(0, 0)\n                    return\
+      \ produced\n\n\n        elif  self.state == 'postamble' and self.transmission_ended\
+      \ == True:\n            return 0\n\n\n        while  consumed < len(inp):\n\n\
+      \           if self.state == 'preamble':\n                print(self.state)\n\
+      \                print(\"len(out)=\",len(out))\n                while self.preamble_index\
+      \ < len(self.preamble):\n\n                    remaining_preamble = len(self.preamble)\
+      \ - self.preamble_index\n                    print(\"noutput_items=\",noutput_items,\
+      \ remaining_preamble)\n                    to_copy = min(noutput_items - produced,\
+      \ remaining_preamble)\n                    print(\"to_copy=\",to_copy)\n   \
+      \                 if to_copy == 0:\n                        break\n        \
+      \            #print(self.preamble[self.preamble_index:self.preamble_index +\
+      \ to_copy])\n                    out[produced:produced + to_copy] = self.preamble[self.preamble_index:self.preamble_index\
+      \ + to_copy]\n                    self.preamble_index += to_copy\n         \
+      \           produced += to_copy\n                    print(\"produced=\",produced,\
+      \ to_copy)\n                    space_left_in_out = noutput_items - produced\n\
+      \                    print(\"space_left_in_out=\",space_left_in_out)\n     \
+      \               self.consume(0, 0)\n                    return produced\n\n\n\
+      \                if self.preamble_index >= len(self.preamble):\n           \
+      \         self.state = 'payload'\n                    self.packet_start_tagged\
+      \ = False  # Reset for new frame\n                    produced = 0\n\n     \
+      \      elif self.state == 'payload':\n\n                print(self.state)\n\n\
+      \                remaining_payload = len(inp) - consumed\n                if\
+      \ remaining_payload == 0:\n                    break\n                to_copy\
+      \ = min(space_left_in_out, remaining_payload)\n                print(\"to_copy=\"\
+      ,to_copy,\"consumed,produced=\",consumed,produced)\n                if not self.packet_start_tagged:\n\
+      \                    # Add tag at the start of payload\n                   \
+      \ self.add_item_tag(0, self.nitems_written(0) + produced,\n                \
+      \                      pmt.intern(\"packet_start\"), pmt.PMT_NIL)\n        \
+      \            self.packet_start_tagged = True\n\n                #print(\"will\
+      \ output->\",inp[consumed:consumed + to_copy])\n\n\n                if not self.packet_end_tagged:\n\
+      \                    data_slice = inp[consumed:consumed + to_copy]\n       \
+      \             print(\"len(data_slice)=\",len(data_slice) )\n               \
+      \     match_index = self.find_subsequence(data_slice, self.postamble)\n    \
+      \                if match_index != -1:\n                        print(\"post\
+      \ amble pattern found\")\n                        tag_position = self.nitems_written(0)\
+      \ + consumed + match_index\n                        # one extra bit to accomodate\
+      \ FIR filters tail loss i.e tag at 2nd bit of preamble \n                  \
+      \      self.add_item_tag(0, tag_position,pmt.intern('packet_end'),pmt.PMT_NIL)\n\
+      \                        self.packet_end_tagged = True\n\n\n\n\n\n         \
+      \       out[produced:produced + to_copy] = inp[consumed:consumed + to_copy]\n\
+      \                self.payload.extend(inp[consumed:consumed + to_copy])\n   \
+      \             consumed += to_copy\n                produced += to_copy\n   \
+      \             print(\"----->consumed,produced= \",consumed,produced)\n     \
+      \           self.consume(0, consumed)\n                return consumed\n\n \
+      \       print(\"in while,consumed= \",consumed)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0f'
+    preamble: '0xaa'
+  states:
+    _io_cache: ('frame_generator', 'FramingPlusTagInserter', [('preamble', '2864434397'),
+      ('postamble', '4009693474')], [('0', 'byte', 1)], [('0', 'byte', 1)], "\n    A
+      sync block that generates a framed packet by adding a preamble and postamble\n    to
+      the input bit stream and tags the start and end with 'packet_start' and 'packet_end'.\n    ",
+      ['postamble', 'preamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 308.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_4
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nimport numpy as np\nfrom\
+      \ gnuradio import gr\n\nclass file_with_postamble(gr.sync_block):\n    def __init__(self,\
+      \ filename='/tmp/sample.txt', postamble=0xEEFF1122):\n        gr.sync_block.__init__(self,\n\
+      \            name=\"file_with_postamble\",\n            in_sig=None,\n     \
+      \       out_sig=[np.uint8])\n\n        # Convert integer postamble to byte list\n\
+      \        self.postamble = list(postamble.to_bytes((postamble.bit_length() +\
+      \ 7) // 8, byteorder='big'))\n\n        print(filename)\n        try:\n    \
+      \        with open(filename, 'rb') as f:\n                raw = np.frombuffer(f.read(),\
+      \ dtype=np.uint8)\n        except IOError as e:\n            print(f\"IOError\
+      \ occurred while opening {filename}: {e}\")\n            raw = np.array([],\
+      \ dtype=np.uint8)\n            \n        #print(\"raw=\",raw)\n        print(\"\
+      Length of file (in bytes):\", len(raw))\n        # No bit unpacking, just concatenate\
+      \ bytes\n        self.data = np.concatenate([raw, np.array(self.postamble, dtype=np.uint8)])\n\
+      \        self.offset = 0\n\n    def work(self, input_items, output_items):\n\
+      \        out = output_items[0]\n        n = min(len(out), len(self.data) - self.offset)\n\
+      \        if n > 0:\n            out[:n] = self.data[self.offset:self.offset\
+      \ + n]\n            self.offset += n\n        return n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    filename: '''/media/linux1/600GB_EXT4/GNU_radio/GNURadio_src_dev_test_dir/03_flowgraphs/BPSK_tests/alice_excerpt.txt'''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0F00'
+  states:
+    _io_cache: ('file_with_postamble', 'file_with_postamble', [('filename', "'/tmp/sample.txt'"),
+      ('postamble', '4009693474')], [], [('0', 'byte', 1)], '', ['postamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 308.0]
+    rotation: 0
+    state: disabled
+- name: fir_filter_xxx_0
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: ''
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 1004.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 20.0]
+    rotation: 0
+    state: enabled
+- name: interp_fir_filter_xxx_0_0
+  id: interp_fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: interpolation_factor
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: rrc_taps
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 460.0]
+    rotation: 0
+    state: enabled
+- name: low_pass_filter_0
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: 32*1000
+    decim: '1'
+    gain: '1'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_fff
+    width: 1*1000
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 1108.0]
+    rotation: 0
+    state: enabled
+- name: low_pass_filter_1
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: 32*1000
+    decim: '1'
+    gain: '1'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_fff
+    width: 1*1000
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [536, 836.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1400, 1004.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: modulatedSig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1448, 620.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: BaseBand_Signal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 332.0]
+    rotation: 0
+    state: disabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: modulatedSig
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 996.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_noise_source_x_0, '0', blocks_add_xx_0, '1']
+- [analog_random_source_x_0, '0', digital_constellation_encoder_bc_0, '0']
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_2, '1']
+- [analog_sig_source_x_0_0_0, '0', blocks_multiply_xx_1, '0']
+- [blocks_add_xx_0, '0', blocks_multiply_xx_1, '1']
+- [blocks_add_xx_0, '0', blocks_multiply_xx_2, '0']
+- [blocks_complex_to_real_0, '0', virtual_sink_0, '0']
+- [blocks_float_to_complex_0, '0', fir_filter_xxx_0, '0']
+- [blocks_multiply_xx_0, '0', blocks_complex_to_real_0, '0']
+- [blocks_multiply_xx_1, '0', low_pass_filter_1, '0']
+- [blocks_multiply_xx_2, '0', low_pass_filter_0, '0']
+- [blocks_packed_to_unpacked_xx_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
+- [blocks_throttle2_0_1, '0', interp_fir_filter_xxx_0_0, '0']
+- [digital_constellation_encoder_bc_0, '0', blocks_throttle2_0_1, '0']
+- [epy_block_1, '0', blocks_packed_to_unpacked_xx_0, '0']
+- [epy_block_4, '0', epy_block_0_0_0_0_1, '0']
+- [epy_block_4, '0', epy_block_1, '0']
+- [fir_filter_xxx_0, '0', qtgui_const_sink_x_0, '0']
+- [interp_fir_filter_xxx_0_0, '0', blocks_multiply_xx_0, '0']
+- [low_pass_filter_0, '0', blocks_float_to_complex_0, '1']
+- [low_pass_filter_1, '0', blocks_float_to_complex_0, '0']
+- [virtual_source_0, '0', blocks_add_xx_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.11.0

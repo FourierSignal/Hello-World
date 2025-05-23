@@ -1,0 +1,4058 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: ASK_grFlowgraph
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Mhz
+  id: variable
+  parameters:
+    comment: ''
+    value: 1000*1000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1440, 20.0]
+    rotation: 0
+    state: enabled
+- name: N
+  id: variable
+  parameters:
+    comment: ''
+    value: 2**nbits
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 100.0]
+    rotation: 0
+    state: enabled
+- name: RF_BW
+  id: variable
+  parameters:
+    comment: ''
+    value: int(1.5*Mhz)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1536, 20.0]
+    rotation: 0
+    state: enabled
+- name: excess_bw
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 12.0]
+    rotation: 0
+    state: enabled
+- name: fc
+  id: variable
+  parameters:
+    comment: ''
+    value: 4000*1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 12.0]
+    rotation: 0
+    state: enabled
+- name: filelength
+  id: variable
+  parameters:
+    comment: ''
+    value: (1+594+2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 100.0]
+    rotation: 0
+    state: enabled
+- name: interpolation_factor
+  id: variable
+  parameters:
+    comment: ''
+    value: '256'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 12.0]
+    rotation: 0
+    state: enabled
+- name: lpf_taps_downsampling
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.low_pass(1.0, samp_rate*64 , samp_rate/(2*interpolation_factor),
+      200, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1808, 4.0]
+    rotation: 0
+    state: enabled
+- name: lpf_taps_upsampling
+  id: variable
+  parameters:
+    comment: ''
+    value: firdes.low_pass(1.0, samp_rate*64 , fc+300, 200, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 20.0]
+    rotation: 0
+    state: enabled
+- name: nbits
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 108.0]
+    rotation: 0
+    state: enabled
+- name: ntaps
+  id: variable
+  parameters:
+    comment: "for short bursts of data like 8 symbols \nntaps = 16 is ok.  which introduce\
+      \ very small group delay and it does not distort the signal"
+    value: int(interpolation_factor*11)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 12.0]
+    rotation: 0
+    state: enabled
+- name: rrc_taps
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.array ( firdes.root_raised_cosine(1,samp_rate,symbol_rate, excess_bw,ntaps
+      ))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 12.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: symbol_rate * interpolation_factor
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 12.0]
+    rotation: 0
+    state: enabled
+- name: symbol_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 2*50
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 12.0]
+    rotation: 0
+    state: enabled
+- name: total_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: ((filelength*8)/nbits)/10
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 100.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: fc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 724.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: ''
+    freq: fc
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    showports: 'False'
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 1964.0]
+    rotation: 0
+    state: enabled
+- name: band_pass_filter_0
+  id: band_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    decim: '1'
+    gain: '10'
+    high_cutoff_freq: fc+(150*2)
+    interp: '1'
+    low_cutoff_freq: fc-(150*2)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_ccf
+    width: '1000'
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 1476.0]
+    rotation: 0
+    state: disabled
+- name: band_reject_filter_0
+  id: band_reject_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    decim: '1'
+    gain: '20'
+    high_cutoff_freq: '9100'
+    interp: '1'
+    low_cutoff_freq: '6800'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_ccf
+    width: '100'
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 1836.0]
+    rotation: 0
+    state: enabled
+- name: blocks_complex_to_real_0
+  id: blocks_complex_to_real
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 1952.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_sink_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /media/linux1/600GB_EXT4/GNU_radio/GNURadio_src_dev_test_dir/03_flowgraphs/BPSK_tests/hello_out.txt
+    type: byte
+    unbuffered: 'True'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [3232, 1516.0]
+    rotation: 0
+    state: disabled
+- name: blocks_float_to_uchar_0
+  id: blocks_float_to_uchar
+  parameters:
+    affinity: ''
+    alias: ''
+    bias: '0'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1792, 2956.0]
+    rotation: 0
+    state: disabled
+- name: blocks_head_0
+  id: blocks_head
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: int(  (total_symbols*100)*256)
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 2044.0]
+    rotation: 0
+    state: disabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '100'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1736, 244.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '100'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 2204.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 760.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 1880.0]
+    rotation: 0
+    state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2704, 1728.0]
+    rotation: 0
+    state: disabled
+- name: blocks_null_sink_1
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 2336.0]
+    rotation: 0
+    state: enabled
+- name: blocks_null_sink_2
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [784, 1424.0]
+    rotation: 0
+    state: disabled
+- name: blocks_null_source_1
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [592, 1680.0]
+    rotation: 0
+    state: disabled
+- name: blocks_packed_to_unpacked_xx_0
+  id: blocks_packed_to_unpacked_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: nbits
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 308.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_debug_0_0_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug6
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2824, 2844.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug4
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2568, 2860.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0_0_2
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug3
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1472, 404.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0_0_3
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug5
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2464, 3140.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0_0_3_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug5
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 2404.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0_1
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: access_code_debug3
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2984, 1396.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tagged_stream_align_0_0
+  id: blocks_tagged_stream_align
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: packet_start
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2568, 2964.0]
+    rotation: 0
+    state: disabled
+- name: blocks_threshold_ff_0
+  id: blocks_threshold_ff
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    high: '120'
+    init: '0'
+    low: '10'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [760, 2292.0]
+    rotation: 0
+    state: disabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1944, 236.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle2_0_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: symbol_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1160, 324.0]
+    rotation: 0
+    state: enabled
+- name: blocks_unpacked_to_packed_xx_0_1
+  id: blocks_unpacked_to_packed_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    bits_per_chunk: '1'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2984, 1524.0]
+    rotation: 0
+    state: disabled
+- name: digital_chunks_to_symbols_xx_0_0
+  id: digital_chunks_to_symbols_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    dimension: '1'
+    in_type: byte
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    out_type: complex
+    symbol_table: (numpy.exp(1j*2*numpy.pi*numpy.arange(N)/N ))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 320.0]
+    rotation: 0
+    state: enabled
+- name: digital_correlate_access_code_tag_xx_1
+  id: digital_correlate_access_code_tag_xx
+  parameters:
+    access_code: '10101010'
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tagname: packet_start
+    threshold: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1992, 2828.0]
+    rotation: 0
+    state: disabled
+- name: digital_correlate_access_code_tag_xx_1_1
+  id: digital_correlate_access_code_tag_xx
+  parameters:
+    access_code: '00001111'
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tagname: packet_end
+    threshold: '0'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2272, 2828.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\nimport ast\n\nclass ExtractPayLoad(gr.basic_block):\n\
+      \    \"\"\"\n    Forwards input data to output and simultaneously inspects and\
+      \ prints any tags.\n    Input and output are streams of bit objects (numpy arrays\
+      \ of 0s and 1s).\n    \"\"\"\n\n    def __init__(self):\n        gr.basic_block.__init__(\n\
+      \            self,\n            name='ExtractPayLoad',\n            in_sig=[np.int8],\
+      \  # Input is a stream of bits (0 or 1)\n            out_sig=[np.int8]  # Output\
+      \ is a stream of bits (0 or 1)\n        )\n        self.payload_buffer = []\n\
+      \        self.in_payload = False\n\n    def general_work(self, input_items,\
+      \ output_items):\n        in_bits = input_items[0]\n        out_bits = output_items[0]\n\
+      \        nread = self.nitems_read(0)\n        tags = self.get_tags_in_window(0,\
+      \ 0, len(in_bits))\n        tag_offsets = {tag.offset - nread: tag for tag in\
+      \ tags}\n\n        # Directly forward the input to the output\n        #out_bits[:]\
+      \ = in_bits\n        print(\"----->in_bits=\",in_bits)\n        # Inspect and\
+      \ print tags present in the current input buffer\n        for offset, tag in\
+      \ tag_offsets.items():\n            key = pmt.to_python(tag.key)\n         \
+      \   value = pmt.to_python(tag.value)\n            print(f\"Tag Debug: Offset:\
+      \ {tag.offset}, Relative Offset: {offset}, Key: {key}, Value: {value}\")\n\n\
+      \        consumed = 0\n        produced = 0\n        i = 0\n\n\n        # If\
+      \ packet_end is reached and entire buffer is not sent out in previous call,\
+      \ Flush the data is Remaining in Buffer.\n        # Output remaining payload\
+      \ if it exists and we're no longer in payload collection\n        if not self.in_payload\
+      \ and self.payload_buffer:\n            output_len = min(len(self.payload_buffer),\
+      \ len(out_bits))\n            #print(\"flushing:len(out_bits)=\",len(out_bits),\
+      \ len(self.payload_buffer))\n            if output_len > 0:\n              \
+      \  out_bits[:output_len] = self.payload_buffer[:output_len]\n              \
+      \  self.payload_buffer = self.payload_buffer[output_len:]  # remove outputted\n\
+      \                self.consume(0, 0)  # No new input consumed in this call\n\
+      \                return output_len\n\n        while i < len(in_bits):\n    \
+      \        if i in tag_offsets:\n                tag = tag_offsets[i]\n      \
+      \          key = pmt.to_python(tag.key)\n                #print(key,\"tag.offset=\"\
+      ,tag.offset)\n\n                if key == 'packet_start':\n                \
+      \    print(\"Detected packet_start.\")\n                    print(key,\"tag.offset=\"\
+      ,tag.offset)\n                    self.in_payload = True\n                 \
+      \   self.payload_buffer.clear()  \n\n                elif key == 'packet_end':\n\
+      \                    if self.in_payload:\n                        print(\"Detected\
+      \ packet_end.\")\n                        print(key,\"tag.offset=\",tag.offset)\n\
+      \                        self.in_payload = False\n                        \n\
+      \                        #print(\"len(out_bits)=\",len(out_bits), len(self.payload_buffer))\n\
+      \                        output_len = min(len(self.payload_buffer), len(out_bits))\
+      \ # Output as much as fits\n                        if output_len > 0:\n   \
+      \                         produced = output_len\n                          \
+      \  consumed = i+1\n                            print(\"--->produced=\",produced,[int(x)\
+      \ for x in self.payload_buffer],\"consumed=\",consumed)\n                  \
+      \          out_bits[:output_len] = self.payload_buffer[:output_len]\n      \
+      \                      self.payload_buffer = self.payload_buffer[output_len:]\n\
+      \                            self.consume(0, consumed) \n                  \
+      \          return produced\n                        \n            #print(i,in_bits[i])\
+      \ \n            if self.in_payload == True:\n                self.payload_buffer.append(in_bits[i])\n\
+      \            i += 1\n            consumed = i\n        \n        print(\"produced=\"\
+      ,produced,[int(x) for x in self.payload_buffer],\"consumed=\",consumed)\n  \
+      \      self.consume(0,consumed)\n        # The number of output items produced\
+      \ is the same as the number of input items consumed\n        return produced\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('ExtractPayLoad', 'ExtractPayLoad', [], [('0', 'byte', 1)], [('0',
+      'byte', 1)], '\n    Forwards input data to output and simultaneously inspects
+      and prints any tags.\n    Input and output are streams of bit objects (numpy
+      arrays of 0s and 1s).\n    ', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2744, 1596.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass complex_display_block(gr.sync_block):\n   \
+      \ def __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Complex Display Block\",\n            in_sig=[np.complex64],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\n\
+      \            print(f\"1.Complex[{i}]: {val.real:.4f} + {val.imag:.4f}j\")\n\
+      \            self.item_counter += 1\n        print(f\"Total items printed: {self.item_counter}\"\
+      )\n        return len(input_items[0])  # Consume all input items\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Complex Display Block', 'complex_display_block', [], [('0', 'complex',
+      1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1504, 352.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass complex_display_block(gr.sync_block):\n   \
+      \ def __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Complex Display Block\",\n            in_sig=[np.complex64],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\n\
+      \            print(f\"1.Complex[{i}]: {val.real:.4f} + {val.imag:.4f}j\")\n\
+      \            self.item_counter += 1\n        print(f\"Total items printed: {self.item_counter}\"\
+      )\n        return len(input_items[0])  # Consume all input items\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Complex Display Block', 'complex_display_block', [], [('0', 'complex',
+      1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 2152.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass float_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\
+      \  \n            print(f\"Byte[{i}]: {val:02x}\")\n            self.item_counter\
+      \ += 1 \n        print(f\"Total items printed: {self.item_counter}\")\n    \
+      \    return len(input_items[0])  # Consume all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte Display Block', 'float_display_block', [], [('0', 'byte', 1)],
+      [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2232, 2736.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass float_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\
+      \  \n            print(f\"Byte[{i}]: {val:02x}\")\n            self.item_counter\
+      \ += 1 \n        print(f\"Total items printed: {self.item_counter}\")\n    \
+      \    return len(input_items[0])  # Consume all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte Display Block', 'float_display_block', [], [('0', 'byte', 1)],
+      [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2704, 1656.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_0_0_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass float_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\
+      \  \n            print(f\"Byte[{i}]: {val:02x}\")\n            self.item_counter\
+      \ += 1 \n        print(f\"Total items printed: {self.item_counter}\")\n    \
+      \    return len(input_items[0])  # Consume all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte Display Block', 'float_display_block', [], [('0', 'byte', 1)],
+      [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2984, 1648.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_0_0_1_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass float_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\
+      \  \n            print(f\"Byte[{i}]: {val:02x}\")\n            self.item_counter\
+      \ += 1 \n        print(f\"Total items printed: {self.item_counter}\")\n    \
+      \    return len(input_items[0])  # Consume all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte Display Block', 'float_display_block', [], [('0', 'byte', 1)],
+      [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [3200, 1624.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_0_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass float_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\
+      \  \n            print(f\"Byte[{i}]: {val:02x}\")\n            self.item_counter\
+      \ += 1 \n        print(f\"Total items printed: {self.item_counter}\")\n    \
+      \    return len(input_items[0])  # Consume all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte Display Block', 'float_display_block', [], [('0', 'byte', 1)],
+      [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2000, 3032.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass byte_display_block(gr.sync_block):\n    def\
+      \ __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Byte + ASCII Display Block\",\n            in_sig=[np.uint8],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        data = input_items[0]\n        for i,\
+      \ byte_val in enumerate(data):\n            try:\n                ascii_char\
+      \ = chr(byte_val) if 32 <= byte_val <= 126 else '.'\n            except:\n \
+      \               ascii_char = '?'\n            print(f\"[{i}] Byte: {byte_val},\
+      \ ASCII: '{ascii_char}'\")\n            self.item_counter += 1\n        print(f\"\
+      Total items printed: {self.item_counter}\")\n        return len(data)  # Consume\
+      \ all input items\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Byte + ASCII Display Block', 'byte_display_block', [], [('0', 'byte',
+      1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 240.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0_0_2
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\nclass complex_display_block(gr.sync_block):\n   \
+      \ def __init__(self):\n        gr.sync_block.__init__(self,\n            name=\"\
+      Complex Display Block\",\n            in_sig=[np.complex64],\n            out_sig=None)\n\
+      \        self.item_counter = 0  # Initialize item counter\n\n    def work(self,\
+      \ input_items, output_items):\n        for i, val in enumerate(input_items[0]):\n\
+      \            print(f\"1.Complex[{i}]: {val.real:.4f} + {val.imag:.4f}j\")\n\
+      \            self.item_counter += 1\n        print(f\"Total items printed: {self.item_counter}\"\
+      )\n        return len(input_items[0])  # Consume all input items\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Complex Display Block', 'complex_display_block', [], [('0', 'complex',
+      1)], [], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 2208.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\n\nclass FramingPlusTagInserter(gr.basic_block):\n\
+      \    \"\"\"\n    A sync block that generates a framed packet by adding a preamble\
+      \ and postamble\n    to the input bit stream and tags the start and end with\
+      \ 'packet_start' and 'packet_end'.\n    \"\"\"\n\n    def __init__(self, preamble=0xAABBCCDD,\
+      \ postamble=0xEEFF1122):\n        gr.basic_block.__init__(\n            self,\n\
+      \            name=\"frame_generator\",\n            in_sig=[np.uint8],\n   \
+      \         out_sig=[np.uint8]\n        )\n\n        self.preamble= list(preamble.to_bytes((preamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n        self.postamble = list(postamble.to_bytes((postamble.bit_length()\
+      \ + 7) // 8, byteorder='big'))\n\n        self.state = 'preamble'\n        self.preamble_index\
+      \ = 0\n        self.payload = []\n        self.payload_index = 0\n        self.postamble_index\
+      \ = 0\n        self.packet_start_tagged = False\n        self.packet_end_tagged\
+      \ = False\n        self.eof_detected = False\n        self.transmission_ended\
+      \ = False\n        print(self.preamble)\n\n    def find_subsequence(self, data,\
+      \ pattern):\n        for i in range(len(data) - len(pattern) + 1):\n       \
+      \     if np.array_equal(data[i:i+len(pattern)], pattern):\n                return\
+      \ i\n        return -1  # Not found\n\n    def general_work(self, input_items,\
+      \ output_items):\n        inp = input_items[0]\n        out = output_items[0]\n\
+      \n\n        noutput_items = len(out)\n        in0_length = len(inp)\n      \
+      \  space_left_in_out = noutput_items\n        produced = 0\n        consumed\
+      \ = 0\n\n\n        #print(\"\\n------>inp=\",inp)\n\n        print(\"in0_length=\"\
+      ,in0_length,\"noutput_items=\",noutput_items)\n\n\n\n        if in0_length ==0\
+      \ and self.state == 'payload' and not self.eof_detected:\n            self.eof_detected\
+      \ = True\n            self.state = 'postamble'\n            print(\"\\n--Entered\
+      \ postamble state\")\n\n        if  self.state == 'postamble' and self.transmission_ended\
+      \ == False:\n\n            while self.postamble_index < len(self.postamble):\n\
+      \                remaining_postamble = len(self.postamble) - self.postamble_index\n\
+      \                print(\"noutput_items=\",noutput_items, remaining_postamble)\n\
+      \                to_copy = min(noutput_items - produced, remaining_postamble)\n\
+      \                print(\"to_copy=\",to_copy)\n                if to_copy ==\
+      \ 0:\n                    break\n                print(self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy])\n                out[produced:produced + to_copy] = self.postamble[self.postamble_index:self.postamble_index\
+      \ + to_copy]\n                self.postamble_index += to_copy\n\n          \
+      \      if self.postamble_index == len(self.postamble):\n                   \
+      \ self.transmission_ended = True\n                \n                produced\
+      \ += to_copy\n                print(\"produced=\",produced, to_copy)\n     \
+      \           space_left_in_out = noutput_items - produced\n                print(\"\
+      space_left_in_out=\",space_left_in_out)\n                if space_left_in_out\
+      \ == 0:\n                    self.consume(0, 0)\n                    return\
+      \ produced\n\n\n        elif  self.state == 'postamble' and self.transmission_ended\
+      \ == True:\n            return 0\n\n\n        while  consumed < len(inp):\n\n\
+      \           if self.state == 'preamble':\n                print(self.state)\n\
+      \                print(\"len(out)=\",len(out))\n                while self.preamble_index\
+      \ < len(self.preamble):\n\n                    remaining_preamble = len(self.preamble)\
+      \ - self.preamble_index\n                    print(\"noutput_items=\",noutput_items,\
+      \ remaining_preamble)\n                    to_copy = min(noutput_items - produced,\
+      \ remaining_preamble)\n                    print(\"to_copy=\",to_copy)\n   \
+      \                 if to_copy == 0:\n                        break\n        \
+      \            #print(self.preamble[self.preamble_index:self.preamble_index +\
+      \ to_copy])\n                    out[produced:produced + to_copy] = self.preamble[self.preamble_index:self.preamble_index\
+      \ + to_copy]\n                    self.preamble_index += to_copy\n         \
+      \           produced += to_copy\n                    print(\"produced=\",produced,\
+      \ to_copy)\n                    space_left_in_out = noutput_items - produced\n\
+      \                    print(\"space_left_in_out=\",space_left_in_out)\n     \
+      \               self.consume(0, 0)\n                    return produced\n\n\n\
+      \                if self.preamble_index >= len(self.preamble):\n           \
+      \         self.state = 'payload'\n                    self.packet_start_tagged\
+      \ = False  # Reset for new frame\n                    produced = 0\n\n     \
+      \      elif self.state == 'payload':\n\n                print(self.state)\n\n\
+      \                remaining_payload = len(inp) - consumed\n                if\
+      \ remaining_payload == 0:\n                    break\n                to_copy\
+      \ = min(space_left_in_out, remaining_payload)\n                print(\"to_copy=\"\
+      ,to_copy,\"consumed,produced=\",consumed,produced)\n                if not self.packet_start_tagged:\n\
+      \                    # Add tag at the start of payload\n                   \
+      \ self.add_item_tag(0, self.nitems_written(0) + produced,\n                \
+      \                      pmt.intern(\"packet_start\"), pmt.PMT_NIL)\n        \
+      \            self.packet_start_tagged = True\n\n                #print(\"will\
+      \ output->\",inp[consumed:consumed + to_copy])\n\n\n                if not self.packet_end_tagged:\n\
+      \                    data_slice = inp[consumed:consumed + to_copy]\n       \
+      \             print(\"len(data_slice)=\",len(data_slice) )\n               \
+      \     match_index = self.find_subsequence(data_slice, self.postamble)\n    \
+      \                if match_index != -1:\n                        print(\"post\
+      \ amble pattern found\")\n                        tag_position = self.nitems_written(0)\
+      \ + consumed + match_index\n                        # one extra bit to accomodate\
+      \ FIR filters tail loss i.e tag at 2nd bit of preamble \n                  \
+      \      self.add_item_tag(0, tag_position,pmt.intern('packet_end'),pmt.PMT_NIL)\n\
+      \                        self.packet_end_tagged = True\n\n\n\n\n\n         \
+      \       out[produced:produced + to_copy] = inp[consumed:consumed + to_copy]\n\
+      \                self.payload.extend(inp[consumed:consumed + to_copy])\n   \
+      \             consumed += to_copy\n                produced += to_copy\n   \
+      \             print(\"----->consumed,produced= \",consumed,produced)\n     \
+      \           self.consume(0, consumed)\n                return consumed\n\n \
+      \       print(\"in while,consumed= \",consumed)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0f'
+    preamble: '0xaa'
+  states:
+    _io_cache: ('frame_generator', 'FramingPlusTagInserter', [('preamble', '2864434397'),
+      ('postamble', '4009693474')], [('0', 'byte', 1)], [('0', 'byte', 1)], "\n    A
+      sync block that generates a framed packet by adding a preamble and postamble\n    to
+      the input bit stream and tags the start and end with 'packet_start' and 'packet_end'.\n    ",
+      ['postamble', 'preamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 308.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_2
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nimport numpy as np\nfrom\
+      \ gnuradio import gr\nimport pmt\nimport ast\n\nclass extract_payload_block(gr.basic_block):\n\
+      \    def __init__(self, postamble_pattern=None):\n        gr.basic_block.__init__(\n\
+      \            self,\n            name=\"extract_payload_block\",\n          \
+      \  in_sig=[np.uint8],   # unpacked bits: 0 or 1\n            out_sig=[np.uint8]\
+      \   # output same type\n        )\n        self.in_payload = False\n       \
+      \ self.buffer = []\n\n\n        print(f\"Type of postamble_pattern received:\
+      \ {type(postamble_pattern)}\")\n        print(f\"Value of postamble_pattern\
+      \ received: {postamble_pattern}\")\n\n        if isinstance(postamble_pattern,\
+      \ str):\n            try:\n                # Safely evaluate the string as a\
+      \ Python literal\n                self.postamble_pattern = ast.literal_eval(postamble_pattern)\n\
+      \            except (SyntaxError, ValueError) as e:\n                raise ValueError(f\"\
+      Invalid format for postamble_pattern string: {e}\")\n        elif isinstance(postamble_pattern,\
+      \ (int, list, np.ndarray)):\n            # If it's already the correct type,\
+      \ use it directly\n            self.postamble_pattern = postamble_pattern\n\
+      \        else:\n            raise TypeError(\"postamble_pattern must be a string\
+      \ representing a list, an integer, a list, or a NumPy array\")\n\n        print(f\"\
+      Type of self.postamble_pattern after processing: {type(self.postamble_pattern)}\"\
+      )\n        print(f\"Value of self.postamble_pattern after processing: {self.postamble_pattern}\"\
+      )\n\n\n\n\n        # Ensure postamble_pattern is a numpy array or list\n   \
+      \     self.postamble_pattern = postamble_pattern\n\n\n\n\n    def general_work(self,\
+      \ input_items, output_items):\n        in0 = input_items[0]\n        out = output_items[0]\n\
+      \        nread = self.nitems_read(0)\n\n        tags = self.get_tags_in_window(0,\
+      \ 0, len(in0))\n        tag_offsets = {tag.offset - nread: tag for tag in tags}\n\
+      \n        i = 0\n        packet_start_idx = None\n        packet_end_idx = None\n\
+      \n        # Step 1: Detect start and end tags (packet_start and packet_end)\n\
+      \        while i < len(in0):\n            if i in tag_offsets and tag_offsets[i].key\
+      \ == pmt.intern(\"packet_start\"):\n                self.in_payload = True\n\
+      \                self.buffer.clear()\n                packet_start_idx = i\n\
+      \n            if i in tag_offsets and tag_offsets[i].key == pmt.intern(\"packet_end\"\
+      ):\n                packet_end_idx = i\n                if self.in_payload:\n\
+      \                    self.in_payload = False\n                    break  # Stop\
+      \ once packet_end is found\n\n            if self.in_payload:\n            \
+      \    self.buffer.append(in0[i])\n\n            i += 1\n\n        print(\"packet_end_idx=\"\
+      ,packet_end_idx)\n\n        if not isinstance(self.postamble_pattern, (int,\
+      \ list, np.ndarray)):\n            print(f\"Error: postamble_pattern has incorrect\
+      \ type: {type(self.postamble_pattern)}\")\n            return -1\n\n       \
+      \ # Step 2: If packet_end found, remove postamble\n        if packet_end_idx\
+      \ is not None:\n            # Check and remove postamble before packet_end\n\
+      \            payload_end_idx = self._remove_postamble(packet_end_idx)\n    \
+      \        self.buffer = self.buffer[:payload_end_idx]\n\n        # Step 3: Output\
+      \ the extracted payload (without postamble)\n        num_to_output = min(len(out),\
+      \ len(self.buffer))\n        out[:num_to_output] = self.buffer[:num_to_output]\n\
+      \        self.buffer = self.buffer[num_to_output:]\n\n        self.consume(0,\
+      \ i)\n        return num_to_output\n\n    def _remove_postamble(self, packet_end_idx):\n\
+      \        \"\"\"Detect and remove postamble before the packet_end tag\"\"\"\n\
+      \n                # --- Normalize postamble_pattern to a list of ints ---\n\n\
+      \        if isinstance(postamble_pattern, int):\n\n            postamble_pattern\
+      \ = [postamble_pattern]\n\n        elif isinstance(postamble_pattern, np.ndarray):\n\
+      \n            postamble_pattern = postamble_pattern.tolist()\n\n        elif\
+      \ not isinstance(postamble_pattern, list):\n\n            raise TypeError(\"\
+      postamble_pattern must be int, list, or numpy array\")\n\n        self.postamble_pattern\
+      \ = np.array(postamble_pattern, dtype=np.uint8) \n\n        print(\"self.postamble_pattern\"\
+      ,self.postamble_pattern,type(self.postamble_pattern))\n\n\n        print( type(self.postamble_pattern),\
+      \ type(self.buffer) )\n        if self.postamble_pattern is not None and len(self.postamble_pattern)\
+      \ > 0:\n            # Try to detect the postamble pattern before the packet_end\n\
+      \            postamble_len = len(self.postamble_pattern)\n            end_idx\
+      \ = len(self.buffer)\n\n            # Search for the postamble pattern before\
+      \ the packet_end in the buffer\n            for j in range(end_idx - postamble_len,\
+      \ end_idx):\n                if self.buffer[j:j + postamble_len] == self.postamble_pattern:\n\
+      \                    return j  # Trim the buffer at the point postamble starts\n\
+      \n        return len(self.buffer)  # No postamble detected, return full buffer\
+      \ length\n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble_pattern: '"0x0f"'
+  states:
+    _io_cache: ('extract_payload_block', 'extract_payload_block', [('postamble_pattern',
+      'None')], [('0', 'byte', 1)], [('0', 'byte', 1)], '', ['postamble_pattern'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2744, 1532.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_3
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\n\nclass tag_delay_block(gr.sync_block):\n\
+      \    def __init__(self, delay_samples = 1):\n        gr.sync_block.__init__(self,\n\
+      \            name=\"tag_delay_block\",\n            in_sig=[np.uint8],\n   \
+      \         out_sig=[np.uint8])\n        self.delay_samples = delay_samples\n\n\
+      \    def work(self, input_items, output_items):\n        in0 = input_items[0]\n\
+      \        out0 = output_items[0]\n        n = len(in0)\n\n        # Copy samples\n\
+      \        for i in range(n):\n            out0[i] = in0[i]\n\n\n        tags\
+      \ = self.get_tags_in_range(0, self.nitems_read(0), self.nitems_read(0) + n)\n\
+      \n        \n        for tag in tags:\n            print(\"tag.key=\",tag.key)\n\
+      \            key = pmt.symbol_to_string(tag.key)\n            if key in ['packet_start',\
+      \ 'packet_end']: \n                relative_offset = tag.offset - self.nitems_read(0)\n\
+      \                new_offset = self.nitems_written(0) + relative_offset\n   \
+      \             output_sample_index = (new_offset + self.delay_samples)\n    \
+      \            print(output_sample_index)\n                self.add_item_tag(0,\
+      \ output_sample_index, tag.key, tag.value)\n\n        #self.consume(0, n)\n\
+      \        return n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay_samples: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('tag_delay_block', 'tag_delay_block', [('delay_samples', '1')], [('0',
+      'byte', 1)], [('0', 'byte', 1)], '', ['delay_samples'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2256, 3004.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_4
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nimport numpy as np\nfrom\
+      \ gnuradio import gr\n\nclass file_with_postamble(gr.sync_block):\n    def __init__(self,\
+      \ filename='/tmp/sample.txt', postamble=0xEEFF1122):\n        gr.sync_block.__init__(self,\n\
+      \            name=\"file_with_postamble\",\n            in_sig=None,\n     \
+      \       out_sig=[np.uint8])\n\n        # Convert integer postamble to byte list\n\
+      \        self.postamble = list(postamble.to_bytes((postamble.bit_length() +\
+      \ 7) // 8, byteorder='big'))\n\n        print(filename)\n        try:\n    \
+      \        with open(filename, 'rb') as f:\n                raw = np.frombuffer(f.read(),\
+      \ dtype=np.uint8)\n        except IOError as e:\n            print(f\"IOError\
+      \ occurred while opening {filename}: {e}\")\n            raw = np.array([],\
+      \ dtype=np.uint8)\n            \n        #print(\"raw=\",raw)\n        print(\"\
+      Length of file (in bytes):\", len(raw))\n        # No bit unpacking, just concatenate\
+      \ bytes\n        self.data = np.concatenate([raw, np.array(self.postamble, dtype=np.uint8)])\n\
+      \        self.offset = 0\n\n    def work(self, input_items, output_items):\n\
+      \        out = output_items[0]\n        n = min(len(out), len(self.data) - self.offset)\n\
+      \        if n > 0:\n            out[:n] = self.data[self.offset:self.offset\
+      \ + n]\n            self.offset += n\n        return n\n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    filename: '''/media/linux1/600GB_EXT4/GNU_radio/GNURadio_src_dev_test_dir/03_flowgraphs/BPSK_tests/alice_excerpt.txt'''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    postamble: '0x0F00'
+  states:
+    _io_cache: ('file_with_postamble', 'file_with_postamble', [('filename', "'/tmp/sample.txt'"),
+      ('postamble', '4009693474')], [], [('0', 'byte', 1)], '', ['postamble'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [0, 308.0]
+    rotation: 0
+    state: enabled
+- name: fir_filter_xxx_0
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: samp_rate // symbol_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: rrc_taps
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 2300.0]
+    rotation: 0
+    state: enabled
+- name: fir_filter_xxx_1
+  id: fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: rrc_taps
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1208, 1956.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import numpy
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 20.0]
+    rotation: 0
+    state: enabled
+- name: interp_fir_filter_xxx_0
+  id: interp_fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: interpolation_factor
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_delay: '0'
+    taps: rrc_taps
+    type: ccf
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1448, 236.0]
+    rotation: 0
+    state: enabled
+- name: low_pass_filter_0
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: '1000'
+    decim: '1'
+    gain: '10'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_ccf
+    width: '1000'
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 1844.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: int( (32/nbits))
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1136, 180.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: int( total_symbols*interpolation_factor)
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1776, 348.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_const_sink_x_0_1
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"After Matched Filtering"'
+    nconnections: '1'
+    size: int( (total_symbols)*256)
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1552, 1812.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_const_sink_x_0_1_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '"After FIR"'
+    nconnections: '1'
+    size: int( total_symbols)
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 2340.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_eye_sink_x_0
+  id: qtgui_eye_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: blue
+    color3: blue
+    color4: blue
+    color5: blue
+    color6: blue
+    color7: blue
+    color8: blue
+    color9: blue
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    nconnections: '1'
+    samp_per_symbol: interpolation_factor
+    size: int(total_symbols*256)
+    srate: samp_rate
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '"Eye After interpolator"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 468.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_eye_sink_x_0_0
+  id: qtgui_eye_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: blue
+    color2: blue
+    color3: blue
+    color4: blue
+    color5: blue
+    color6: blue
+    color7: blue
+    color8: blue
+    color9: blue
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    nconnections: '1'
+    samp_per_symbol: interpolation_factor
+    size: int( 10*256)
+    srate: samp_rate
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '"Eye After matchedFilter"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1560, 2004.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: 'samp_rate '
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of BaseBandSignal"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_KAISER
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 468.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of QPSK"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_KAISER
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 676.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of mixer O/P"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: float
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1208, 3244.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_0_0_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.05'
+    axislabels: 'True'
+    bw: (samp_rate/interpolation_factor)/2
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of DecimatedFIR o/p"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.0001'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '1'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 2420.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_0_0_0_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of mixer o/p"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [896, 1732.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0_0_0_1_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of BPF pluto o/p Signal"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1248, 1428.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_0_0_0_1_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of MatchedFilt o/p"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1480, 1716.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0_0_0_2
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of Rxed pluto sig"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [256, 1612.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_0_0_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate*64
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of ASK after upsamling"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '500'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_KAISER
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 1028.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_0_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: 'samp_rate '
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: 1024*2
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Freq Response of symbols"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '2'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_KAISER
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1368, 508.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"BaseBandSignal"'
+    nconnections: '1'
+    size: int(total_symbols*256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 564.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"mixer o/p "'
+    nconnections: '1'
+    size: int( total_symbols *256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [904, 2004.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_0_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: "observe aliased frequency components at 10Khz\ncos(2\u03C08kt)\u22C5\
+      cos(2\u03C08kt)=  1/2*x(n) + 1/2*x(n)*cos(2\u03C0\u22C516kt)\n\nAliased\_frequency=16kHz\u2212\
+      25.6kHz=\u22129.6kHz"
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"decimating FIR o/p Signal"'
+    nconnections: '1'
+    size: int(total_symbols)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 2164.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_0_0_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"mixer o/p after matched  "'
+    nconnections: '1'
+    size: int( total_symbols*256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1560, 1908.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_0_0_1_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '" Rxed pluto sig"'
+    nconnections: '1'
+    size: 1*256*64
+    srate: samp_rate*64
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 1372.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_4_1_0_0_1_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"pluto O/p Signal after resampling and BPF"'
+    nconnections: '1'
+    size: int(total_symbols*256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '50'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1232, 1588.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_4_1_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"symbols"'
+    nconnections: '1'
+    size: int(total_symbols)
+    srate: 'symbol_rate '
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1448, 132.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_2
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Mixer output"'
+    nconnections: '1'
+    size: int((32/nbits)*256)
+    srate: samp_rate//interpolation_factor
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '1'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1160, 1796.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_4_1_3
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"QPSK before upsamling"'
+    nconnections: '1'
+    size: int((total_symbols/10) *256)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 860.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_4_1_3_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"QPSK  after upsamling"'
+    nconnections: '1'
+    size: 12*256*64
+    srate: samp_rate*64
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '20'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 1092.0]
+    rotation: 0
+    state: disabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: passBandBpskSignal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 772.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: BaseBand_Signal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2136, 164.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_2
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Mixer output
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 1892.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_3
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: filtered pluto output
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1248, 1532.0]
+    rotation: 0
+    state: disabled
+- name: virtual_sink_4
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: matchedFilter_op
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1392, 2076.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Mixer output
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 2308.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: BaseBand_Signal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [56, 588.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: BaseBand_Signal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 884.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1_0_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: passBandBpskSignal
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 1876.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '0']
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
+- [band_pass_filter_0, '0', qtgui_freq_sink_x_0_0_0_1_0, '0']
+- [band_pass_filter_0, '0', qtgui_time_sink_x_4_1_0_0_1_1, '0']
+- [band_pass_filter_0, '0', virtual_sink_3, '0']
+- [band_reject_filter_0, '0', low_pass_filter_0, '0']
+- [blocks_complex_to_real_0, '0', qtgui_time_sink_x_4_1_2, '0']
+- [blocks_float_to_uchar_0, '0', blocks_tag_debug_0_0_0_0, '0']
+- [blocks_float_to_uchar_0, '0', digital_correlate_access_code_tag_xx_1, '0']
+- [blocks_float_to_uchar_0, '0', epy_block_0_0_0_0_0_1, '0']
+- [blocks_float_to_uchar_0, '0', epy_block_3, '0']
+- [blocks_head_0, '0', band_reject_filter_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_throttle2_0, '0']
+- [blocks_multiply_const_vxx_1, '0', qtgui_const_sink_x_0_1_0, '0']
+- [blocks_multiply_const_vxx_1, '0', qtgui_time_sink_x_4_1_0_0_0, '0']
+- [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0_0, '0']
+- [blocks_multiply_xx_0, '0', qtgui_time_sink_x_4_1_3, '0']
+- [blocks_multiply_xx_0, '0', virtual_sink_0, '0']
+- [blocks_multiply_xx_0_0, '0', band_reject_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', blocks_head_0, '0']
+- [blocks_null_source_1, '0', band_pass_filter_0, '0']
+- [blocks_packed_to_unpacked_xx_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
+- [blocks_tagged_stream_align_0_0, '0', blocks_null_sink_0, '0']
+- [blocks_tagged_stream_align_0_0, '0', blocks_tag_debug_0_0_0, '0']
+- [blocks_tagged_stream_align_0_0, '0', epy_block_0, '0']
+- [blocks_tagged_stream_align_0_0, '0', epy_block_0_0_0_0_0_0, '0']
+- [blocks_tagged_stream_align_0_0, '0', epy_block_2, '0']
+- [blocks_throttle2_0, '0', virtual_sink_1, '0']
+- [blocks_throttle2_0_0, '0', blocks_tag_debug_0_0_0_0_2, '0']
+- [blocks_throttle2_0_0, '0', epy_block_0_0_0, '0']
+- [blocks_throttle2_0_0, '0', interp_fir_filter_xxx_0, '0']
+- [blocks_throttle2_0_0, '0', qtgui_const_sink_x_0, '0']
+- [blocks_throttle2_0_0, '0', qtgui_freq_sink_x_0_1, '0']
+- [blocks_throttle2_0_0, '0', qtgui_time_sink_x_4_1_1, '0']
+- [blocks_unpacked_to_packed_xx_0_1, '0', blocks_file_sink_0_0, '0']
+- [blocks_unpacked_to_packed_xx_0_1, '0', epy_block_0_0_0_0_0_0_1_0, '0']
+- [digital_chunks_to_symbols_xx_0_0, '0', blocks_throttle2_0_0, '0']
+- [digital_correlate_access_code_tag_xx_1, '0', digital_correlate_access_code_tag_xx_1_1,
+  '0']
+- [digital_correlate_access_code_tag_xx_1, '0', epy_block_0_0_0_0_0, '0']
+- [digital_correlate_access_code_tag_xx_1_1, '0', blocks_tag_debug_0_0_0_0, '0']
+- [digital_correlate_access_code_tag_xx_1_1, '0', blocks_tagged_stream_align_0_0,
+  '0']
+- [epy_block_0, '0', blocks_unpacked_to_packed_xx_0_1, '0']
+- [epy_block_0, '0', epy_block_0_0_0_0_0_0_1, '0']
+- [epy_block_1, '0', blocks_packed_to_unpacked_xx_0, '0']
+- [epy_block_2, '0', blocks_tag_debug_0_0_0_1, '0']
+- [epy_block_2, '0', blocks_unpacked_to_packed_xx_0_1, '0']
+- [epy_block_3, '0', blocks_tag_debug_0_0_0_0_3, '0']
+- [epy_block_3, '0', blocks_tagged_stream_align_0_0, '0']
+- [epy_block_3, '0', epy_block_0, '0']
+- [epy_block_4, '0', epy_block_0_0_0_0_1, '0']
+- [epy_block_4, '0', epy_block_1, '0']
+- [fir_filter_xxx_0, '0', blocks_multiply_const_vxx_1, '0']
+- [fir_filter_xxx_0, '0', blocks_null_sink_1, '0']
+- [fir_filter_xxx_0, '0', blocks_threshold_ff_0, '0']
+- [fir_filter_xxx_0, '0', epy_block_0_0_0_0, '0']
+- [fir_filter_xxx_0, '0', qtgui_freq_sink_x_0_0_0_0, '0']
+- [fir_filter_xxx_1, '0', qtgui_const_sink_x_0_1, '0']
+- [fir_filter_xxx_1, '0', qtgui_eye_sink_x_0_0, '0']
+- [fir_filter_xxx_1, '0', qtgui_freq_sink_x_0_0_0_1_1, '0']
+- [fir_filter_xxx_1, '0', qtgui_time_sink_x_4_1_0_0_1, '0']
+- [fir_filter_xxx_1, '0', virtual_sink_4, '0']
+- [interp_fir_filter_xxx_0, '0', blocks_multiply_const_vxx_0, '0']
+- [interp_fir_filter_xxx_0, '0', qtgui_const_sink_x_0_0, '0']
+- [low_pass_filter_0, '0', blocks_complex_to_real_0, '0']
+- [low_pass_filter_0, '0', fir_filter_xxx_1, '0']
+- [low_pass_filter_0, '0', qtgui_freq_sink_x_0_0_0_1, '0']
+- [low_pass_filter_0, '0', qtgui_time_sink_x_4_1_0_0, '0']
+- [low_pass_filter_0, '0', virtual_sink_2, '0']
+- [virtual_source_0_0, '0', epy_block_0_0_0_0_2, '0']
+- [virtual_source_0_0, '0', fir_filter_xxx_0, '0']
+- [virtual_source_1, '0', qtgui_eye_sink_x_0, '0']
+- [virtual_source_1, '0', qtgui_freq_sink_x_0, '0']
+- [virtual_source_1, '0', qtgui_time_sink_x_4_1, '0']
+- [virtual_source_1_0, '0', blocks_multiply_xx_0, '1']
+- [virtual_source_1_0_0, '0', blocks_multiply_xx_0_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.11.0
